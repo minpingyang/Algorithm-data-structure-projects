@@ -1,0 +1,33 @@
+/* Reflection.txt for COMP103
+ * Name: Minping Yang
+ * Usercode:
+ * ID: 300364234
+ */
+
+For your reflection:
+====================
+
+First, describe how far you got, on this assignment. Please be specific about
+what you attempted (core, completion, challenge, and any finer-grained goals,
+if applicable). Please also state how successful you believe you were
+respectively. If there were any problems you got stuck on, what were they?
+
+I got core, completion and challenge parts successfully.
+
+By my 20 times tests for my programme, there is not bug in my programmes. 
+I used to stuck on StackOverFlow problem for my challenge part. However, I just make the “passenger” choose the cell smartly by setting different steps of choice. The most successful step I set is that the first step is to go left and right direction, which is the direction of exit. The first step overcame the StackOverFlow problems,even if the size of maze is maximum size.   
+
+
+What are the advantages/disadvantages of using recursive methods rather than
+loops?
+
+I think that the advantage of recursive methods are that it probably made the codes simpler especial for problems like tree traversal and it reduces a time complexity of a program.
+The disadvantage is that use more memory than a loop, leading to cause StackOverFlow problem. Because with every recursive call stack increases. It could potentially crash the stack if operations are too large and also slow up process.
+
+
+Many people find recursion hard to understand at first, although it doesn't do
+anything different from previous programs - it just involves methods which call
+methods.  Why is it tricky then?
+I think that there are two trick things for using recursion rather than loops. Firstly, I should think about the “each return step” until it finished, which easily made me feel dizzy. Secondly, the order of operations is very easily to cause errors, especially for the base step and operation step.
+
+--------------------------------------------------------------------

@@ -1,0 +1,17 @@
+/* Reflection.txt for COMP103
+ * Name:Minping Yang
+ * Usercode:yangminp
+ * ID:300364234
+ */
+
+For your reflection:
+====================
+
+Write a paragraph that describes an aspect of the material we've covered 
+so far (i.e. anything in the lectures to date, or this assignment) that 
+you found particularly interesting or tricky to understand. Include how 
+you went about exploring further, learning about the issue to your own 
+satisfaction. If understanding it remains a problem for you, outline 
+what your next step will be in sorting this out.
+
+I found this assignment which is more tricky than comp102 assignments,but it is also more fun. I think that For the game2048 and Game16 is really similiar strategics. Only just covert one D arrays to 2D arrays, and use nest-loops replace each single loop. However, I found that a small bug which I am not sure how to fixed it, which is called null pointer. It only happened if I press the key board too fast, otherwise, it never exist.For the challenge part of spiral programme, the idea is not too hard to be figured out. But the position of “each group number” changes under the loop with three parameters, it’s easier to make mistakes. I take very careful to debug some values. it is easily to cause the bug called”out of bound”. For this bug, just check if the threshold is valid. In a world, this assignment indirectly let me review the knowledge which I learn in last trimester, which is very helpful.

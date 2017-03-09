@@ -1,0 +1,72 @@
+COMP 103 Assignment 3 
+Report on ArraySet and SortedArraySet testing and benchmarking
+
+Name:Minping Yang
+ID:300364234
+
+Testing:
+--------
+Which test methods failed for your implementations?
+ 
+- ArraySet:
+
+
+Nothing
+
+
+
+
+- SortedArraySet:
+
+Nothing
+
+
+
+
+
+Performance Benchmarking:
+-------------------------
+What were the results of your timing tests?
+
+
+Give the time to load the dictionary and the time to check the story, for 
+  - SortedArraySet, ArraySet, and HashSet, and
+  - dictionaryUnsorted.txt and dictionarySorted.txt. 
+
+Present the results, in the table below. 
+Provide times in seconds.
+
+ArraySet                       load | check (seconds)
+    dictionarySorted        147.228 | 76.876 
+    dictionaryUnsorted       451.117| 85.450
+
+SortedArraySet                 load | check (seconds)
+    dictionarySorted          0.657 | 1.078  
+    dictionaryUnsorted      310.067 | 1.147
+
+HashSet                        load | check (seconds)
+    dictionarySorted          0.595 | 0.569  
+    dictionaryUnsorted        0.749 | 0.589
+
+
+Discussion:
+-----------
+Discuss the measurements, pointing out any interesting or unexpected results, and try to give explanations for the results. In particular, consider the following questions:
+
+
+
+- How can you explain the differences in performance for the various implementations?
+ 
+For ArraySet, adding and removing. All the cost is in the search.( Because when adding a new item, it need to first search for duplicates.O(n). It also need to first find to be removed,when removing item.O(n) ) However, the difference between ArraySet and SortedArraySet is the searching method. In generally, binary search is faster than linear search. Thus,SortedArraySet is faster in loading dictionary and checking the story whatever dictionary. (As the time data shown above)
+It’s also obviously HashSet is the fastest one in the three implementations. I think that the reason is that the Big O notation of HashSet is O(1). Furthermore, the sortedArraySet is O(log n) and unsortedArraySet is O(n). Therefore, in generally. the speed of HashSet > sortedArraySet > unsortedArraySet.
+The last thing I found from the table is that the cost for dictionarySorted is less than dictionarySorted under the same implementation. The reason is that the operation will cost more for sorting for dictionaryUnsorted. 
+
+
+- How can you explain the differences in performance with respect to the two versions of the dictionary?
+
+As the table shown above,the cost for dictionarySorted is less than dictionarySorted under the same implementation. The reason is that the operation will cost more steps  for sorting and loading the dictionary for dictionaryUnsorted, especially for the implementations (ArraySet and SortedArray) From the data, I found that the difference between SortedDictionary and UnsortedDictionary is similar for ArraySet and SortedArray, which is about 300 seconds. This means the cost of sorting is 300 seconds. 
+For the HashSet, the difference between two dictionaries is not very big but the cost of sortedDictionary is still less than the other. I think that the cost of sorting is 0(1) for HashSet. Therefore, its not a lot cost.
+
+In your answers, make reference to the sub-results for
+"loading the dictionary" and "checking the story".
+ 

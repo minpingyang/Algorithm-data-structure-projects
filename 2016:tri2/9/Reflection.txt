@@ -1,0 +1,98 @@
+/* Reflection.txt for COMP103
+ * Name: Minping Yang
+ * Usercode:
+ * ID:300364234
+ */
+
+For your reflection:
+====================
+
+Firstly, describe how far you got, on this assignment. Please be specific about
+what you attempted (core, completion, challenge, and any finer-grained goals,
+if applicable). Please also state how successful you believe you were
+respectively. If there were any problems you got stuck on, what were they?
+
+I had attempted and got the core and completion parts so far. 
+By the unit core test, I believed that core part was done successfully. Meantime, I spent more time in completion part. Because, at the beginning, I did know how to check if what I did is right or wrong. But now, I believed that my way is correct. Because I try to increase the number of cyclists from 3 to 7 or more. the profit and on time are increased in both standard and priority queue, with increasing the number of cyclists. The priority queue is pretty much all of pizzas were be delivered on time when 6 cyclists. Once there are 7 or more cyclists, the saving will become 0.  By these tests, I believed that my code work correctly. Meanwhile, I also tried to use the HeapArrayQueue to store the “availableTimes “ . I find that whatever using HeapArrayQueue or array, they show completely same influences on the profit and on time ratio. Finally , I think that the array version is relatively easily to understand and explain in reflection. So I left the array version.
+
+
+What part(s) of the assignment did you find most difficult?
+
+I think that the challenge part is most difficult. 
+
+If you completed the completion part:
+
+Show the results you obtained when using the priorty queue and compare them
+to the results you obtained with the ordinary queue.
+
+StandardQueue:  on time: 24, late:81 (urgent=18, std=23, undelivered=40), Profit:$-1419.50
+PriorityQueue:  on time: 22, late:83 (urgent=16, std=28, undelivered=39), Profit:$-1269.50
+                                                                          Saving = $150.00
+======================= Log File: completLog10 =======================
+StandardQueue:  on time: 40, late:60 (urgent=11, std=17, undelivered=32), Profit: $-848.00
+PriorityQueue:  on time: 43, late:57 (urgent= 8, std=20, undelivered=29), Profit: $-657.00
+                                                                          Saving = $191.00
+======================= Log File: completLog11 =======================
+StandardQueue:  on time: 18, late:94 (urgent=19, std=27, undelivered=48), Profit:$-1576.00
+PriorityQueue:  on time: 20, late:92 (urgent=10, std=35, undelivered=47), Profit:$-1321.00
+                                                                          Saving = $255.00
+======================= Log File: completLog12 =======================
+StandardQueue:  on time: 21, late:69 (urgent=13, std=26, undelivered=30), Profit:$-1221.50
+PriorityQueue:  on time: 15, late:75 (urgent=14, std=30, undelivered=31), Profit:$-1283.00
+                                                                          Saving = $-61.50
+======================= Log File: completLog13 =======================
+StandardQueue:  on time: 22, late:81 (urgent=12, std=27, undelivered=42), Profit:$-1345.50
+PriorityQueue:  on time: 17, late:86 (urgent=12, std=32, undelivered=42), Profit:$-1367.00
+                                                                          Saving = $-21.50
+======================= Log File: completLog14 =======================
+StandardQueue:  on time: 16, late:83 (urgent=11, std=34, undelivered=38), Profit:$-1433.00
+PriorityQueue:  on time: 14, late:85 (urgent= 8, std=39, undelivered=38), Profit:$-1352.00
+                                                                          Saving = $81.00
+======================= Log File: completLog15 =======================
+StandardQueue:  on time: 32, late:51 (urgent=13, std=17, undelivered=21), Profit: $-844.00
+PriorityQueue:  on time: 35, late:48 (urgent= 6, std=21, undelivered=21), Profit: $-587.50
+                                                                          Saving = $256.50
+======================= Log File: completLog16 =======================
+StandardQueue:  on time: 20, late:82 (urgent=22, std=21, undelivered=39), Profit:$-1482.00
+PriorityQueue:  on time: 15, late:87 (urgent=19, std=28, undelivered=40), Profit:$-1456.50
+                                                                          Saving = $25.50
+======================= Log File: completLog17 =======================
+StandardQueue:  on time: 35, late:47 (urgent=24, std= 7, undelivered=16), Profit: $-905.00
+PriorityQueue:  on time: 33, late:49 (urgent=17, std=15, undelivered=17), Profit: $-725.00
+                                                                          Saving = $180.00
+======================= Log File: completLog18 =======================
+StandardQueue:  on time: 19, late:88 (urgent=14, std=29, undelivered=45), Profit:$-1497.00
+PriorityQueue:  on time: 22, late:85 (urgent=10, std=29, undelivered=46), Profit:$-1268.00
+                                                                          Saving = $229.00
+======================= Log File: completLog19 =======================
+StandardQueue:  on time: 34, late:60 (urgent=15, std=11, undelivered=34), Profit: $-993.50
+PriorityQueue:  on time: 30, late:64 (urgent=13, std=18, undelivered=33), Profit: $-936.50
+                                                                          Saving = $57.00
+======================= Log File: completLog20 =======================
+StandardQueue:  on time: 31, late:77 (urgent=13, std=15, undelivered=49), Profit:$-1309.00
+PriorityQueue:  on time: 27, late:81 (urgent=13, std=21, undelivered=47), Profit:$-1245.00
+                                                                          Saving = $64.00
+
+Explain how you incorporated the distance into the scheduling (if at all),
+and what effect this had.
+
+Firstly, I created a three cyclists’ availableTimes into a array. Meantime, all of the initial available time is 0;
+
+Secondly, I go for check the array if there is one of cyclists’s available time < current time. if it exists, then assign the cyclist to delivery the pizza. Once the delivery was done, then update this cyclist’s available time =time+full trip time. Meantime, update the value in the available times in the array as well. on the other hand, if three of them are not available i.e. all of their time > current time, then the pizza could not be delivered on time. 
+
+the above two steps will run in the loop. 
+
+By description above, the main meaning is that if there is one of three cyclists available to delivery pizza, then the pizza could be delivered. which has same as function of priority queue.
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------
+

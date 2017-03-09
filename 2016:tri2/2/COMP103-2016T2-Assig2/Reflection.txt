@@ -1,0 +1,26 @@
+/* Reflection.txt for COMP103
+ * Name:minping Yang
+ * Usercode:
+ * ID:300364234
+ */
+
+--------------------------------------------------------------------
+Time spent to the nearest hour on FastFood: 4 hours
+Time spent to the nearest hour on Sokoban: 1 and half hours
+
+Please do answer on the corresponding LINE, not below or above the
+line as it would make the extraction of the data more difficult.
+--------------------------------------------------------------------
+
+For your reflection:
+====================
+
+Describe how far you got. If there was a problem you got stuck on, what was that problem?
+
+I got all of the parts for both FastFood and Sokoban. At the same time, I add a timer for FastFood, which make game more challenge and interesting. However, I got stuck on the the second part of challenge of Sokoban, which allow user to make the worker arrive the position by clicking mouse. I try to use if statement to check if there are wall in the four directions around the walker.Meantime, regarding the boxes as wall to limit the walker to path finder. However, the codes I written for this things make me dizzy.It always report some errors which I can not figure out how to fix it. So, I have to delete this part of codes to make other parts running successfully. 
+
+Reading and understanding someone else's code is difficult. What elements of Sokoban made it easier or made it more difficult for you to understand? Can you identify things that you would do or avoid doing if you were trying to make your own code easily understood by someone else?
+
+--------------------------------------------------------------------
+I think that the name of variables and method make it easier to read for me. Furthermore, the comments next to some codes also make me know each this part of codes does. On the other hand, it’s a bit hard to understand in doAction methods. There are nested-if statements and some of conditions is hard to understand the reason why put there.
+For my own codes, I try to write some comments in some method or part of codes, which is easily to read for others and me. Moreover,I try to set the name of variables, fields and method reasonable and readable. At the same time, I avoid using some abstract names of variables, such as x and y. 

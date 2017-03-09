@@ -1,0 +1,38 @@
+/* Reflection.txt for COMP103
+ * Name:Minping Yang
+ * Usercode:
+ * ID:300364234
+ */
+
+For your reflection:
+====================
+
+Firstly, describe how far you got, on this assignment. Please be specific about
+what you attempted (core, completion, challenge, and any finer-grained goals,
+if applicable). Please also state how successful you believe you were
+respectively. If there were any problems you got stuck on, what were they?
+
+I got core, completion and challenge part. 
+I think that I have succeed in achieving the tree parts. Because those functions implement well. 
+
+However, I did not achieve the calulateLocations(). I have attempted it in 1 hour. Unfortunately, it did not looks better than original version. So, I change my code back into original version. If I have more time to do the assignment, I will spend more time in making “tree “ more beautiful.
+On the other hand, I use to stuck on  printAllAtDepth() method. I considered about more case which is currentDepth > targetDepth instead of only currentDepth < targetDepth. 
+However, I just follow the assignment hints to make things simple and just regrade the currentDepth >= targetDepth. Meanwhile, heaps of stackOverflow and null pointer problems were reported in this assignment because of recursion. I just try to debug find where are the problems and just draw diagrams to make me feel more sense to check the recursion step. 
+
+
+* When you load in the same taxonomy from the file over and over again, you may notice that some times the tree is displayed differently. Why?
+
+In my opinion, it is because the collection of children is a HashSet and Set does not retain the elements in order. Therefore, some times the tree is displayed differently
+
+
+
+* In the inSubtree(...) method used in the completion, we try to ensure that if a node is moved (along with it's subtree), then it isn't moved into it's own subtree. Discuss two problems that could occur if we allowed a node (along with it's subtree) to become a child of one of the nodes in that subtree.
+
+Firstly, it would cause StackOverFlow. It’s probably, it will belong to it’s subtree and it’s subtree belong to itself, Which is ridiculously. For example, I am my son ’s son and my son is also my father.
+
+Secondly, It would cause NullPointerException. Because it will removes it’s subtree, then  move itself to destination node. But the destination node is on its own subtree which has been removed already. So destination == null. 
+
+
+
+
+----------------------------------------------------------------

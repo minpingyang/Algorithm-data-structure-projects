@@ -1,0 +1,37 @@
+/* Reflection.txt for COMP103
+ * Name:Minping Yang
+ * Usercode:
+ * ID: 300364234
+ */
+
+For your reflection:
+====================
+
+Firstly, describe how far you got, on this assignment. Please be specific about
+what you attempted (core, completion, challenge, and any finer-grained goals,
+if applicable). Please also state how successful you believe you were
+respectively. If there were any problems you got stuck on, what were they?
+
+I have got core, completion and challenge done. All of three parts work well according to the three unit tests. However, I used to spend 1 day in debugging the next() method in challenge part. Firstly, I attempted to use while-loop to pushes its right child onto the stack (and all that child's left descendent. However, the variable -nextRight need update again and again, otherwise, it will cause null point error. Then, I choose to use for-loop to overcome the problem under help from help desk. Eventually, the method work successfully ( At least, it passed the unit test)
+ 
+
+* Did you notice a difference in speed of the application compared to the one of assignment 3? Where does the speed difference come from?
+
+Yes, I pretty sure that the speed of app in this assignment higher than assignment3 one. 
+I think that the speed difference come from the binary search tree structure is higher efficiency because of structure’s order for searching item.  However,arraySet doest have a order. check everything through the whole array to search a item, which is very inefficient. 
+
+
+	
+* What did you observe comparing the height of the tree, both after loading the dictionary words and after removing the bad words? How do you explain this result? 
+
+I found that the height does not change. I think that because BST is not guaranteed balanced, removing items does not mean removing item from bottom. 
+
+
+* What is the numerical difference between the height of the tree you observed and the theoretical minimum? State the number and briefly comment on how much it affects the search speed.
+
+The theoretical minimum height of 206382 items is around 18 while the real
+height is 37. Obviously  it affects search speed a lot. The speed of a balance BST (i.e. ACV tree) is O(log n) on average while in the worst case, If it becomes a linked list, it will be O(n), which would be a slower way. Although the tree is imbalanced in my case. the order still keeps O(log n) (or maybe a bit worse than O(log n)) Overall, it is still a faster sorting. 
+
+
+----------------------------------------------------------------
+

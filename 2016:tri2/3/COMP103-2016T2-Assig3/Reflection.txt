@@ -1,0 +1,32 @@
+/* Reflection.txt for COMP103
+ * Name:Minping Yang
+ * Usercode:
+ * ID:300364234
+ */
+
+For your reflection:
+====================
+
+1.
+Describe how far you got on this assignment. Please be specific about what you
+attempted (core, completion, challenge, and any finer-grained goals, if
+applicable). Please also state how successful you believe you were respectively.
+If there were any problems you got stuck on, what were they? 
+
+I got all of parts of the assignments except the “ Interpolation search”.I passed all tests in ArraySet and SortedArray successfully.However, there is a warning from BlueJ which is called “uses unchecked or unsafe operations” warning”.I find the way to add @SuppressWarnings("unchecked") above the method to solve that. In fact, I attempted to do the Interpolation search.I think the only one different between Interpolation search and binary search is the middle value.
+
+In binary search, the middle=(high+low)/2  
+In interpolation search,
+middle=low+(high-low)*(item-array[low])/(array[high]-array[low]); 
+
+I use the compareTo method to calculation out the value item-array[low] and array[high]-array[low]. However, there appears some error after testing, which I did not figure out. But after this assignment, I will come back to try again. 
+
+2.
+The Java collection library provides several different implementations of the
+Set type, including HashSet and TreeSet. Why does it not provide ArraySet?
+After all, Java provides the ArrayList implementation of the List type!
+
+I think that its because ArraySet costs too many O(n) and execution time require too much, which means that it has low efficiency compare to other implementations. Furthermore, ArraySet does not have special method to be provided for users. 
+
+--------------------------------------------------------------------
+

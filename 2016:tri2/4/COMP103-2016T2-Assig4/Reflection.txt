@@ -1,0 +1,39 @@
+/* Reflection.txt for COMP103
+ * Name:Minping Yang
+ * Username:
+ * ID:300364234
+ */
+
+For your reflection:
+====================
+
+Firstly, describe how far you got, on this assignment. Please be specific about
+what you attempted (core, completion, challenge, and any finer-grained goals,
+if applicable). Please also state how successful you believe you were
+respectively. If there were any problems you got stuck on, what were they?
+
+
+* Do you think that having both classes "Images" and "ImageNode" is overkill? 
+  What pros and cons can you think of in comparison to just using ImageNode?
+
+  YES!ITS HORRIBLE!but,I make it.
+  pros: By this assignment, I get more and meaningful practise to improve my understanding of Linked List and single Linked Node. 
+  cons: ImageNode make things become complex. Because we should really carefully discuss some situations which depend on head and cursor position every time.
+
+
+	
+* Did you notice the different complexity of adding an image
+  before vs after the cursor? 
+  What are the complexities and what is the cause of this complexity difference? 
+Yes, I think that the adding before is more tricky than adding after. Because I should think the situation which is head==cursor. I should change the head position.Meanwhile, move the cursor to the position of new head. 
+In other hand, addImageAfter is relative easier compare to addImageBefore. The only tricky thing for that is concern if imageFileName==null.
+
+* Can you think of an extension to "ImageNode" that would avoid the 
+  above mentioned complexity difference?
+I think that if we improve ImageNode by have different limitations in insertBefore and insertAfter methods, it probably  make things easier.
+
+* Cursors are a good way of obtaining quick access to a certain point in a list. 
+  Can you think of a potential problem if a client does not use Images.setCursor correctly?
+setCursor method set the cursor to a new node. If we does not use the method, we might just only change the cursor.next not the object of cursor. I think that this is potential problem. Therefore, I use Images.setCursor in the reverse method, which work very well.
+ 
+----------------------------------------------------------------
