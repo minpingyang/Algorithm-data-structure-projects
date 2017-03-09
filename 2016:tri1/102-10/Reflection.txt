@@ -1,0 +1,27 @@
+Questions for reflection.
+=========================
+
+
+1. Did you do any online practice questions this week? If yes, which topics did
+you look at and why?
+no
+Because I had done online questions one month ago.
+
+2. What is one error, bug, or exception that you encountered this week? How did
+you go about fixing it? Can you think of a way of making it easier to fix next
+time?
+
+error: this.parameter should put first position in a method.
+how I fixed it: I put the code which contains this.parameter in the first line under the method.
+easier: remember to put this.parameter in the first line under the method.
+  
+3. What is one thing that you did in this assignment that is similar to previous
+ones? Was it easier this time? How did you approach doing it?
+
+I think that the thing which is similar to previous  assignment is that use mouse action to draw some shapes. which is similar to the program minipaint. 
+yes, I think this time is easier. Because I have ability to know how to use these point that mouse make to meet my program requirement.
+I use public void doMouse(String mouseAction, double x, double y) method under the different mouse action to execute different tasks.
+
+4. If you have any other thoughts about the assignment please write them here.
+
+I think that this assignment give me a chance to practise using interface to do the interesting assignment. In addition, the polygon part let me practise using array and arrayList again. Even if the polygon is a bit hard for me compare to previous challenge part.
