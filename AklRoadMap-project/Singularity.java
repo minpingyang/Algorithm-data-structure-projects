@@ -1,7 +1,12 @@
 package code.comp261.ass1;
 
 import java.util.Map;
-
+/*
+ * this class represent the bad node or restriction nodes
+ * 
+ * @author Minping
+ * 
+ * */
 public class Singularity {
 	Node nodeFrom, nodeTo, badNode;
 	Roads roadFrom,roadTo;
@@ -13,11 +18,10 @@ public class Singularity {
 		roadTo = roadMap.get(Integer.parseInt(values[3]));
 		nodeTo = nodeMap.get(Integer.parseInt(values[4]));
 	}
-	//description info of bade nodes
+	//description of info of bad nodes
 	public String toString(){
-		return "Restriction [nodeFrom=" + nodeFrom.nodeID + ", roadFrom =" + roadFrom.roadID +", badNode ="+ badNode.nodeID + ", roadTo=" 
-		   + roadTo.Roa
-				
+		return "Restriction [nodeFrom=" + nodeFrom.nodeID + ", roadFrom =" + roadFrom.roadId +", badNode ="+ badNode.nodeID + ", roadTo=" 
+		   + roadTo.roadId + "]";			
 	}
     
 }
