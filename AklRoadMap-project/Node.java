@@ -52,10 +52,21 @@ public class Node {
 	 * */
 	public void setNeighbours() {
 		for (RoadSegment roadSegment : jointedSegments) {
-			Node neighbour =roadSegment.N
+			Node neighbour =roadSegment.neighborNodeOfSegment(this);
+			neighboursNode.add(neighbour);
 		}
 	}
-	
+	@Override
+	public String toString() {
+		String neighours = "";
+		int i =1;
+		for (Node node : neighboursNode){
+			neighours += i +") :" + node.nodeId + ".";
+			i++;
+		}
+		return "Node [nodeId =" + nodeId + ", neighbours =" + neighours + "]";
+		
+	}
 	
 	/*color setter
 	 * */
