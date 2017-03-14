@@ -1,71 +1,67 @@
 package code.comp261.ass1;
+/*
+ * Node class represents node of the graph
+ * @author MinPing
+ * */
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.print.attribute.Size2DSyntax;
 import javax.sound.sampled.Line;
-import javax.swing.text.Segment;
+
+import org.omg.CORBA.portable.ValueBase;
+
+import code.comp261.example.Location;
 
 public class Node {
-	//easy to access, but can not change. by using public-final
-	public final int nodeID;
+	public final int nodeId;
 	public final Location location;
-	public final Set<RoadSegment> intersection;
-	public Set<Node> neighbourNodes;
-	public final int nodeSize;   // it would be changed with zooming in/our , fix it later
-	private Color color; //setter-getter later
-	//set unique color to highlight different actions;
-	public static final Color GENERAL_COLOUR = new Color(215, 226, 192); //green
-	public static final Color SELECTED_COLOUR = new Color(25, 55, 114); //blue
-	public static final Color NAVIGATION_COLOUR = new Color(186, 87, 16); //brown
-	public static final Color INTERSECTIONS_COLOUR = new Color(179,39, 109); // pink
-	
-	//
-	
-	
-	
-	
-	
-	
-	public Node(String line){
-		String[] values = line.split("\t");
-		this.nodeID = Integer.parseInt(values[0]);
-		double lat = Double.parseDouble(values[1]);
-		double lon = Double.parseDouble(values[2]);
-		this.location = Location.newFromLatLon(lat, lon);
-		intersection = new HashSet<>();
-		neighbourNodes = new HashSet<>();	
-		nodeSize = 1;
+	public final Set<RoadSegment> jointedSegments;
+	private Color color;
+	/*default color: blue;
+	 * selected corlor: orange;
+	 * navigation: red
+	 * */
+	public static final Color DEFAULT_COLOR = new Color(83, 141, 213);
+	public static final Color SELECTED_COLOR = new Color(255, 192, 0);
+	public static final Color NAVIGATION_COLOR = new Color(255, 0, 0);
+	public Set<Node> neighboursNode;
+	/*two constant for adjusting shape of node during the process of zooming
+	 * */
+	public static final int NODE_WIDTH = 1;
+	public static final double NODE_LEAN = 0.7;
+	/*constructor
+	 * @parma string:  the data which is loaded from files
+	 * */
+	public Node(String string) {
+		String[] data = string.split("\t");
+		nodeId = Integer.parseInt(data[0]);
+		double lat = Double.parseDouble(data[1]);
+		double lon = Double.parseDouble(data[2]);
+		// use the newFromLation function defined in location class to transfer lat&lone --> Location Object
+		location = Location.newFromLatLon(lat, lon);
+		color = DEFAULT_COLOR;  //Initialise color
+		jointedSegments  = new HashSet<>();  //use set collections to collect the unique road segments in the collection
+		neighboursNode = new HashSet<>(); // same as the collection of segements. Neighbours of node are unique in the collection
+			
 	}
-	
-	public void setColor (Color color){
-		this.color = color;
-	}
-	public void setNeighbourNodes(){
-		for (RoadSegment sg : intersection) {
-			Node endNode = sg;
+	/**
+	 * fill neighbours of this node into the collection of neighbours node
+	 * 
+	 * */
+	public void setNeighbours() {
+		for (RoadSegment roadSegment : jointedSegments) {
+			Node neighbour =roadSegment.N
 		}
 	}
-	public void draw(Graphics g, Location origin, double scale, Dimension d) {
-		int centX = (int) (d.getWidth() / 2);
-		int centY = (int) (d.getHeight() / 2);
-		// use a Point class to record position
-		Point p1 = this.location.asPoint(origin, scale);
-		//after zooming in, the location of P1 will be changed to P2 (right-bottom)
-		//limit the range of the location of p2 (screen size is determined by dimension)
-		Point p2 = new Point(p1.x, p1.y);
-		if (p2.x > d.width || p2.x < 0 || p2.y > d.height || p2.y <0)
-			return;
-		g.setColor(this.color);
-		g.fillOval(p2.x - nodeSize / 2, p2.y - nodeSize / 2,nodeSize, nodeSize);
-					
+	
+	
+	/*color setter
+	 * */
+	public void setColor(Color color) {
+		this.color = color;
 	}
-	
-	
+		
+		
 }
