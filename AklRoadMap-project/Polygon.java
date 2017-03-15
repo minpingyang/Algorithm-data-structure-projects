@@ -1,6 +1,4 @@
 package code.comp261.ass1;
-import com.sun.source.tree.ForLoopTree;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Set;
@@ -50,7 +48,7 @@ public class Polygon {
         case 0x4f:
         case 0x50:
         case 0x51:
-            this.color = new Color(202, 223, 170); // green field / Cemetery /
+            this.color = new Color(202, 223, 170); // green field
             break;
         case 0x28:
         case 0x29:
@@ -72,7 +70,7 @@ public class Polygon {
         case 0x49:
         case 0x4c:
         case 0x4d:
-            this.color = new Color(179, 209, 255); // sea / ocean / river / lake
+            this.color = new Color(179, 209, 255); // sea & ocean & lake,water places, etc
             break;
         case 0x53:
             this.color = new Color(255, 225, 104); // sand
@@ -86,8 +84,19 @@ public class Polygon {
 	    //coordinate of centre of panel
         int centrXofPanel = (int) (dimension.getWidth()/2);
         int centrYofPanel = (int)(dimension.getHeight()/2);
-        for(ArrayList<Location> polygon){
-
+        for(ArrayList<Location> polygon: positions){
+            int  numberOfpointsOfPolygon= polygon.size();
+            int[] xPoints = new int[numberOfpointsOfPolygon];
+            int[] yPoints = new int[numberOfpointsOfPolygon];
+            for(int i=0; i<numberOfpointsOfPolygon;i++){
+                Point point = polygon.get(i).asPoint(currentOrigin,currentScale);
+                // create the changed points of polygon after zooming
+                Point changedPoint = new Point(point.x + centrXofPanel,point.y + centrYofPanel);
+                xPoints[i] = (int) changedPoint.getX();
+                yPoints[i] = (int) changedPoint.getY();
+            }
+            g.setColor(color);
+            g.fillPolygon(xPoints,yPoints,numberOfpointsOfPolygon);
         }
     }
 	
