@@ -1,14 +1,12 @@
 package code.comp261.ass1;
 
-import javax.swing.text.Segment;
 import java.io.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /*
-* Graph class means the graph of linking nodes and roads
+* Graph class will load files, store information into
+* graph(data structure needed),Display (part of graph
+* in the drawing area), Redraw the graph after movement(left,right, zoom in/out)
 * @author Minping
 * */
 public class Graph {
@@ -63,7 +61,7 @@ public class Graph {
         } catch (FileNotFoundException e) {
             System.out.println(nodes+ "File has not been found");
         } catch (IOException e) {
-            System.out.print("IO Exception");
+            System.out.println("IO Exception");
         }
     }
     /*very similar to loadNode method
@@ -77,14 +75,14 @@ public class Graph {
             while (line!=null){
                 Road road =new Road(line);
                 //Road is indexed by its ID
-                nodeMap.put(road.roadId,road);
+                roadMap.put(road.roadId,road);
                 line = bufferedReader.readLine(); // next line
             }
             bufferedReader.close();
         } catch (FileNotFoundException e) {
             System.out.println(roads+ "File has not been found");
         } catch (IOException e) {
-            System.out.print("IO Exception");
+            System.out.println("IO Exception");
         }
 
     }
@@ -96,19 +94,47 @@ public class Graph {
             String line = bufferedReader.readLine();
             while (line!=null){
                 RoadSegment segment =new RoadSegment(line, nodeMap, roadMap);
-                
+                segmentSet.add(segment);
                 //node is indexed by its ID
-                nodeMap.put(node.nodeId,node);
+                roadMap.get(segment.roadId).roadSegments.add(segment);
                 line = bufferedReader.readLine(); // next line
             }
             bufferedReader.close();
         } catch (FileNotFoundException e) {
-            System.out.println(nodes+ "File has not been found");
+            System.out.println(segments+ "File has not been found");
         } catch (IOException e) {
-            System.out.print("IO Exception");
+            System.out.println("IO Exception");
         }
     }
     private void loadPolygons(File polygons) {
+        BufferedReader bufferedReader;
+        try {
+            bufferedReader = new BufferedReader(new FileReader());
+            String line =bufferedReader.readLine();
+            while (line!=null){
+                if (line.equals("[POLYGON]")){
+                    String label = null;
+                    Integer type =null;
+                    Integer endLevel = null;
+                    Integer cityIdx = null;
+                    Set<List<Location>> locations = new HashSet<>();
+                    line = bufferedReader.readLine();
+                    while (!line.equals("[END]")){
+                        if(line.startsWith("Type")){
+                            //cover the hexdecimal integer which is after "type=0x" into decimal
+                            type = Integer.parseInt(line.substring(7),16);
+
+                        }
+                    }
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println(polygons+ "File has not been found");
+        } catch (IOException e) {
+            System.out.println("IO Exception");
+        }
+
     }
 
 }
