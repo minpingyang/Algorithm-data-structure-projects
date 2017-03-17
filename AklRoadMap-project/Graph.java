@@ -1,6 +1,5 @@
 package code.comp261.ass1;
 
-import javax.swing.text.Segment;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
@@ -19,6 +18,7 @@ public class Graph {
     Set<RoadSegment> segmentSet;
 
     RoadTrie roadTrie;
+    /// not too sure~
     public static final double CLICKED_RANGE = 0.2;
 
     public Graph(){
@@ -158,10 +158,11 @@ public class Graph {
         }
 
     }
+    //redraw method which is used after movement of map
     public void redraw(Graphics graphics, Location currentOrigin, double currentScale, Dimension dimension){
        //redraw all nodes
         for (Node node:nodeMap.values()){
-            node.draw();
+            node.draw(graphics,currentOrigin,currentScale,dimension);
         }
         //redraw  road segments
         for (RoadSegment segment: segmentSet){
@@ -171,9 +172,35 @@ public class Graph {
 
         if(!polygonSet.isEmpty()){
             for (Polygon polygon: polygonSet){
-                polygon.draw();
+                polygon.draw(graphics,currentOrigin,currentScale,dimension);
             }
         }
     }
+    //find intersections by linear search
+    //@param  location represents the location clicked
+    public Node findNode(Location location){
+        //initialisation
+        double shortestPath = Double.MAX_VALUE;
+        Node closestIntersection = null;
+        for (Node node: nodeMap.values()){
+            double distance = location.distance(node.location);
+            if(distance<shortestPath){
+                shortestPath = distance;
+                closestIntersection = node;
+            }
+        }
+        // if closestIntersection exist, then return the intersection node
+        // to be used for highlight, and it can be clicked
+        if(location.distance(closestIntersection.location)>CLICKED_RANGE||closestIntersection==null)
+            return null;
+        else
+            return closestIntersection;
 
+        //*******figure out quard-tree version later
+    }
 }
+//store user input, and search matching roads with same prefix by tries data structure
+public List<Road> search(String input){
+    return roadTrie.find(input);
+}
+
