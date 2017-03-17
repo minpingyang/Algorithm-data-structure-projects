@@ -178,7 +178,7 @@ public class Graph {
     }
     //find intersections by linear search
     //@param  location represents the location clicked
-    public Node findNode(Location location){
+    public Node findClosest(Location location){
         //initialisation
         double shortestPath = Double.MAX_VALUE;
         Node closestIntersection = null;
@@ -198,9 +198,10 @@ public class Graph {
 
         //*******figure out quard-tree version later
     }
-}
-//store user input, and search matching roads with same prefix by tries data structure
-public List<Road> search(String input){
-    return roadTrie.find(input);
+    //store user input, and search matching roads with same prefix by tries data structure
+    public List<Road> search(String input){
+        return roadTrie.find(input);
+    }
+
 }
 
