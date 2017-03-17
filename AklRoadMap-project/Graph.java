@@ -1,7 +1,10 @@
 package code.comp261.ass1;
 
+import javax.swing.text.Segment;
+import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 
 /*
 * Graph class will load files, store information into
@@ -26,9 +29,7 @@ public class Graph {
     }
     /**
      * wrapper method for loading different files
-     * @param
-     * @param
-     * @param
+     * @param , roads, node,segments, polygons, which refer to their files
      * */
     public void load(File nodes, File roads, File segments, File polygons){
         // initialisation
@@ -109,32 +110,70 @@ public class Graph {
     private void loadPolygons(File polygons) {
         BufferedReader bufferedReader;
         try {
-            bufferedReader = new BufferedReader(new FileReader());
+            bufferedReader = new BufferedReader(new FileReader(polygons));
             String line =bufferedReader.readLine();
+            //outer loop is used to read multiple polygons
             while (line!=null){
                 if (line.equals("[POLYGON]")){
                     String label = null;
                     Integer type =null;
                     Integer endLevel = null;
                     Integer cityIdx = null;
+                    //store locations of alll points of polygons
                     Set<List<Location>> locations = new HashSet<>();
                     line = bufferedReader.readLine();
+                    // inner loop for read data within a polygon
                     while (!line.equals("[END]")){
                         if(line.startsWith("Type")){
                             //cover the hexdecimal integer which is after "type=0x" into decimal
                             type = Integer.parseInt(line.substring(7),16);
-
+                        } //use subString() to only get the number of each variable;
+                        else if(line.startsWith("Label")){
+                            label = line.substring(6);
+                        }else if(line.startsWith("EndLevel")){
+                            endLevel = Integer.parseInt(line.substring(8));
+                        }else if(line.startsWith("Data")){
+                            // only get coordinators of the file without comma & brackets
+                            String[] coordinators = line.substring(6).replace("(","").replace(")","").split(",");
+                            ArrayList<Location> list = new ArrayList<>();
+                            for (int i = 0; i < coordinators.length;){
+                                double lat = Double.parseDouble(coordinators[i++]);
+                                double lon = Double.parseDouble(coordinators[i++]);
+                                list.add(Location.newFromLatLon(lat,lon));
+                            }
+                            locations.add(list);
                         }
+                        line =bufferedReader.readLine();  // go to the next line within one polygon data
                     }
+                 polygonSet.add(new Polygon(type,label,endLevel,cityIdx,locations));
+                 bufferedReader.readLine();    // skip the empty line between each polygon;
+                 line = bufferedReader.readLine();
                 }
             }
-
+            bufferedReader.close();
         } catch (FileNotFoundException e) {
             System.out.println(polygons+ "File has not been found");
         } catch (IOException e) {
             System.out.println("IO Exception");
         }
 
+    }
+    public void redraw(Graphics graphics, Location currentOrigin, double currentScale, Dimension dimension){
+       //redraw all nodes
+        for (Node node:nodeMap.values()){
+            node.draw();
+        }
+        //redraw  road segments
+        for (RoadSegment segment: segmentSet){
+           segment.draw(graphics,currentOrigin,currentScale,dimension);
+       }
+
+
+        if(!polygonSet.isEmpty()){
+            for (Polygon polygon: polygonSet){
+                polygon.draw();
+            }
+        }
     }
 
 }
