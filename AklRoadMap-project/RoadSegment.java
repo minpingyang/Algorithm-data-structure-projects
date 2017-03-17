@@ -1,17 +1,8 @@
 package code.comp261.ass1;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.List;
-import java.awt.Point;
-import java.io.FilterInputStream;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
-
-import javax.sound.sampled.Line;
-
-import code.comp261.example.Location;
 
 public class RoadSegment {
 	public final int roadId;  // which road contain the road segment
@@ -21,11 +12,12 @@ public class RoadSegment {
 	public final ArrayList<Location> coordsOfNodesOnTheSegment;
 	private Color color;
 	//same as color constant of Node class
-	public static final Color DEFAULT_COLOUR = new Color(130, 130, 130);
-    public static final Color SELECT_COLOUR = new Color(255, 192, 0);
-    public static final Color NAVI_COLOUR = new Color(255, 0, 0);
+	public static final Color DEFAULT_COLOUR = new Color(77, 127, 130);
+    public static final Color SELECT_COLOUR = new Color(255, 159, 7);
+    public static final Color NAVI_COLOUR = new Color(255, 23, 6);
 	/**
 	 * constructor
+	 * nodes and roads both are indexed by their Id
 	 * */
     public RoadSegment(String data, Map<Integer, Node> nodeMap, Map<Integer, Road>roadMap) {
 		coordsOfNodesOnTheSegment = new ArrayList<>();
@@ -33,7 +25,6 @@ public class RoadSegment {
 		roadId = Integer.parseInt(values[0]);
 		road = roadMap.get(roadId);
 		lengthOfSegment = Double.parseDouble(values[1]);
-		//?????????????????????????????????
 		startNode = nodeMap.get(Integer.parseInt(values[2]));
 		//the location of start node is added as first element in the collection
 		coordsOfNodesOnTheSegment.add(startNode.location);
@@ -72,7 +63,7 @@ public class RoadSegment {
     		 Point changedInitialPoint = new Point(initialPoint.x + centrXofPanel, initialPoint.y+centrYofPanel);
     		 Point changeNextPoint = new Point(nextPoint.x+centrXofPanel, nextPoint.y+centrYofPanel);
     	 //for security, prevent from drawing will be out of screen
-    		 //????????? 
+
     		 if ((changedInitialPoint.x < 0 && changeNextPoint.x <0)
     			 ||(changedInitialPoint.x>dimension.getWidth()&& changeNextPoint.x > dimension.getWidth())
     			 ||(changedInitialPoint.y < 0 && changeNextPoint.x <0)
@@ -83,19 +74,8 @@ public class RoadSegment {
 		}
      }
      
-    /*
-     * return the neighbor node which is linked with node which call this function by the road segments
-     * */
 
-    public Node neighborNodeOfSegment(Node node1){
-    	// node1 should be startNode or endNode either
-    	if(node1.nodeId != startNode.nodeId && node1.nodeId !=endNode.nodeId)
-    		return null;
-    	
-    	if (node1.nodeId == startNode.nodeId) return endNode;
-    	else  return startNode;
-    		
-    }
+
     /*show information of road segments
      * */
     @Override

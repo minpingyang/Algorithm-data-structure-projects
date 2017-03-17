@@ -1,4 +1,5 @@
 package code.comp261.ass1;
+
 import java.awt.Point;
 
 /**
@@ -29,12 +30,12 @@ public class Location {
 	private static final double CENTRE_LAT = -36.847622;
 	private static final double CENTRE_LON = 174.763444;
 
-	// how many kilometers per degree.    degree ----->  kilomes
+	// how many kilometers per degree.
 	private static final double SCALE_LAT = 111.0;
 	private static final double DEG_TO_RAD = Math.PI / 180;
 
 	// fields are public for easy access, but they are final so that the
-	// location is immutable. 
+	// location is immutable.
 	public final double x;
 	public final double y;
 
@@ -50,7 +51,7 @@ public class Location {
 	/**
 	 * Makes a new Point object from this Location object and returns it. To
 	 * create this Point, an origin location and the scale of the window are
-	 * required. Note the vertical direction is inverted 
+	 * required. Note the vertical direction is inverted
 	 */
 	public Point asPoint(Location origin, double scale) {
 		int u = (int) ((x - origin.x) * scale);

@@ -1,6 +1,7 @@
 package code.comp261.ass1;
+
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /*This class represent a colored polygon which is used to drawing a nicer map - parks, coastline,
@@ -14,11 +15,11 @@ public class Polygon {
 	public final Integer type, endLevel, cityIdx;
 	//every polygon drawing different places, so they should be unique. so I used set of polygon,
 	//the coordinates of each polygon is used a list to collect each point(location) of polygon
-	public final Set<ArrayList<Location>> positions;
+	public final Set<List<Location>> positions;
 	public final Color color;
 	/*constructor
 	 * */
-	public Polygon(Integer type, String label, Integer endLevel, Integer cityIdx, Set<ArrayList<Location>>positions){
+	public Polygon(Integer type, String label, Integer endLevel, Integer cityIdx, Set<List<Location>> positions){
 		this.type = type;
 		this.label = label;
 		this.endLevel = endLevel;
@@ -84,7 +85,7 @@ public class Polygon {
 	    //coordinate of centre of panel
         int centrXofPanel = (int) (dimension.getWidth()/2);
         int centrYofPanel = (int)(dimension.getHeight()/2);
-        for(ArrayList<Location> polygon: positions){
+        for(List<Location> polygon: positions){
             int  numberOfpointsOfPolygon= polygon.size();
             int[] xPoints = new int[numberOfpointsOfPolygon];
             int[] yPoints = new int[numberOfpointsOfPolygon];
