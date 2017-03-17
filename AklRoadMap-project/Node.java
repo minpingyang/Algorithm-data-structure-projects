@@ -4,20 +4,14 @@ package code.comp261.ass1;
  * @author MinPing
  * */
 
-import java.awt.Color;
-import java.util.HashSet;
-import java.util.Set;
+import java.awt.*;
 
-import javax.sound.sampled.Line;
 
-import org.omg.CORBA.portable.ValueBase;
-
-import code.comp261.example.Location;
 
 public class Node {
 	public final int nodeId;
 	public final Location location;
-	public final Set<RoadSegment> jointedSegments;
+
 	private Color color;
 	/*default color: blue;
 	 * selected corlor: orange;
@@ -26,7 +20,7 @@ public class Node {
 	public static final Color DEFAULT_COLOR = new Color(83, 141, 213);
 	public static final Color SELECTED_COLOR = new Color(255, 192, 0);
 	public static final Color NAVIGATION_COLOR = new Color(255, 0, 0);
-	public Set<Node> neighboursNode;
+
 	/*two constant for adjusting shape of node during the process of zooming
 	 * */
 	public static final int NODE_WIDTH = 1;
@@ -42,29 +36,29 @@ public class Node {
 		// use the newFromLation function defined in location class to transfer lat&lone --> Location Object
 		location = Location.newFromLatLon(lat, lon);
 		color = DEFAULT_COLOR;  //Initialise color
-		jointedSegments  = new HashSet<>();  //use set collections to collect the unique road segments in the collection
-		neighboursNode = new HashSet<>(); // same as the collection of segements. Neighbours of node are unique in the collection
+
 			
 	}
-	/**
-	 * fill neighbours of this node into the collection of neighbours node
-	 * 
-	 * */
-	public void setNeighbours() {
-		for (RoadSegment roadSegment : jointedSegments) {
-			Node neighbour =roadSegment.neighborNodeOfSegment(this);
-			neighboursNode.add(neighbour);
-		}
+	public void draw(Graphics graphics,Location currentOrigin, double currentScale, Dimension dimension){
+		//coordinators of centre of panel
+		int centrXofPanel = (int) (dimension.getWidth() / 2);
+		int centrYofPanel = (int) (dimension.getHeight() / 2);
+		// transfer Locations into Points
+		Point point = location.asPoint(currentOrigin,currentScale);
+		// changed Points after zooming
+		Point changedPoint =new Point(point.x + centrXofPanel, point.y + centrYofPanel);
+		//prevent changedPoints out of screen
+		if(changedPoint.x<0 || changedPoint.x> dimension.width || changedPoint.y <0 || changedPoint.y >dimension.height)
+			return;
+		int size = (int)(Math.log(currentScale)*NODE_LEAN + NODE_WIDTH);
+		graphics.setColor(color);
+		graphics.fillOval(changedPoint.x - size/2, changedPoint.y-size/2,size,size);
 	}
+	//override java documentation toString method
 	@Override
 	public String toString() {
-		String neighours = "";
-		int i =1;
-		for (Node node : neighboursNode){
-			neighours += i +") :" + node.nodeId + ".";
-			i++;
-		}
-		return "Node [nodeId =" + nodeId + ", neighbours =" + neighours + "]";
+
+		return "Node [nodeId =" + nodeId;
 		
 	}
 	
