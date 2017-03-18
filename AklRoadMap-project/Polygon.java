@@ -33,7 +33,7 @@ public class Polygon {
             this.color = new Color(232, 221, 189); // college
             break;
         case 0x0b:
-            this.color = new Color(235, 210, 207); // hospital
+           this.color = new Color(235, 210, 207); // hospital
             break;
         case 0x14:
         case 0x15:
@@ -49,7 +49,7 @@ public class Polygon {
         case 0x4f:
         case 0x50:
         case 0x51:
-            this.color = new Color(202, 223, 170); // green field
+          this.color = new Color(202, 223, 170); // green field
             break;
         case 0x28:
         case 0x29:
@@ -74,10 +74,11 @@ public class Polygon {
             this.color = new Color(179, 209, 255); // sea & ocean & lake,water places, etc
             break;
         case 0x53:
-            this.color = new Color(255, 225, 104); // sand
+           this.color = new Color(255, 225, 104); // sand
             break;
         default:
-            this.color = new Color(233, 229, 220);
+           this.color = new Color(233, 229, 220);
+         //   this.color = new Color(255,255,255);
         }
 				
 	}

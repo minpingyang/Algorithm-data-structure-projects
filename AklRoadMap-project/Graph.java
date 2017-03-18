@@ -19,7 +19,7 @@ public class Graph {
 
     RoadTrie roadTrie;
 
-    public static final double CLICKED_RANGE = 0.2;
+    public static final double CLICKED_RANGE = 0.18;
 
     public Graph(){
         nodeMap = new HashMap<>();
@@ -44,7 +44,7 @@ public class Graph {
         loadNodes(nodes);
 
         loadRoads(roads);
-        System.out.println("run road  sucess");
+        //System.out.println("run road  sucess");
         loadSegments(segments);
         //for security, since the user may click the small data folder
         if(polygons== null) return;
@@ -75,7 +75,7 @@ public class Graph {
     /*very similar to loadNode method
     * */
     private void loadRoads(File roads) {
-        int roadRun=0;
+       // int roadRun=0;
         BufferedReader bufferedReader;
         try {
             bufferedReader = new BufferedReader(new FileReader(roads));
@@ -88,7 +88,7 @@ public class Graph {
 
                 roadTrie.add(road.label + ","+ road.city,road);
                 line = bufferedReader.readLine(); // next line
-                System.out.println("loadRoad method run: "+(roadRun++));
+               // System.out.println("loadRoad method run: "+(roadRun++));
             }
             bufferedReader.close();
         } catch (FileNotFoundException e) {
@@ -114,7 +114,7 @@ public class Graph {
                 //node is indexed by its ID
                 roadMap.get(segment.roadId).roadSegments.add(segment);
                 line = bufferedReader.readLine(); // next line
-                System.out.println("segmentRun: "+(segmentRun++));
+                //System.out.println("segmentRun: "+(segmentRun++));
             }
             bufferedReader.close();
         } catch (FileNotFoundException e) {
@@ -154,7 +154,7 @@ public class Graph {
                         else if(line.startsWith("Data")){
                             // only get coordinators of the file without comma & brackets
                             String[] coordinators = line.substring(6).replace("(","").replace(")","").split(",");
-                            ArrayList<Location> list = new ArrayList<>();
+                            List<Location> list = new ArrayList<>();
                             for (int i = 0; i < coordinators.length;){
                                 double lat = Double.parseDouble(coordinators[i++]);
                                 double lon = Double.parseDouble(coordinators[i++]);
@@ -179,23 +179,38 @@ public class Graph {
     }
     //redraw method which is used after movement of map
     public void redraw(Graphics graphics, Location currentOrigin, double currentScale, Dimension dimension){
-       //redraw all nodes
-        for (Node node:nodeMap.values()){
-            node.draw(graphics,currentOrigin,currentScale,dimension);
-        }
+
         //redraw  road segments
-        for (RoadSegment segment: segmentSet){
-           segment.draw(graphics,currentOrigin,currentScale,dimension);
-       }
+        //redraw all nodes
 
-
+        //redraw should orderly, otherwise, polygons will cover roads and nodes
         if(!polygonSet.isEmpty()){
             for (Polygon polygon: polygonSet){
                 polygon.draw(graphics,currentOrigin,currentScale,dimension);
             }
         }
+
+        for (RoadSegment segment: segmentSet){
+            segment.draw(graphics,currentOrigin,currentScale,dimension);
+        }
+
+        for (Node node:nodeMap.values()){
+            node.draw(graphics,currentOrigin,currentScale,dimension);
+        }
+
     }
+
+    //store user input, and search matching roads with same prefix by tries data structure
+    public List<Road> search(String input){
+        return roadTrie.find(input);
+    }
+
+
+
+
+    //this method use for release mouse
     //find intersections by linear search
+
     //@param  location represents the location clicked
     public Node findClosest(Location location){
         //initialisation
@@ -216,10 +231,6 @@ public class Graph {
             return closestIntersection;
 
         //*******figure out quard-tree version later
-    }
-    //store user input, and search matching roads with same prefix by tries data structure
-    public List<Road> search(String input){
-        return roadTrie.find(input);
     }
 
 }

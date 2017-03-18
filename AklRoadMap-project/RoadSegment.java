@@ -3,18 +3,19 @@ package code.comp261.ass1;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.List;
 
 public class RoadSegment {
 	public final int roadId;  // which road contain the road segment
 	public Node startNode, endNode;  // ends of the segment
 	public final Road road;
 	public final double lengthOfSegment;
-	public final ArrayList<Location> coordsOfNodesOnTheSegment;
+	public final List<Location> coordsOfNodesOnTheSegment;
 	private Color color;
-	//same as color constant of Node class
+	//same  color constant as Node class
 	public static final Color DEFAULT_COLOUR = new Color(77, 127, 130);
     public static final Color CLICKED_COLOUR = new Color(255, 159, 7);
-    public static final Color NAVI_COLOUR = new Color(255, 23, 6);
+    public static final Color NAVI_COLOUR = new Color(177, 52, 52);
 	/**Í
 	 * constructor
 	 * nodes and roads both are indexed by their Id
@@ -48,8 +49,8 @@ public class RoadSegment {
       * */
      public void draw(Graphics graphics, Location currentOrigin, double currentScale, Dimension dimension){
     	 // coordinates of the centre of panel by using dimension class
-    	 int centrXofPanel = (int)(dimension.getWidth());
-    	 int centrYofPanel = (int)(dimension.getHeight());
+    	 int centrXofPanel = (int)(dimension.getWidth()/2);   //fixed !
+    	 int centrYofPanel = (int)(dimension.getHeight()/2);
     	 graphics.setColor(color);
     	 // last one is i+1, so loop condition should be < size-1
     	 for (int i = 0; i < coordsOfNodesOnTheSegment.size()-1; i++) {
@@ -69,6 +70,7 @@ public class RoadSegment {
     			 ||(changedInitialPoint.y < 0 && changeNextPoint.x <0)
     			 ||(changedInitialPoint.x>dimension.getHeight()&& changeNextPoint.x > dimension.getHeight()))		 
     			 return;
+
     		 graphics.drawLine(changedInitialPoint.x,changedInitialPoint.y, changeNextPoint.x, changeNextPoint.y);	
     		
 		}
