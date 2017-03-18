@@ -31,6 +31,11 @@ public abstract class GUI {
 
     // these are the methods you need to implement.
 
+
+
+    // NOTICE: MOSEHWELLEVENT  NOT MOSEEVENT
+        protected abstract void onScroll(MouseWheelEvent event);
+
     /**
      * Is called when the drawing area is redrawn and performs all the logic for
      * the actual drawing, which is done with the passed Graphics object.
@@ -53,7 +58,7 @@ public abstract class GUI {
      * object for that scroll.
      * made changes by minping
      */
-    protected abstract void onScroll(MouseWheelEvent e);
+
 
     protected abstract void onSearch();
 
