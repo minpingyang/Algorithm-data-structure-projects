@@ -68,9 +68,9 @@ public class RoadSegment {
     		 if ((changedInitialPoint.x < 0 && changeNextPoint.x <0)
     			 ||(changedInitialPoint.x>dimension.getWidth()&& changeNextPoint.x > dimension.getWidth())
     			 ||(changedInitialPoint.y < 0 && changeNextPoint.x <0)
-    			 ||(changedInitialPoint.x>dimension.getHeight()&& changeNextPoint.x > dimension.getHeight()))		 
-    			 return;
-
+    			 ||(changedInitialPoint.x>dimension.getHeight()&& changeNextPoint.x > dimension.getHeight())) {//return;
+                 continue;  //directly step over next loop at this point
+             }
     		 graphics.drawLine(changedInitialPoint.x,changedInitialPoint.y, changeNextPoint.x, changeNextPoint.y);	
     		
 		}
@@ -81,7 +81,7 @@ public class RoadSegment {
      		return null;
 
      	if (node.nodeId == startNode.nodeId)
-     		return node;
+     		return endNode;   // fixed~  return end node not node..
      	else
      		return startNode;
 	}
@@ -90,7 +90,7 @@ public class RoadSegment {
      * */
     @Override
     public String toString(){
-    	return "Segment [roadID ="+ roadId + ", startNode =" + startNode.nodeId + ", end node" + endNode.nodeId
-    			+", Road =" + road.roadId + ", coordinates =" + coordsOfNodesOnTheSegment.toString() + "]";
+    	return "Segment : roadID ="+ roadId + ", startNode =" + startNode.nodeId + ", end node" + endNode.nodeId
+    			+", Road =" + road.roadId + ", coordinates =" + coordsOfNodesOnTheSegment.toString() + ".";
     }
 }
