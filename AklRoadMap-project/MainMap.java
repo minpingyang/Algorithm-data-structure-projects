@@ -27,26 +27,29 @@ public class MainMap extends GUI {
 	private  Node clickedNode, startNod,endNode;
 	private  List<RoadSegment> pathsBetweenStartEnd;
 	private List<Road> clickedRoad;
-	//not sure if need
-	private Location locationOnDraged;
+
+
 	private  Location currentOrigin;
 	private  double currentScale;
 
+	public static void main(String[] args) {
+		new MainMap();
 
+	}
 	/**
 	 * constructor, initalise fields.
 	 * */
 	public MainMap(){
+		graph = new Graph();
 		clickedNode = null;
 		startNod = null;
 		endNode = null;
 		pathsBetweenStartEnd = new ArrayList<>();
 		clickedRoad = new ArrayList<>();
-		graph = new Graph();
 		currentOrigin = CENTREAKL;
-		//getDramingAreaDimension from GUI super class ,return the dimensions of the drawing area.
+		//getDrawingAreaDimension from GUI super class ,return the dimensions of the drawing area.
 		currentScale = Math.max(getDrawingAreaDimension().getHeight(),getDrawingAreaDimension().getWidth())/55;
-		locationOnDraged = null;
+
 	}
 	/**
 	 * display the information of nodes
@@ -110,6 +113,20 @@ public class MainMap extends GUI {
 		endNode.setColor(Node.NAVIGATION_COLOR);
 
 	}
+	private  void selectStarEndNode(Node nodeClicking){
+		//set last clicked node defalut color;
+		if(endNode != null){
+			endNode.setColor(Node.DEFAULT_COLOR);
+		}
+		if(clickedNode != null){
+			clickedNode.setColor(Node.DEFAULT_COLOR);
+			clickedNode = null;
+		}
+		// now, the current clicked node becomes the end node, highlight the end node to navigation color
+		endNode = nodeClicking;
+		endNode.setColor(Node.NAVIGATION_COLOR);
+
+	}
 //add a abstract "onScoll" method in GUI class which is similar to "onlick" method
 	// NOTICE: MOSEHWELLEVENT  NOT MOSEEVENT
 	@Override
@@ -123,10 +140,7 @@ public class MainMap extends GUI {
 	}
 
 
-	public static void main(String[] args) {
-		new MainMap();
 
-	}
 
 	@Override
 	protected void redraw(Graphics g) {
@@ -169,7 +183,7 @@ public class MainMap extends GUI {
 	private void displayRoadInfo(List<Road> clickedRoad) {
 		String lineSeparator = System.lineSeparator();
 		StringBuilder stringBuilder = new StringBuilder("Roads are found:"+ clickedRoad.size() + lineSeparator);
-		for (Road road: clickedRoad){
+		for (Road road : clickedRoad){
 			stringBuilder.append("RoadID: ")
 					.append(road.roadId).append(", Road Name: ")
 					.append(road.label).append(", City: ")
@@ -207,6 +221,7 @@ public class MainMap extends GUI {
 				break;
 			}  default: {
 				System.out.println("Should input right enum value");
+
 			}
 
 		}
@@ -216,8 +231,15 @@ public class MainMap extends GUI {
 	@Override
 	protected void onLoad(File nodes, File roads, File segments, File polygons) {
 		currentOrigin = CENTREAKL;
-		currentScale = Math.max(getDrawingAreaDimension().getHeight(),getDrawingAreaDimension().getWidth())/45;
-		
+		currentScale = Math.max(getDrawingAreaDimension().getHeight(),getDrawingAreaDimension().getWidth())/55;
+		//reset fields
+		clickedRoad = new ArrayList<>();
+		clickedNode = null;
+		startNod = null;
+		endNode = null;
+		pathsBetweenStartEnd =new ArrayList<>();
+		graph.onload(nodes,roads,segments,polygons);
+
 	}
 
 	/*

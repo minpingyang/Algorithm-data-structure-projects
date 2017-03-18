@@ -57,7 +57,9 @@ public class RoadTrie {
         string = string.trim(); // trim() is used to returns a copy of the string, with leading and trailing whitespace omitted.
         for(int i = 0 ; i < string.length(); i++){
             char c = string.charAt(i);  // only add one character of string as a key step by step
-            if (tempRootNode ==null){ tempRootNode = tempRootNode.children.put(c,new RoadTrieNode());}
+            if ( tempRootNode.children.get(c)==null){
+                tempRootNode.children.put(c,new RoadTrieNode());
+            }
             tempRootNode = tempRootNode.children.get(c);
         }
         tempRootNode.isMarked = true;

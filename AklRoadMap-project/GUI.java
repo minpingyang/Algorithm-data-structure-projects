@@ -33,14 +33,15 @@ public abstract class GUI {
 
 
 
-    // NOTICE: MOSEHWELLEVENT  NOT MOSEEVENT
-        protected abstract void onScroll(MouseWheelEvent event);
 
     /**
      * Is called when the drawing area is redrawn and performs all the logic for
      * the actual drawing, which is done with the passed Graphics object.
      */
     protected abstract void redraw(Graphics g);
+
+    // NOTICE: MOSEHWELLEVENT  NOT MOSEEVENT
+    protected abstract void onScroll(MouseWheelEvent event);
 
     /**
      * Is called when the mouse is clicked (actually, when the mouse is
@@ -124,8 +125,8 @@ public abstract class GUI {
     // understanding, you don't need to look any further to finish the
     // assignment up to and including completion.
     // --------------------------------------------------------------------
-
-    private static final boolean UPDATE_ON_EVERY_CHARACTER = false;
+// change UPDATE_ON_EVERY_CHARACTER to true,
+    private static final boolean UPDATE_ON_EVERY_CHARACTER = true;
 
     private static final int DEFAULT_DRAWING_HEIGHT = 400;
     private static final int DEFAULT_DRAWING_WIDTH = 400;

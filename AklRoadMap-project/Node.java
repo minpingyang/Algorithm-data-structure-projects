@@ -26,7 +26,7 @@ public class Node {
 	/*two constant for adjusting shape of node during the process of zooming
 	 * */
 	public static final int NODE_WIDTH = 1;
-	public static final double NODE_LEAN = 0.7;
+	public static final double NODE_LEAN = 0.6;
 	/*constructor
 	 * @parma string:  the data which is loaded from files
 	 * */

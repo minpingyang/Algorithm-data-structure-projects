@@ -18,7 +18,7 @@ public class Graph {
     Set<RoadSegment> segmentSet;
 
     RoadTrie roadTrie;
-    /// not too sure~
+
     public static final double CLICKED_RANGE = 0.2;
 
     public Graph(){
@@ -26,21 +26,25 @@ public class Graph {
         roadMap = new HashMap<>();
         polygonSet = new HashSet<>();
         roadTrie = new RoadTrie();
+        segmentSet = new HashSet<>();
     }
     /**
      * wrapper method for loading different files
-     * @param , roads, node,segments, polygons, which refer to their files
+     * @param , roads, nodes,segments, polygons, which refer to their files
      * */
-    public void load(File nodes, File roads, File segments, File polygons){
+    public void onload(File nodes, File roads, File segments, File polygons){
         // initialisation
         nodeMap = new HashMap<>();
         roadMap = new HashMap<>();
         polygonSet = new HashSet<>();
+        segmentSet =new HashSet<>(); // FIXED
         roadTrie = new RoadTrie();
 
 
         loadNodes(nodes);
+
         loadRoads(roads);
+        System.out.println("run road  sucess");
         loadSegments(segments);
         //for security, since the user may click the small data folder
         if(polygons== null) return;
@@ -48,6 +52,7 @@ public class Graph {
     }
 
     private void loadNodes(File nodes) {
+
         BufferedReader bufferedReader;
         try {
             bufferedReader = new BufferedReader(new FileReader(nodes));
@@ -57,6 +62,7 @@ public class Graph {
                 //node is indexed by its ID
                 nodeMap.put(node.nodeId,node);
                 line = bufferedReader.readLine(); // next line
+               // System.out.print("load node run: "+(nodeRun++));
             }
             bufferedReader.close();
         } catch (FileNotFoundException e) {
@@ -65,9 +71,11 @@ public class Graph {
             System.out.println("IO Exception");
         }
     }
+
     /*very similar to loadNode method
     * */
     private void loadRoads(File roads) {
+        int roadRun=0;
         BufferedReader bufferedReader;
         try {
             bufferedReader = new BufferedReader(new FileReader(roads));
@@ -77,7 +85,10 @@ public class Graph {
                 Road road =new Road(line);
                 //Road is indexed by its ID
                 roadMap.put(road.roadId,road);
+
+                roadTrie.add(road.label + ","+ road.city,road);
                 line = bufferedReader.readLine(); // next line
+                System.out.println("loadRoad method run: "+(roadRun++));
             }
             bufferedReader.close();
         } catch (FileNotFoundException e) {
@@ -88,17 +99,22 @@ public class Graph {
 
     }
     private void loadSegments(File segments) {
+        int segmentRun=0;
         BufferedReader bufferedReader;
         try {
             bufferedReader = new BufferedReader(new FileReader(segments));
             bufferedReader.readLine(); // skip the first line
             String line = bufferedReader.readLine();
+
             while (line!=null){
                 RoadSegment segment =new RoadSegment(line, nodeMap, roadMap);
                 segmentSet.add(segment);
+                segment.startNode.linkedSegments.add(segment);
+                segment.endNode.linkedSegments.add(segment);
                 //node is indexed by its ID
                 roadMap.get(segment.roadId).roadSegments.add(segment);
                 line = bufferedReader.readLine(); // next line
+                System.out.println("segmentRun: "+(segmentRun++));
             }
             bufferedReader.close();
         } catch (FileNotFoundException e) {
@@ -131,8 +147,11 @@ public class Graph {
                         else if(line.startsWith("Label")){
                             label = line.substring(6);
                         }else if(line.startsWith("EndLevel")){
-                            endLevel = Integer.parseInt(line.substring(8));
-                        }else if(line.startsWith("Data")){
+                            endLevel = Integer.parseInt(line.substring(9));
+                        }else if (line.startsWith("CityIdx")){
+                            cityIdx = Integer.parseInt(line.substring(8));
+                        }
+                        else if(line.startsWith("Data")){
                             // only get coordinators of the file without comma & brackets
                             String[] coordinators = line.substring(6).replace("(","").replace(")","").split(",");
                             ArrayList<Location> list = new ArrayList<>();
