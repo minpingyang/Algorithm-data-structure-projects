@@ -47,6 +47,14 @@ public abstract class GUI {
      * Is called whenever the search box is updated. Use getSearchBox to get the
      * JTextField object that is the search box itself.
      */
+
+    /**
+     * Is called when the mouse wheel is scrolled, and is passed the MouseEvent
+     * object for that scroll.
+     * made changes by minping
+     */
+    protected abstract void onScroll(MouseWheelEvent e);
+
     protected abstract void onSearch();
 
     /**
@@ -359,9 +367,11 @@ public abstract class GUI {
                 redraw();
             }
         });
-
+/**make changes on addMouseWheelListener**/
         drawing.addMouseWheelListener(new MouseAdapter() {
             public void mouseWheelMoved(MouseWheelEvent e) {
+                onScroll(e);
+                redraw();
             }
         });
 
