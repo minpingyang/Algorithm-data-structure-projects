@@ -13,9 +13,9 @@ public class RoadSegment {
 	private Color color;
 	//same as color constant of Node class
 	public static final Color DEFAULT_COLOUR = new Color(77, 127, 130);
-    public static final Color SELECT_COLOUR = new Color(255, 159, 7);
+    public static final Color CLICKED_COLOUR = new Color(255, 159, 7);
     public static final Color NAVI_COLOUR = new Color(255, 23, 6);
-	/**
+	/**Í
 	 * constructor
 	 * nodes and roads both are indexed by their Id
 	 * */
@@ -74,7 +74,15 @@ public class RoadSegment {
 		}
      }
      
+	public  Node otherNode(Node node){
+     	if(node.nodeId != startNode.nodeId && node.nodeId!= endNode.nodeId)
+     		return null;
 
+     	if (node.nodeId == startNode.nodeId)
+     		return node;
+     	else
+     		return startNode;
+	}
 
     /*show information of road segments
      * */

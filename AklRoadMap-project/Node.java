@@ -5,7 +5,8 @@ package code.comp261.ass1;
  * */
 
 import java.awt.*;
-
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class Node {
@@ -18,9 +19,10 @@ public class Node {
 	 * navigation: red
 	 * */
 	public static final Color DEFAULT_COLOR = new Color(83, 141, 213);
-	public static final Color SELECTED_COLOR = new Color(255, 192, 0);
+	public static final Color CLICKED_COLOR = new Color(255, 192, 0);
 	public static final Color NAVIGATION_COLOR = new Color(255, 0, 0);
-
+	public Set<Node> neighbourNodes;
+	public final Set<RoadSegment> linkedSegments;
 	/*two constant for adjusting shape of node during the process of zooming
 	 * */
 	public static final int NODE_WIDTH = 1;
@@ -36,6 +38,8 @@ public class Node {
 		// use the newFromLation function defined in location class to transfer lat&lone --> Location Object
 		location = Location.newFromLatLon(lat, lon);
 		color = DEFAULT_COLOR;  //Initialise color
+		linkedSegments = new HashSet<>();
+		neighbourNodes = new HashSet<>();
 
 			
 	}
@@ -67,6 +71,12 @@ public class Node {
 	public void setColor(Color color) {
 		this.color = color;
 	}
-		
+
+	public void setNeighbourNodes(){
+		for(RoadSegment segment: linkedSegments){
+			 Node otherNode = segment.otherNode(this);
+			 neighbourNodes.add(otherNode);
+		}
+	}
 		
 }
