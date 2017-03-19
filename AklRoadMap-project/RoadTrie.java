@@ -15,10 +15,10 @@ public class RoadTrie {
 
     //internal class
     public class RoadTrieNode{
-
+        public Map<Character, RoadTrieNode> children;
         public boolean isMarked;
         public Set<Road> roads;
-        public Map<Character, RoadTrieNode> children;
+
 
         //constructor of internal class
         public RoadTrieNode(){
@@ -32,9 +32,12 @@ public class RoadTrie {
         *
         * */
         public void getAllFromNode(List<Road> roads){
-            //exit condition of recursion
-            if(!isMarked || roads.isEmpty()) return;
-            roads.addAll(this.roads);  // 'this' represent which object call getAllFromNode
+
+            //// 'this' represent the object which call getAllFromNode
+            if(isMarked && !this.roads.isEmpty()) {
+                roads.addAll(this.roads);   //fixed
+            }
+
             //use recursion to store
             for(RoadTrieNode node: children.values()) {
                 node.getAllFromNode(roads);
@@ -57,27 +60,42 @@ public class RoadTrie {
         string = string.trim(); // trim() is used to returns a copy of the string, with leading and trailing whitespace omitted.
         for(int i = 0 ; i < string.length(); i++){
             char c = string.charAt(i);  // only add one character of string as a key step by step
-            if ( tempRootNode.children.get(c)==null){
-                tempRootNode.children.put(c,new RoadTrieNode());
-            }
+            if ( tempRootNode.children.get(c)==null) tempRootNode.children.put(c, new RoadTrieNode());
             tempRootNode = tempRootNode.children.get(c);
         }
-        tempRootNode.isMarked = true;
+
+         tempRootNode.isMarked = true;
         tempRootNode.roads.add(road);
+        // test add road if succeed
+        for(Road r: tempRootNode.roads){
+            System.out.println("add road:  "+r.label);
+        }
+
     }
+    // find a list of roads which matching input prefix
     public List<Road> find(String string){
 
         RoadTrieNode temRootNode = root;
-        string = string.trim();
+        string = string.trim();   //remove white space at the leading and trailling of the string
+        System.out.println("find string: "+string);
         for (int i = 0; i<string.length(); i++){
             char c = string.charAt(i);
+            //System.out.println("Trie Node children: "+(temRootNode.children.get(c)==null));
+            for(Road r: temRootNode.children.get(c).roads){
+                System.out.println("Find temRootNode.Children: "+r.label);
+            }
+
+
             if (temRootNode.children.get(c)!=null){
-                temRootNode.children.get(c);
+                //System.out.println("111111111");
+                temRootNode = temRootNode.children.get(c);   //fixed
+                //System.out.println("3333333"+(temRootNode==null));
+
             }else{
                 return null;
             }
         }
-        //use list instead of set, since list store data orderly
+
         List<Road> roads = new ArrayList<>();
         temRootNode.getAllFromNode(roads);
         return roads;
