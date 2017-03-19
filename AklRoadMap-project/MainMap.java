@@ -150,7 +150,19 @@ public class MainMap extends GUI {
 
 	@Override
 	protected void onClick(MouseEvent e) {
+	    currentOrigin = CENTREAKL;
 
+        Point pointClicking = e.getPoint();   // changed Current Point location into a betterPoint base on  central of panel as origin
+        Point betterPoint = new Point (pointClicking.x - (int) (getDrawingAreaDimension().getWidth()/2),
+                pointClicking.y - (int) (getDrawingAreaDimension().getHeight()/2));
+
+        Location locationClicking =Location.newFromPoint(betterPoint,currentOrigin,currentScale);
+        Node nodeClicking = graph.findClosest(locationClicking);
+        if(nodeClicking != null){
+            this.clickdeNode(nodeClicking);
+        }else{
+            getTextOutputArea().setText(null);
+        }
 	}
 
 	@Override
@@ -192,7 +204,7 @@ public class MainMap extends GUI {
 		// getTextOutputArea() return--->JTextArea.setText
 		getTextOutputArea().setText(stringBuilder.toString());
 	}
-
+//change currentOrigin and currentScale
 	@Override
 	protected void onMove(Move m) {
 		Dimension dimension = getDrawingAreaDimension();
