@@ -16,6 +16,7 @@ public class RoadSegment {
 	public static final Color DEFAULT_COLOUR = new Color(77, 127, 130);
     public static final Color CLICKED_COLOUR = new Color(255, 159, 7);
     public static final Color NAVI_COLOUR = new Color(177, 52, 52);
+    public  int count=0;
 	/**Í
 	 * constructor
 	 * nodes and roads both are indexed by their Id
@@ -68,9 +69,11 @@ public class RoadSegment {
     		 if ((changedInitialPoint.x < 0 && changeNextPoint.x <0)
     			 ||(changedInitialPoint.x>dimension.getWidth()&& changeNextPoint.x > dimension.getWidth())
     			 ||(changedInitialPoint.y < 0 && changeNextPoint.x <0)
-    			 ||(changedInitialPoint.x>dimension.getHeight()&& changeNextPoint.x > dimension.getHeight())) {//return;
-                 continue;  //directly step over next loop at this point
+    			 ||(changedInitialPoint.y>dimension.getHeight()&& changeNextPoint.y > dimension.getHeight())) {//return;
+                 continue;  //directly step over next loop at this point    //fixed! x--> y for height
              }
+
+             System.out.println("draw segement"+(count++));
     		 graphics.drawLine(changedInitialPoint.x,changedInitialPoint.y, changeNextPoint.x, changeNextPoint.y);	
     		
 		}

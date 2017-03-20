@@ -153,6 +153,7 @@ public class MainMap extends GUI {
 	    currentOrigin = CENTREAKL;
 
         Point pointClicking = e.getPoint();   // changed Current Point location into a betterPoint base on  central of panel as origin
+        //since ,draw Node and Road based on centralOfpanel.
         Point betterPoint = new Point (pointClicking.x - (int) (getDrawingAreaDimension().getWidth()/2),
                 pointClicking.y - (int) (getDrawingAreaDimension().getHeight()/2));
 
@@ -169,8 +170,10 @@ public class MainMap extends GUI {
 	protected void onSearch() {
 		//getSearchBox() given by GUI class, which return a JTextFiled, then use JTextFiled call its method "getText()"
 	 	String string = getSearchBox().getText();
-	 	List<Road> roadsFound = graph.search(string);
-	 	if(roadsFound == null || roadsFound.isEmpty()){
+	 	System.out.println("typed in: "+string);
+	 	List<Road> foundRoads = graph.search(string);
+	 	if(foundRoads == null || foundRoads.isEmpty()){
+	 	    System.out.println("Roads were not found");
 			return;
 		}
 		//if roads are already search before, then recovery selectedRoad back to initial color
@@ -183,7 +186,11 @@ public class MainMap extends GUI {
 			}
 		}
 		//Otherwise, highlight clickedRoad
-		clickedRoad = roadsFound;
+		clickedRoad = foundRoads;
+		for (Road r: clickedRoad){
+            System.out.println("Clicked Road: "+r.label);
+        }
+
 		for (Road road: clickedRoad){
 			for (RoadSegment roadSegment: road.roadSegments){
 				roadSegment.setColor(RoadSegment.CLICKED_COLOUR);

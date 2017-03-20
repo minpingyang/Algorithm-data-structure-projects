@@ -44,7 +44,7 @@ public class Graph {
         loadNodes(nodes);
 
         loadRoads(roads);
-        //System.out.println("run road  sucess");
+        //System.out.println("run road  success");
         loadSegments(segments);
         //for security, since the user may click the small data folder
         if(polygons== null) return;
@@ -99,7 +99,7 @@ public class Graph {
 
     }
     private void loadSegments(File segments) {
-        int segmentRun=0;
+        //int segmentRun=0;
         BufferedReader bufferedReader;
         try {
             bufferedReader = new BufferedReader(new FileReader(segments));
@@ -114,7 +114,7 @@ public class Graph {
                 //node is indexed by its ID
                 roadMap.get(segment.roadId).roadSegments.add(segment);
                 line = bufferedReader.readLine(); // next line
-                //System.out.println("segmentRun: "+(segmentRun++));
+               // System.out.println("segmentRun: "+(segmentRun++));
             }
             bufferedReader.close();
         } catch (FileNotFoundException e) {
@@ -202,6 +202,8 @@ public class Graph {
 
     //store user input, and search matching roads with same prefix by tries data structure
     public List<Road> search(String input){
+
+
         return roadTrie.find(input);
     }
 
@@ -225,7 +227,7 @@ public class Graph {
         }
         // if closestIntersection exist, then return the intersection node
         // to be used for highlight, and it can be clicked
-        if(location.distance(closestIntersection.location)>CLICKED_RANGE||closestIntersection==null)
+        if(closestIntersection==null)
             return null;
         else
             return closestIntersection;
