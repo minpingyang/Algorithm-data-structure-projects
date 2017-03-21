@@ -17,7 +17,7 @@ public class ConwaysReproductionRule extends ConwayAbstractRule {
 	@Override
 	public int apply(int x, int y, int neighbours) {
 		if(neighbours == 3){
-			return ConwayAbstractRule.board.getCellState(x, y) + GET_YOUNGER;		
+			return ConwayAbstractRule.ALIVE;	
 		}
 		return Rule.NOT_APPLICABLE;		
 	}

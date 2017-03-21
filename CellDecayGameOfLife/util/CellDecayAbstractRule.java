@@ -1,25 +1,27 @@
+
 package swen221.lab2.util;
 
 import swen221.lab2.model.*;
 
 /**
- * Implements a standard class for implementing the standard rules for Conway's
+ * Implements a standard class for implementing the standard rules for CellDecay's
  * game of life. Specifically, those based around the number of neighbours which
  * are alive. In the standard game, cell's are either ON or OFF which, in our
- * customizable version of Conway, corresponds to state 0 and state 9.
+ * customizable version of CellDecay, corresponds to state 0 and state 9.
  */
-public abstract class ConwayAbstractRule implements Rule{
-	public final static int GET_YOUNGER = -1;  //fixed
-    public final static int GET_OLDER = 1;//fixed
+public abstract class CellDecayAbstractRule implements Rule{
+	public final static int STATE_DECRESE = -1;
+	public final static int STATE_INCRESE = 1;
+    public static BoardView boardView;
     
-	public final static int ALIVE = 0;
 	public final static int DEAD = 9;
-	public static BoardView board; //fixed
+
 	
 	@Override
 	public int apply(int x, int y, BoardView board) {
-		int count = 0;  //fixed
-		ConwayAbstractRule.board = board; //fixed
+		int count = 0;
+		
+		CellDecayAbstractRule.boardView = board;
 		// top row
 		count += getNumAlive(x-1,y-1,board);
 		count += getNumAlive(x,y-1,board);
