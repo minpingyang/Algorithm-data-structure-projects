@@ -1,6 +1,6 @@
 package swen221.lab2.rules;
 
-import swen221.lab2.CellDecayGameOfLife;
+
 import swen221.lab2.model.*;
 import swen221.lab2.util.ConwayAbstractRule;
 
