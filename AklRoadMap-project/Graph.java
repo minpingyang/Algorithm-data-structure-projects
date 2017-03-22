@@ -1,81 +1,86 @@
 package code.comp261.ass1;
-
 import java.awt.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
 
-/*
-* Graph class will load files, store information into
-* graph(data structure needed),Display (part of graph
-* in the drawing area), Redraw the graph after movement(left,right, zoom in/out)
-* @author Minping
-* */
-public class Graph {
-    Map<Integer,Node> nodeMap;
+/**
+ * Graph class do two things: load files and draw stuff.
+ *
+ * include the heaps of onLoad methods corresponding to different files(roade, node, polygon, etc)
+ * do the redraw method as well.
+ *
+ * @author Minping
+ * **/
+
+public class Graph{
+    //use map collection to store nodes and roads by indexing their ID number
+    //use Set for segment and polygon, since the order of segments and polygons does not matter. Set can prevent duplicates data
+    //higher efficiency compare to List
+    Map<Integer,Node> nodeMap;  // used for searching closest node by its node
     Map<Integer,Road> roadMap;
-    Set<Polygon> polygonSet;
-    Set<RoadSegment> segmentSet;
+    Set<RoadSegment> roadSegmentSet;
+    Set<Polygon>polygonSet;
 
-    RoadTrie roadTrie;
-
-    public static final double CLICKED_RANGE = 0.18;
-
+    /**constructor**/
     public Graph(){
+        //initialise filed
         nodeMap = new HashMap<>();
         roadMap = new HashMap<>();
         polygonSet = new HashSet<>();
-        roadTrie = new RoadTrie();
-        segmentSet = new HashSet<>();
+        roadSegmentSet= new HashSet<>();
     }
     /**
-     * wrapper method for loading different files
-     * @param , roads, nodes,segments, polygons, which refer to their files
-     * */
-    public void onload(File nodes, File roads, File segments, File polygons){
-        // initialisation
+     * a wrapper method for different small onload methods
+     * ***/
+    public void onload(File nodeFile, File roadFile, File segmentFile, File polygonFile){
+        //initialise all field before we use those filed in load methods
         nodeMap = new HashMap<>();
         roadMap = new HashMap<>();
         polygonSet = new HashSet<>();
-        segmentSet =new HashSet<>(); // FIXED
-        roadTrie = new RoadTrie();
+        roadSegmentSet =new HashSet<>();
 
-
-        loadNodes(nodes);
-
-        loadRoads(roads);
-        //System.out.println("run road  success");
-        loadSegments(segments);
-        //for security, since the user may click the small data folder
-        if(polygons== null) return;
-        loadPolygons(polygons);
+        loadNodes(nodeFile);
+        loadRoads(roadFile);
+        loadRoadSegments(segmentFile);
+        //small data fold probably does not exist polygon file. So should check if it exist first
+        if(polygonFile == null) return;
+        loadPolygons(polygonFile);
     }
-
-    private void loadNodes(File nodes) {
+/**
+ * using bufferReader to read the file line by line
+ *this loadnode method is just used to get one line of information of the Node,
+ * then put the node constructor to deal with
+ ***/
+    private void loadNodes(File nodeFile) {
 
         BufferedReader bufferedReader;
         try {
-            bufferedReader = new BufferedReader(new FileReader(nodes));
+            bufferedReader = new BufferedReader(new FileReader(nodeFile));
             String line = bufferedReader.readLine();
             while (line!=null){
+                //pass the whole line information of the node to the node object, which constructor can sort the information properly
                 Node node =new Node(line);
                 //node is indexed by its ID
                 nodeMap.put(node.nodeId,node);
-                line = bufferedReader.readLine(); // next line
-               // System.out.print("load node run: "+(nodeRun++));
+                line = bufferedReader.readLine(); // next line for next literation
+                // System.out.print("load node run: "+(nodeRun++));
             }
             bufferedReader.close();
         } catch (FileNotFoundException e) {
-            System.out.println(nodes+ "File has not been found");
+            System.out.println(nodeFile+ "File has not been found");
         } catch (IOException e) {
             System.out.println("IO Exception");
         }
     }
 
-    /*very similar to loadNode method
-    * */
+    /**
+     * using bufferReader to read the file line by line
+     *this loadRoad method is just used to get one line of information of Road,
+     * then put the Road constructor to deal with
+     ***/
     private void loadRoads(File roads) {
-       // int roadRun=0;
+        // int roadRun=0;
         BufferedReader bufferedReader;
         try {
             bufferedReader = new BufferedReader(new FileReader(roads));
@@ -86,9 +91,9 @@ public class Graph {
                 //Road is indexed by its ID
                 roadMap.put(road.roadId,road);
 
-                roadTrie.add(road.label + ","+ road.city,road);
+                //roadTrie.add(road.label + ","+ road.city,road);
                 line = bufferedReader.readLine(); // next line
-               // System.out.println("loadRoad method run: "+(roadRun++));
+                // System.out.println("loadRoad method run: "+(roadRun++));
             }
             bufferedReader.close();
         } catch (FileNotFoundException e) {
@@ -98,7 +103,14 @@ public class Graph {
         }
 
     }
-    private void loadSegments(File segments) {
+    /**
+     * using bufferReader to read the file line by line
+     *Due to the information is chunk by chunk instead of line by line in the RoadSegments file,
+     * this load method will sort every information properly first, then put values of temporary variables into
+     * RoadSegments constructor
+     *
+     ***/
+    private void loadRoadSegments(File segments) {
         //int segmentRun=0;
         BufferedReader bufferedReader;
         try {
@@ -108,13 +120,13 @@ public class Graph {
 
             while (line!=null){
                 RoadSegment segment =new RoadSegment(line, nodeMap, roadMap);
-                segmentSet.add(segment);
+                roadSegmentSet.add(segment);
                 segment.startNode.linkedSegments.add(segment);
                 segment.endNode.linkedSegments.add(segment);
                 //node is indexed by its ID
                 roadMap.get(segment.roadId).roadSegments.add(segment);
                 line = bufferedReader.readLine(); // next line
-               // System.out.println("segmentRun: "+(segmentRun++));
+                // System.out.println("segmentRun: "+(segmentRun++));
             }
             bufferedReader.close();
         } catch (FileNotFoundException e) {
@@ -123,6 +135,13 @@ public class Graph {
             System.out.println("IO Exception");
         }
     }
+    /**
+     * using bufferReader to read the file line by line
+     *Due to the information is chunk by chunk instead of line by line in the RoadSegments file,
+     *this load method will sort every information properly first, then put values of temporary variables into
+     *Polygon constructor
+     *
+     ***/
     private void loadPolygons(File polygons) {
         BufferedReader bufferedReader;
         try {
@@ -164,9 +183,9 @@ public class Graph {
                         }
                         line =bufferedReader.readLine();  // go to the next line within one polygon data
                     }
-                 polygonSet.add(new Polygon(type,label,endLevel,cityIdx,locations));
-                 bufferedReader.readLine();    // skip the empty line between each polygon;
-                 line = bufferedReader.readLine();
+                    polygonSet.add(new Polygon(type,label,endLevel,cityIdx,locations));
+                    bufferedReader.readLine();    // skip the empty line between each polygon;
+                    line = bufferedReader.readLine();
                 }
             }
             bufferedReader.close();
@@ -177,7 +196,11 @@ public class Graph {
         }
 
     }
-    //redraw method which is used after movement of map
+    /***
+     * The redraw method is used by MainMap class
+     * Meantime. it calls draw methods of polygon, RoadSegment, node orderly,
+     * Since, draw big stuff first, which prevent covering the drawing of small stuff
+     * *******/
     public void redraw(Graphics graphics, Location currentOrigin, double currentScale, Dimension dimension){
 
         //redraw  road segments
@@ -190,7 +213,7 @@ public class Graph {
             }
         }
 
-        for (RoadSegment segment: segmentSet){
+        for (RoadSegment segment: roadSegmentSet){
             segment.draw(graphics,currentOrigin,currentScale,dimension);
         }
 
@@ -199,25 +222,15 @@ public class Graph {
         }
 
     }
-
-    //store user input, and search matching roads with same prefix by tries data structure
-    public List<Road> search(String input){
-
-
-        return roadTrie.find(input);
-    }
-
-
-
-
-    //this method use for release mouse
-    //find intersections by linear search
-
-    //@param  location represents the location clicked
-    public Node findClosest(Location location){
+    /**
+     * This method is used to find the closest node of the passing parameter location
+     * It is used by onClick method of MainMap class
+     * **/
+    public Node findClosestNode(Location location){
         //initialisation
         double shortestPath = Double.MAX_VALUE;
         Node closestIntersection = null;
+
         for (Node node: nodeMap.values()){
             double distance = location.distance(node.location);
             if(distance<shortestPath){
@@ -235,5 +248,11 @@ public class Graph {
         //*******figure out quard-tree version later
     }
 
+    /***
+     * store user input, and search matching roads with same prefix by tries data structure
+     * return list of Roads which are matching roads with same prefix
+     * ****/
+    public List<Road> search(String input){
+        return roadTrie.find(input);
+    }
 }
-

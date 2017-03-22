@@ -2,98 +2,104 @@ package code.comp261.ass1;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
-public class RoadSegment {
-	public final int roadId;  // which road contain the road segment
-	public Node startNode, endNode;  // ends of the segment
+
+
+public class RoadSegment{
+	//the road which the segments belong to
 	public final Road road;
+	//id of the road which the segments belong to
+	public final int roadId;
+	//two ends of the segments
+	public Node startNode, endNode;
+	//length of the segment
 	public final double lengthOfSegment;
+	//(x,y) the order of the coordinatorOfSegments is very important, so I use List instead of Set
 	public final List<Location> coordsOfNodesOnTheSegment;
+	//highlight segments when we type in on the search box the segment matching the same prefix
 	private Color color;
-	//same  color constant as Node class
-	public static final Color DEFAULT_COLOUR = new Color(77, 127, 130);
-    public static final Color CLICKED_COLOUR = new Color(222, 3, 255);
-    public static final Color NAVI_COLOUR = new Color(177, 52, 52);
-    public  int count=0;
-	/**Í
-	 * constructor
-	 * nodes and roads both are indexed by their Id
-	 * */
-    public RoadSegment(String data, Map<Integer, Node> nodeMap, Map<Integer, Road>roadMap) {
-		coordsOfNodesOnTheSegment = new ArrayList<>();
+	public static final Color DEFAULT_COLOUR = new Color(132, 130, 147);
+	public static final Color CLICKED_COLOUR = new Color(222, 3, 255);
+	/**constructor
+	 * This is used by loadSegment method of Graph class
+	 * **/
+	public RoadSegment(String data, Map<Integer, Node> nodeMap, Map<Integer, Road>roadMap){
+
+
 		String[] values = data.split("\t");
 		roadId = Integer.parseInt(values[0]);
 		road = roadMap.get(roadId);
 		lengthOfSegment = Double.parseDouble(values[1]);
 		startNode = nodeMap.get(Integer.parseInt(values[2]));
+
+		endNode = nodeMap.get(Integer.parseInt(values[3]));
+		//initialise
+		coordsOfNodesOnTheSegment = new ArrayList<>();
 		//the location of start node is added as first element in the collection
 		coordsOfNodesOnTheSegment.add(startNode.location);
-		endNode = nodeMap.get(Integer.parseInt(values[3]));
-		//add all coordinates into the ArrayList
+		//add other coordinates into the ArrayList
 		for (int i = 4; i < values.length;) {
 			double lat = Double.parseDouble(values[i++]);
 			double lon = Double .parseDouble(values[i++]);
 			coordsOfNodesOnTheSegment.add(Location.newFromLatLon(lat, lon));
 		}
 		coordsOfNodesOnTheSegment.add(endNode.location);
-		color = DEFAULT_COLOUR;		
+		color = DEFAULT_COLOUR;
 	}
-    /*color setter
-     * */
-     public void setColor(Color color){
-    	 this.color = color;
-     }
-     /*draw() -------> draw the segment
-      * 
-      * */
-     public void draw(Graphics graphics, Location currentOrigin, double currentScale, Dimension dimension){
-    	 // coordinates of the centre of panel by using dimension class
-    	 int centrXofPanel = (int)(dimension.getWidth()/2);   //fixed !
-    	 int centrYofPanel = (int)(dimension.getHeight()/2);
-    	 graphics.setColor(color);
-    	 // last one is i+1, so loop condition should be < size-1
-    	 for (int i = 0; i < coordsOfNodesOnTheSegment.size()-1; i++) {
-			// Transfer all the coordinate of the Node on the segment ------> Point object ----> easy to draw
-    		 // Notice: the position of Points are changed after zooming in or zooming out either
-    		 //we need to change the location the a pair of nodes which are linked with same segments at same time
-    		 // to ensure the location of point changing with segment length changing after zooming in or zoom out
-    		 Point initialPoint = coordsOfNodesOnTheSegment.get(i).asPoint(currentOrigin, currentScale);
-    		 Point nextPoint = coordsOfNodesOnTheSegment.get(i+1).asPoint(currentOrigin, currentScale);
-    		 
-    		 Point changedInitialPoint = new Point(initialPoint.x + centrXofPanel, initialPoint.y+centrYofPanel);
-    		 Point changeNextPoint = new Point(nextPoint.x+centrXofPanel, nextPoint.y+centrYofPanel);
-    	 //for security, prevent from drawing will be out of screen
 
-    		 if ((changedInitialPoint.x < 0 && changeNextPoint.x <0)
-    			 ||(changedInitialPoint.x>dimension.getWidth()&& changeNextPoint.x > dimension.getWidth())
-    			 ||(changedInitialPoint.y < 0 && changeNextPoint.x <0)
-    			 ||(changedInitialPoint.y>dimension.getHeight()&& changeNextPoint.y > dimension.getHeight())) {//return;
-                 continue;  //directly step over next loop at this point    //fixed! x--> y for height
-             }
+	/***
+	 * draw the road segments based on center of display panel
+	 * use graphics class to drawLine and set Color
+	 * draw the line between the two adjacent points
+	 * asPoint method has already concerned about scale changing
+	 * ******/
 
-             System.out.println("draw segement"+(count++));
-    		 graphics.drawLine(changedInitialPoint.x,changedInitialPoint.y, changeNextPoint.x, changeNextPoint.y);	
-    		
+	public void draw(Graphics graphics, Location currentOrigin, double currentScale, Dimension dimension){
+		// coordinates of the centre of panel by using dimension class
+		int centrXofPanel = (int)(dimension.getWidth()/2);   //fixed !
+		int centrYofPanel = (int)(dimension.getHeight()/2);
+		graphics.setColor(color);
+		// last one is i+1, so loop condition should be < size-1
+		for (int i = 0; i < coordsOfNodesOnTheSegment.size()-1; i++) {
+
+			Point initialPoint = coordsOfNodesOnTheSegment.get(i).asPoint(currentOrigin, currentScale);
+			Point nextPoint = coordsOfNodesOnTheSegment.get(i+1).asPoint(currentOrigin, currentScale);
+			// create the changed points of polygon base on centre of display panel as origin, not left-top original
+			Point changedInitialPoint = new Point(initialPoint.x + centrXofPanel, initialPoint.y+centrYofPanel);
+			Point changeNextPoint = new Point(nextPoint.x+centrXofPanel, nextPoint.y+centrYofPanel);
+			//for security, prevent from drawing will be out of screen
+
+			if ((changedInitialPoint.x < 0 && changeNextPoint.x <0)
+					||(changedInitialPoint.x>dimension.getWidth()&& changeNextPoint.x > dimension.getWidth())
+					||(changedInitialPoint.y < 0 && changeNextPoint.x <0)
+					||(changedInitialPoint.y>dimension.getHeight()&& changeNextPoint.y > dimension.getHeight())) {//return;
+				continue;  //directly step over next loop at this point    //fixed! x--> y for height
+			}
+
+			//System.out.println("draw segement"+(count++));
+			graphics.drawLine(changedInitialPoint.x,changedInitialPoint.y, changeNextPoint.x, changeNextPoint.y);
+
 		}
-     }
-     
-	public  Node otherNode(Node node){
-     	if(node.nodeId != startNode.nodeId && node.nodeId!= endNode.nodeId)
-     		return null;
-
-     	if (node.nodeId == startNode.nodeId)
-     		return endNode;   // fixed~  return end node not node..
-     	else
-     		return startNode;
+	}
+	/**set segments color**/
+	public void setColor(Color color){
+		this.color = color;
 	}
 
-    /*show information of road segments
-     * */
-    @Override
-    public String toString(){
-    	return "Segment : roadID ="+ roadId + ", startNode =" + startNode.nodeId + ", end node" + endNode.nodeId
-    			+", Road =" + road.roadId + ", coordinates =" + coordsOfNodesOnTheSegment.toString() + ".";
-    }
+	/**
+	 * just return the other end(/start) node of the segment
+	 *
+	 * */
+	public  Node neighbourNode(Node node){
+		if(node.nodeId != startNode.nodeId && node.nodeId!= endNode.nodeId)
+			return null;
+
+		if (node.nodeId == startNode.nodeId)
+			return endNode;   // fixed~  return end node not node..
+		else
+			return startNode;
+	}
+
 }

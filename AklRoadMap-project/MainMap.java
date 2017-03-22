@@ -1,5 +1,6 @@
 package code.comp261.ass1;
 
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -9,226 +10,98 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * MainMap is the main class of the Java app
+ *
+ * This class will extend GUI class, and implement the GUI class methods.
+ * In addition, use pretty much all of the object I created to achieve those implementing methods.
+ *
+ *
+ * @author Minping
+ * */
 
-public class MainMap extends GUI {
+public class MainMap extends GUI{
+    //declare all filed and instance of the Mainmap class
 
-    Graph graph;
-
-    // the center of Auckland City according to Location class
-    private  static final double FACTOR_MOVE = 12.3;
+    //the lat-lon constants for the centre of Auckland, which references from "Location" class
     private static final double CENTRE_LAT = -36.847622;
     private static final double CENTRE_LON = 174.763444;
-    //declare the constant factor and limitation of zooming
-    private  static final double MIN_ZOOMING = 6, MAX_ZOOMING = 780;
-    private  static final double ZOOM_COEFFICENT = 1.5;
-    //the location object of Auckland city
+
+    //transfer lat-lon of AKL centre into "location" object
     private static  final Location CENTREAKL= Location.newFromLatLon(CENTRE_LAT,CENTRE_LON);
 
-    private  Node clickedNode, startNod,endNode;
-    private  List<RoadSegment> pathsBetweenStartEnd;
-    private List<Road> clickedRoad;
+    //constants for zooming function. those constants could be changed into a better one tho.
+    private  static final double MIN_ZOOMING = 6, MAX_ZOOMING = 780;
+    private  static final double ZOOM_COEFFICENT = 1.5;
+    // the constant factor of moving
+    private  static final double FACTOR_MOVE = 12.3;
 
-
+    //the node object will be clicked by mouse
+    private  Node clickedNode;
+    private List<Road> clickedRoads; // the roads which the clickNode belong to, probably more than one.
+    //declare currentOrigin and scale, they would be changed after movement(left right zooming)
     private  Location currentOrigin;
     private  double currentScale;
+    //Graph object is used to implement "onload" method and "drawing" method.
+    Graph graph;
 
+    /**main method**/
     public static void main(String[] args) {
         new MainMap();
-
     }
-    /**
-     * constructor, initalise fields.
-     * */
+    /**constructor**/
     public MainMap(){
+        //initialise filed
         graph = new Graph();
+        clickedRoads = new ArrayList<>();
         clickedNode = null;
-        startNod = null;
-        endNode = null;
-        pathsBetweenStartEnd = new ArrayList<>();
-        clickedRoad = new ArrayList<>();
+        //set initial origin to Auckland centre which is a location object;
         currentOrigin = CENTREAKL;
-        //getDrawingAreaDimension from GUI super class ,return the dimensions of the drawing area.
+        //the initial scale is related on current display panel. 55 is a good constant factor by testing.
         currentScale = Math.max(getDrawingAreaDimension().getHeight(),getDrawingAreaDimension().getWidth())/55;
+    }
+    /**
+     * core part; which is read the files of the chosen folder
+     * Meantime, intialise all the filed of the class.(which is pretty much similar to constructor)
+     * In particularly, call the onload method of graph passing all the files
+     * **/
+    @Override
+    protected void onLoad(File nodes, File roads, File segments, File polygons) {
+        currentOrigin = CENTREAKL;
+        currentScale = Math.max(getDrawingAreaDimension().getHeight(),getDrawingAreaDimension().getWidth())/55;
+        //reset fields
+        clickedRoads = new ArrayList<>();
+        clickedNode = null;
+        graph.onload(nodes,roads,segments,polygons);
 
     }
     /**
-     * display the information of nodes
-     * */
-    private void displayNodeInfo(Node nodeClicking){
-        int count = 1; //count
-        // line Separator is =======> "\n" new line in C
-        String lineSeparator = System.lineSeparator();
-        StringBuilder stringBuilder = new StringBuilder("Click on Node which ID is: "+nodeClicking.nodeId
-                + lineSeparator + "Roads the intersection belong to: " + lineSeparator);
-        Set<String> infoSet =new HashSet<>();
-        for(RoadSegment roadSegment: nodeClicking.linkedSegments){
-            String string = roadSegment.road.label +","+ roadSegment.road.city + ", road ID: "+roadSegment.roadId;
-            if(!infoSet.contains(string))
-                infoSet.add(string);
-        }
-        for (String string:infoSet){
-            stringBuilder.append("(").append(count++).append(")").append(string).append(lineSeparator);
-        }
-        getTextOutputArea().setText(stringBuilder.toString());
-
-    }
-
-    /** highlight and display information of clicked node
-     *
-     * */
-
-    public  void clickdeNode(Node nodeClicking){
-        //set last clicked node as default color
-        //initial the color of special Node
-        if(clickedNode!=null)
-            clickedNode.setColor(Node.DEFAULT_COLOR);
-        if (startNod!= null) {
-            startNod.setColor(Node.DEFAULT_COLOR);
-            startNod = null;  //prevent repeated operations
-        }
-        if(endNode!=null){
-            endNode.setColor(Node.DEFAULT_COLOR);
-            endNode = null; //prevent repeated operations
-        }
-        if(!pathsBetweenStartEnd.isEmpty()){
-            for (RoadSegment roadSegment: pathsBetweenStartEnd){
-                roadSegment.setColor(roadSegment.DEFAULT_COLOUR);
-            }
-        }
-        clickedNode = nodeClicking;
-        clickedNode.setColor(Node.CLICKED_COLOR);
-        displayNodeInfo(clickedNode);
-    }
-
-    
-    private  void selectStartNode(Node nodeClicking){
-        //set last clicked node defalut color;
-        if(startNod != null){
-            startNod.setColor(Node.DEFAULT_COLOR);
-        }
-        if(clickedNode != null){
-            clickedNode.setColor(Node.DEFAULT_COLOR);
-            clickedNode = null;
-        }
-        // now, the current clicked node becomes the end node, highlight the end node to navigation color
-        endNode = nodeClicking;
-        endNode.setColor(Node.NAVIGATION_COLOR);
-
-    }
-    private  void selectStarEndNode(Node nodeClicking){
-        //set last clicked node defalut color;
-        if(endNode != null){
-            endNode.setColor(Node.DEFAULT_COLOR);
-        }
-        if(clickedNode != null){
-            clickedNode.setColor(Node.DEFAULT_COLOR);
-            clickedNode = null;
-        }
-        // now, the current clicked node becomes the end node, highlight the end node to navigation color
-        endNode = nodeClicking;
-        endNode.setColor(Node.NAVIGATION_COLOR);
-
-    }
-    //add a abstract "onScoll" method in GUI class which is similar to "onlick" method
-    // NOTICE: MOSEHWELLEVENT  NOT MOSEEVENT
-    @Override
-    protected void onScroll(MouseWheelEvent event){
-        //negative values if the mouse wheel was rotated up/away from the user,
-        // and positive values if the mouse wheel was rotated down/ towards the user
-        if(event.getWheelRotation()>0)
-            onMove(Move.ZOOM_OUT);
-        else
-            onMove(Move.ZOOM_IN);
-    }
-
-
-
-
+     * the redraw method will be called after everytimme movement or clicking, ect. which is used in GUI class .
+     * **/
     @Override
     protected void redraw(Graphics g) {
         graph.redraw(g,currentOrigin,currentScale,getDrawingAreaDimension());
 
     }
+    /***
+     * This method does 2 things: moving and zooming by changing currentOrigin and currentScale respectively
+     * ****/
 
-    @Override
-    protected void onClick(MouseEvent e) {
-        //currentOrigin = CENTREAKL; //fixed
-
-        Point pointClicking = e.getPoint();   // changed Current Point location into a betterPoint base on  central of panel as origin
-        //since ,draw Node and Road based on centralOfpanel.
-        Point betterPoint = new Point (pointClicking.x - (int) (getDrawingAreaDimension().getWidth()/2),
-                pointClicking.y - (int) (getDrawingAreaDimension().getHeight()/2));
-
-        Location locationClicking =Location.newFromPoint(betterPoint,currentOrigin,currentScale);
-        Node nodeClicking = graph.findClosest(locationClicking);
-        if(nodeClicking != null){
-            this.clickdeNode(nodeClicking);
-        }else{
-            getTextOutputArea().setText(null);
-        }
-    }
-
-    @Override
-    protected void onSearch() {
-        //getSearchBox() given by GUI class, which return a JTextFiled, then use JTextFiled call its method "getText()"
-        String string = getSearchBox().getText();
-        System.out.println("typed in: "+string);
-        List<Road> foundRoads = graph.search(string);
-        if(foundRoads == null || foundRoads.isEmpty()){
-            System.out.println("Roads were not found");
-            return;
-        }
-        //if roads are already search before, then recovery selectedRoad back to initial color
-        //literate roads in clickRoads and road segments of each road
-        if(!clickedRoad.isEmpty()){
-            for (Road road : clickedRoad){
-                for(RoadSegment roadSegment:road.roadSegments){
-                    roadSegment.setColor(RoadSegment.DEFAULT_COLOUR);
-                }
-            }
-        }
-        //Otherwise, highlight clickedRoad
-        clickedRoad = foundRoads;
-        for (Road r: clickedRoad){
-            System.out.println("Clicked Road: "+r.label);
-        }
-
-        for (Road road: clickedRoad){
-            for (RoadSegment roadSegment: road.roadSegments){
-                roadSegment.setColor(RoadSegment.CLICKED_COLOUR);
-            }
-        }
-        displayRoadInfo(clickedRoad);
-    }
-    //similar to "displayNodeInfo" method
-    private void displayRoadInfo(List<Road> clickedRoad) {
-        String lineSeparator = System.lineSeparator();
-        StringBuilder stringBuilder = new StringBuilder("Roads are found:"+ clickedRoad.size() + lineSeparator);
-        for (Road road : clickedRoad){
-            stringBuilder.append("RoadID: ")
-                    .append(road.roadId).append(", Road Name: ")
-                    .append(road.label).append(", City: ")
-                    .append(road.city).append(lineSeparator);
-        }
-        // getTextOutputArea() return--->JTextArea.setText
-        getTextOutputArea().setText(stringBuilder.toString());
-    }
-    //change currentOrigin and currentScale
     @Override
     protected void onMove(Move m) {
         Dimension dimension = getDrawingAreaDimension();
         switch (m){
             case NORTH:{
-                currentOrigin = currentOrigin.moveBy(0, dimension.getHeight() / currentScale / 10);
+                currentOrigin = currentOrigin.moveBy(0, dimension.getHeight() / currentScale / FACTOR_MOVE);
                 break;
             } case SOUTH:{
-                currentOrigin = currentOrigin.moveBy(0, -(dimension.getHeight() / currentScale) / 10);
+                currentOrigin = currentOrigin.moveBy(0, -(dimension.getHeight() / currentScale) / FACTOR_MOVE);
                 break;
             } case WEST:{
                 currentOrigin = currentOrigin.moveBy(-(dimension.getWidth() / currentScale)/FACTOR_MOVE,0);
                 break;
             } case EAST:{
-                currentOrigin = currentOrigin.moveBy(dimension.getWidth() / currentScale / 10, 0);
+                currentOrigin = currentOrigin.moveBy(dimension.getWidth() / currentScale / FACTOR_MOVE, 0);
                 break;
             } case ZOOM_IN:{
                 if(currentScale<MAX_ZOOMING){
@@ -249,32 +122,99 @@ public class MainMap extends GUI {
 
     }
 
+    /**
+     * allow user clicking the node
+     * find the point of clicking based on center of display panel as origin
+     * find the location of the point
+     * use findClosestNode method, find the nearest node by pass location of clicking point
+     * highlight the node and show its information
+     * */
     @Override
-    protected void onLoad(File nodes, File roads, File segments, File polygons) {
-        currentOrigin = CENTREAKL;
-        currentScale = Math.max(getDrawingAreaDimension().getHeight(),getDrawingAreaDimension().getWidth())/55;
-        //reset fields
-        clickedRoad = new ArrayList<>();
-        clickedNode = null;
-        startNod = null;
-        endNode = null;
-        pathsBetweenStartEnd =new ArrayList<>();
-        graph.onload(nodes,roads,segments,polygons);
+    protected void onClick(MouseEvent e) {
+        Point pointClicking = e.getPoint();
+        // create the changed points of polygon base on centre of display panel as origin, not left-top original
+        Point betterPoint = new Point (pointClicking.x + (int) (getDrawingAreaDimension().getWidth()/2),
+                pointClicking.y +  (int) (getDrawingAreaDimension().getHeight()/2));
+
+        Location locationClicking =Location.newFromPoint(betterPoint,currentOrigin,currentScale);
+        Node nodeClicking = graph.findClosestNode(locationClicking);
+        if(nodeClicking != null){
+            clickedNode = nodeClicking;
+            clickedNode.setColor(Node.CLICKED_COLOR);
+            displayNodeInfo(clickedNode);
+        }else{
+            getTextOutputArea().setText(null);
+        }
+    }
+    /**
+    * using stringBuilder to create a string object to edit the information of node, finally, which is used to pass to SetText() method
+     * lineSeparator is used to format the information
+     * linkedSegment field is used to find all segments of the roads the node belong to
+    * **/
+    private void displayNodeInfo(Node nodeClicking){
+        int count = 1; //count how many roads the node belong to, and list them out in the TextOutArea
+        // line Separator is =======> "\n" new line in C
+        String lineSeparator = System.lineSeparator();
+        //basic information of the clicked node
+        StringBuilder stringBuilder = new StringBuilder("Click on Node which ID is: "+nodeClicking.nodeId
+                + lineSeparator + "Roads the intersection belong to: " + lineSeparator);
+        //information of information of the road which the node belong to
+        Set<String> infoSet =new HashSet<>();
+        for(RoadSegment roadSegment: nodeClicking.linkedSegments){
+            String string = roadSegment.road.label +","+ roadSegment.road.city + ", road ID: "+roadSegment.roadId;
+            if(!infoSet.contains(string))    //avoid duplicate information
+                infoSet.add(string);
+        }
+        //format information
+        for (String string:infoSet){
+            stringBuilder.append("( ").append(count++).append(" )").append(string).append(lineSeparator);
+        }
+        getTextOutputArea().setText(stringBuilder.toString());
+
+    }
+    /**
+     * get the String contained in the search box which is what the user type in
+     * use
+     *
+     * ***/
+
+    @Override
+    protected void onSearch() {
+       //get the String contained in the search box which is what the user type in
+        String string = getSearchBox().getText();
+        //System.out.println("typed in: "+string);
+        List<Road> foundRoads = graph.search(string);
+        if(foundRoads == null || foundRoads.isEmpty()){
+            System.out.println("Roads were not found");
+            return;
+        }
+        //if roads are already search before, then recovery selectedRoad back to initial color
+        //literate roads in clickRoads and road segments of each road
+        if(!clickedRoads.isEmpty()){
+            for (Road road : clickedRoads){
+                for(RoadSegment roadSegment:road.roadSegments){
+                    roadSegment.setColor(RoadSegment.DEFAULT_COLOUR);
+                }
+            }
+        }
+        //Otherwise, highlight clickedRoad
+        clickedRoads = foundRoads;
+        for (Road r: clickedRoads){
+            System.out.println("Clicked Road: "+r.label);
+        }
+
+        for (Road road: clickedRoads){
+            for (RoadSegment roadSegment: road.roadSegments){
+                roadSegment.setColor(RoadSegment.CLICKED_COLOUR);
+            }
+        }
+        displayRoadsInfo(clickedRoads);
 
     }
 
-    /*
-    * try to do the challenge.
-    * */
-    private void findPath(){
-        //reset the previous navigate path to default color
-        if(!pathsBetweenStartEnd.isEmpty()){
-            for (RoadSegment roadSegment:pathsBetweenStartEnd){
-                roadSegment.setColor(RoadSegment.DEFAULT_COLOUR);
-            }
-            pathsBetweenStartEnd.clear(); //clear history
-        }
-        //pathsBetweenStartEnd=something ..yes it should equal something, but I have not figured out
+    @Override
+    protected void onScroll(MouseWheelEvent event) {
+
     }
 
 }
