@@ -14,7 +14,7 @@ public class RoadSegment {
 	private Color color;
 	//same  color constant as Node class
 	public static final Color DEFAULT_COLOUR = new Color(77, 127, 130);
-    public static final Color CLICKED_COLOUR = new Color(255, 159, 7);
+    public static final Color CLICKED_COLOUR = new Color(222, 3, 255);
     public static final Color NAVI_COLOUR = new Color(177, 52, 52);
     public  int count=0;
 	/**Í
