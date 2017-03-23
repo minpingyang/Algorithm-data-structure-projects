@@ -60,6 +60,7 @@ public class MainMap extends GUI{
         //the initial scale is related on current display panel. 55 is a good constant factor by testing.
         currentScale = Math.max(getDrawingAreaDimension().getHeight(),getDrawingAreaDimension().getWidth())/55;
     }
+
     /**
      * core part; which is read the files of the chosen folder
      * Meantime, intialise all the filed of the class.(which is pretty much similar to constructor)
@@ -67,7 +68,7 @@ public class MainMap extends GUI{
      * **/
     @Override
     protected void onLoad(File nodes, File roads, File segments, File polygons) {
-        currentOrigin = CENTREAKL;
+        currentOrigin = CENTREAKL;  //coordinator lat-lon data based on AucklandCentre of origin.
         currentScale = Math.max(getDrawingAreaDimension().getHeight(),getDrawingAreaDimension().getWidth())/55;
         //reset fields
         clickedRoads = new ArrayList<>();
@@ -132,13 +133,21 @@ public class MainMap extends GUI{
     @Override
     protected void onClick(MouseEvent e) {
         Point pointClicking = e.getPoint();
-        // create the changed points of polygon base on centre of display panel as origin, not left-top original
-        Point betterPoint = new Point (pointClicking.x + (int) (getDrawingAreaDimension().getWidth()/2),
-                pointClicking.y +  (int) (getDrawingAreaDimension().getHeight()/2));
 
-        Location locationClicking =Location.newFromPoint(betterPoint,currentOrigin,currentScale);
+        // create the changed points of polygon base on centre of display panel as origin, not center of AKL
+
+        //changing the coordinator of the clicking point into a better point by decreasing half length
+        //of the display panel size.
+        //The reason is the points of nodes is based on center of display panel. In order to make clicking point
+        //corresponding to the coordinator of drawing node, use clickpoint.x - half horizontal size of panel
+        //clickpoint.y as well.
+       Point betterPoint = new Point (pointClicking.x - (int) (getDrawingAreaDimension().getWidth()/2), pointClicking.y -  (int) (getDrawingAreaDimension().getHeight()/2));
+       Location locationClicking =Location.newFromPoint(betterPoint,currentOrigin,currentScale);
         Node nodeClicking = graph.findClosestNode(locationClicking);
         if(nodeClicking != null){
+            //reset the previous node color to default color before user clicked a new node every time
+            if(clickedNode!=null)
+                clickedNode.setColor(Node.DEFAULT_COLOR);
             clickedNode = nodeClicking;
             clickedNode.setColor(Node.CLICKED_COLOR);
             displayNodeInfo(clickedNode);
@@ -146,6 +155,7 @@ public class MainMap extends GUI{
             getTextOutputArea().setText(null);
         }
     }
+
     /**
     * using stringBuilder to create a string object to edit the information of node, finally, which is used to pass to SetText() method
      * lineSeparator is used to format the information
@@ -159,6 +169,9 @@ public class MainMap extends GUI{
         StringBuilder stringBuilder = new StringBuilder("Click on Node which ID is: "+nodeClicking.nodeId
                 + lineSeparator + "Roads the intersection belong to: " + lineSeparator);
         //information of information of the road which the node belong to
+        //different roadSegment probably belong to same road, due to this case,
+        // if statement is used to avoid duplication road information
+
         Set<String> infoSet =new HashSet<>();
         for(RoadSegment roadSegment: nodeClicking.linkedSegments){
             String string = roadSegment.road.label +","+ roadSegment.road.city + ", road ID: "+roadSegment.roadId;
@@ -208,7 +221,7 @@ public class MainMap extends GUI{
                 roadSegment.setColor(RoadSegment.CLICKED_COLOUR);
             }
         }
-        displayRoadsInfo(clickedRoads);
+        //displayRoadsInfo(clickedRoads);
 
     }
 
