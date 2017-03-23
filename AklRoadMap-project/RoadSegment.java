@@ -21,7 +21,7 @@ public class RoadSegment{
 	//highlight segments when we type in on the search box the segment matching the same prefix
 	private Color color;
 	public static final Color DEFAULT_COLOUR = new Color(132, 130, 147);
-	public static final Color CLICKED_COLOUR = new Color(222, 3, 255);
+	public static final Color SEARCHED_COLOUR = new Color(222, 3, 255);
 	/**constructor
 	 * This is used by loadSegment method of Graph class
 	 * **/

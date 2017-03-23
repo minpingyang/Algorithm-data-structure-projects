@@ -263,7 +263,7 @@ public class Graph {
      * ****/
 
     public List<Road> search(String input) {
-        return roadTrie.find(input);
+        return roadTries.findMatchingRoads(input);
     }
 
 }

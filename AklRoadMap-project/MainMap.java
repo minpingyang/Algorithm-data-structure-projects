@@ -14,7 +14,7 @@ import java.util.Set;
  * MainMap is the main class of the Java app
  *
  * This class will extend GUI class, and implement the GUI class methods.
- * In addition, use pretty much all of the object I created to achieve those implementing methods.
+ * In addition, use all of the object I created to achieve those implementing methods.
  *
  *
  * @author Minping
@@ -38,7 +38,7 @@ public class MainMap extends GUI{
 
     //the node object will be clicked by mouse
     private  Node clickedNode;
-    private List<Road> clickedRoads; // the roads which the clickNode belong to, probably more than one.
+    private List<Road> searchedRoads; // the roads which the clickNode belong to, probably more than one.
     //declare currentOrigin and scale, they would be changed after movement(left right zooming)
     private  Location currentOrigin;
     private  double currentScale;
@@ -53,7 +53,7 @@ public class MainMap extends GUI{
     public MainMap(){
         //initialise filed
         graph = new Graph();
-        clickedRoads = new ArrayList<>();
+        searchedRoads = new ArrayList<>();
         clickedNode = null;
         //set initial origin to Auckland centre which is a location object;
         currentOrigin = CENTREAKL;
@@ -71,7 +71,7 @@ public class MainMap extends GUI{
         currentOrigin = CENTREAKL;  //coordinator lat-lon data based on AucklandCentre of origin.
         currentScale = Math.max(getDrawingAreaDimension().getHeight(),getDrawingAreaDimension().getWidth())/55;
         //reset fields
-        clickedRoads = new ArrayList<>();
+        searchedRoads = new ArrayList<>();
         clickedNode = null;
         graph.onload(nodes,roads,segments,polygons);
 
@@ -86,6 +86,7 @@ public class MainMap extends GUI{
     }
     /***
      * This method does 2 things: moving and zooming by changing currentOrigin and currentScale respectively
+     * when the origin moved, the value dived by currentScale, which is used to cancel the effect of different scale
      * ****/
 
     @Override
@@ -129,6 +130,7 @@ public class MainMap extends GUI{
      * find the location of the point
      * use findClosestNode method, find the nearest node by pass location of clicking point
      * highlight the node and show its information
+     *
      * */
     @Override
     protected void onClick(MouseEvent e) {
@@ -150,44 +152,45 @@ public class MainMap extends GUI{
                 clickedNode.setColor(Node.DEFAULT_COLOR);
             clickedNode = nodeClicking;
             clickedNode.setColor(Node.CLICKED_COLOR);
-            displayNodeInfo(clickedNode);
+
+            /**
+             * using stringBuilder to create a string object to edit the information of node, finally, which is used to pass to SetText() method
+             * lineSeparator is used to format the information
+             * linkedSegment field is used to find all segments of the roads the node belong to
+             * **/
+
+            int count = 1; //count how many roads the node belong to, and list them out in the TextOutArea
+            // line Separator is =======> "\n" new line in C
+            String lineSeparator = System.lineSeparator();
+            //basic information of the clicked node
+            StringBuilder stringBuilder = new StringBuilder("Click on Node which ID is: "+clickedNode.nodeId
+                    + lineSeparator + "Roads the intersection belong to: " + lineSeparator);
+            //information of information of the road which the node belong to
+            //different roadSegment probably belong to same road, due to this case,
+            // if statement is used to avoid duplication road information
+
+            Set<String> infoSet =new HashSet<>();
+            for(RoadSegment roadSegment: clickedNode.linkedSegments){
+                String string = roadSegment.road.label +","+ roadSegment.road.city + ", road ID: "+roadSegment.roadId;
+                if(!infoSet.contains(string))    //avoid duplicate information
+                    infoSet.add(string);
+            }
+            //format information
+            for (String string:infoSet){
+                stringBuilder.append("( ").append(count++).append(" )").append(string).append(lineSeparator);
+            }
+            getTextOutputArea().setText(stringBuilder.toString());
         }else{
             getTextOutputArea().setText(null);
         }
     }
 
-    /**
-    * using stringBuilder to create a string object to edit the information of node, finally, which is used to pass to SetText() method
-     * lineSeparator is used to format the information
-     * linkedSegment field is used to find all segments of the roads the node belong to
-    * **/
-    private void displayNodeInfo(Node nodeClicking){
-        int count = 1; //count how many roads the node belong to, and list them out in the TextOutArea
-        // line Separator is =======> "\n" new line in C
-        String lineSeparator = System.lineSeparator();
-        //basic information of the clicked node
-        StringBuilder stringBuilder = new StringBuilder("Click on Node which ID is: "+nodeClicking.nodeId
-                + lineSeparator + "Roads the intersection belong to: " + lineSeparator);
-        //information of information of the road which the node belong to
-        //different roadSegment probably belong to same road, due to this case,
-        // if statement is used to avoid duplication road information
 
-        Set<String> infoSet =new HashSet<>();
-        for(RoadSegment roadSegment: nodeClicking.linkedSegments){
-            String string = roadSegment.road.label +","+ roadSegment.road.city + ", road ID: "+roadSegment.roadId;
-            if(!infoSet.contains(string))    //avoid duplicate information
-                infoSet.add(string);
-        }
-        //format information
-        for (String string:infoSet){
-            stringBuilder.append("( ").append(count++).append(" )").append(string).append(lineSeparator);
-        }
-        getTextOutputArea().setText(stringBuilder.toString());
-
-    }
     /**
      * get the String contained in the search box which is what the user type in
      * use
+     * Highlight matching roads into searchedColor
+     * recover previous matching roads into default color
      *
      * ***/
 
@@ -201,33 +204,53 @@ public class MainMap extends GUI{
             System.out.println("Roads were not found");
             return;
         }
-        //if roads are already search before, then recovery selectedRoad back to initial color
+        //if roads are already search before, then recover selectedRoad back to default color
         //literate roads in clickRoads and road segments of each road
-        if(!clickedRoads.isEmpty()){
-            for (Road road : clickedRoads){
+        if(!searchedRoads.isEmpty()){
+            for (Road road : searchedRoads){
                 for(RoadSegment roadSegment:road.roadSegments){
                     roadSegment.setColor(RoadSegment.DEFAULT_COLOUR);
                 }
             }
         }
         //Otherwise, highlight clickedRoad
-        clickedRoads = foundRoads;
-        for (Road r: clickedRoads){
+        searchedRoads = foundRoads;
+        for (Road r: searchedRoads){
             System.out.println("Clicked Road: "+r.label);
         }
 
-        for (Road road: clickedRoads){
+        for (Road road: searchedRoads){
             for (RoadSegment roadSegment: road.roadSegments){
-                roadSegment.setColor(RoadSegment.CLICKED_COLOUR);
+                roadSegment.setColor(RoadSegment.SEARCHED_COLOUR);
             }
         }
-        //displayRoadsInfo(clickedRoads);
+        /**
+         * using string builder to store the information of matching roads
+         * Output the content of string builder into TextOutPut area
+         * **/
+        String lineSeparator = System.lineSeparator();
+        StringBuilder stringBuilder = new StringBuilder("Roads are found:"+ searchedRoads.size() + lineSeparator);
+        for (Road road : searchedRoads){
+            stringBuilder.append("RoadID: ")
+                    .append(road.roadId).append(", Road Name: ")
+                    .append(road.label).append(", City: ")
+                    .append(road.city).append(lineSeparator);
+        }
 
+        getTextOutputArea().setText(stringBuilder.toString());
     }
 
+/**
+ * allow user zooming in and zooming our by using scroll of mouse
+ * run scroll forward ---> zooming in, backward--->zooming our
+ *
+ * */
     @Override
     protected void onScroll(MouseWheelEvent event) {
-
+        if(event.getWheelRotation()>0)
+            onMove(Move.ZOOM_OUT);
+        else
+            onMove(Move.ZOOM_IN);
     }
 
 }
