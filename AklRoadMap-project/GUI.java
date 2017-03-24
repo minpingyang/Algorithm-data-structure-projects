@@ -48,6 +48,7 @@ public abstract class GUI {
      * released), and is passed the MouseEvent object for that click.
      */
     protected abstract void onClick(MouseEvent e);
+    protected abstract void onDrag(MouseEvent e);
 
     /**
      * Is called whenever the search box is updated. Use getSearchBox to get the
@@ -373,6 +374,21 @@ public abstract class GUI {
                 redraw();
             }
         });
+
+        drawing.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                onDrag(e);
+                redraw();
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+
+            }
+        } );
+
+
 /**make changes on addMouseWheelListener**/
         drawing.addMouseWheelListener(new MouseAdapter() {
             public void mouseWheelMoved(MouseWheelEvent e) {

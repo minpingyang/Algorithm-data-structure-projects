@@ -93,6 +93,7 @@ public class Location {
 		return new Location(x + dx, y + dy);
 	}
 
+
 	/**
 	 * Return distance between this location and another
 	 */

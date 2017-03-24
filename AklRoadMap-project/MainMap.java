@@ -3,6 +3,7 @@ package code.comp261.ass1;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+
 import java.awt.event.MouseWheelEvent;
 import java.io.File;
 import java.util.ArrayList;
@@ -44,6 +45,8 @@ public class MainMap extends GUI{
     private  double currentScale;
     //Graph object is used to implement "onload" method and "drawing" method.
     Graph graph;
+    private Location currentDragPoint;
+    private Point betterDragEndPoint;
 
     /**main method**/
     public static void main(String[] args) {
@@ -124,6 +127,8 @@ public class MainMap extends GUI{
 
     }
 
+
+
     /**
      * allow user clicking the node
      * find the point of clicking based on center of display panel as origin
@@ -134,6 +139,8 @@ public class MainMap extends GUI{
      * */
     @Override
     protected void onClick(MouseEvent e) {
+        currentDragPoint = null;
+        betterDragEndPoint = null;
         Point pointClicking = e.getPoint();
 
         // create the changed points of polygon base on centre of display panel as origin, not center of AKL
@@ -183,6 +190,42 @@ public class MainMap extends GUI{
         }else{
             getTextOutputArea().setText(null);
         }
+    }
+
+    @Override
+    protected void onDrag(MouseEvent e) {
+
+
+        if (currentDragPoint == null) {
+            currentDragPoint = new Location(e.getX(), e.getY());
+            return;
+        }
+
+        double xOff = currentDragPoint.x - e.getX();
+        double yOff = e.getY() - currentDragPoint.y;
+
+        currentOrigin = currentOrigin.moveBy(xOff / currentScale, yOff / currentScale);
+        System.out.println(currentOrigin.toString());
+        System.out.printf("%f, %f\n", xOff, yOff);
+
+        currentDragPoint = new Location(e.getX(), e.getY());
+
+
+//        if(currentDragPoint == null){
+//            Point betterDrageStartPoint = new Point (e.getPoint().x - (int) (getDrawingAreaDimension().getWidth()/2), e.getPoint().y -  (int) (getDrawingAreaDimension().getHeight()/2));
+//            currentDragPoint = betterDrageStartPoint;
+//            return;
+//        }
+//        betterDragEndPoint = new Point (e.getPoint().x - (int) (getDrawingAreaDimension().getWidth()/2), e.getPoint().y -  (int) (getDrawingAreaDimension().getHeight()/2));
+//
+//        double releasedPointX = betterDragEndPoint.getX();
+//        double releasedPointY = betterDragEndPoint.getY();
+//        double movingDistanceX = -releasedPointX + currentDragPoint.getX();
+//        double movingDistanceY = releasedPointY - currentDragPoint.getY();
+//        currentDragPoint = null;
+//        betterDragEndPoint = null;
+//        currentOrigin = currentOrigin.moveBy(movingDistanceX/currentScale/2,movingDistanceY/currentScale/2);
+
     }
 
 
