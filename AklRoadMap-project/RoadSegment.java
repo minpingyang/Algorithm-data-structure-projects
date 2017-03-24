@@ -88,18 +88,5 @@ public class RoadSegment{
 		this.color = color;
 	}
 
-	/**
-	 * just return the other end(/start) node of the segment
-	 *
-	 * */
-	public  Node neighbourNode(Node node){
-		if(node.nodeId != startNode.nodeId && node.nodeId!= endNode.nodeId)
-			return null;
-
-		if (node.nodeId == startNode.nodeId)
-			return endNode;   // fixed~  return end node not node..
-		else
-			return startNode;
-	}
 
 }

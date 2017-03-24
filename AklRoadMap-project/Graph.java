@@ -249,11 +249,10 @@ public class Graph {
         }
         // if closestIntersection exist, then return the intersection node
         // to be used for highlight, and it can be clicked
-        if (closestIntersection == null)
-            return null;
-        else
+        if (closestIntersection != null && location.distance(closestIntersection.location) < 0.2 )
             return closestIntersection;
-
+        else
+            return null;
         //*******figure out quard-tree version later
     }
 

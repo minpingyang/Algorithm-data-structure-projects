@@ -96,6 +96,8 @@ public class RoadTrie{
 
         }
         /**
+         * The list of road passing as parameter of this function is used to store all the road
+         * find all nodes which were marked as true under the current subtree of the node calling this method
          * **/
         public void getAllFromNode(List<Road> roads){
 
@@ -111,19 +113,6 @@ public class RoadTrie{
             }
 
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

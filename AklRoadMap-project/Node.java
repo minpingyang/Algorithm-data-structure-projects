@@ -15,11 +15,11 @@ public class Node {
 	private Color color;
 	public static final Color DEFAULT_COLOR = new Color(104, 145, 213);
 	public static final Color CLICKED_COLOR = new Color(255, 46, 12);
-	// neighbourNodes is used to find the neighbours of a node,
+
 	// if nodes are linked with a node, then they are the neighbours of the node.
 	//linkedSegments is used to find all the segments of a node which is clicked.
 	//use Set data structure for linkedSegments, which is also a good way to avoid duplicates of segments.
-	public Set<Node> neighbourNodes;
+
 	public final Set<RoadSegment> linkedSegments;  // it is used for storing all of the segment of a node belong to
 
 	//two constant for adjusting shape and size of node during the process of zooming
@@ -37,7 +37,7 @@ public class Node {
 		location = Location.newFromLatLon(lat, lon);
 		color = DEFAULT_COLOR;  //Initialise color
 		linkedSegments = new HashSet<>();
-		neighbourNodes = new HashSet<>();
+
 	}
     /***
      * draw the road segments based on center of display panel
@@ -66,10 +66,5 @@ public class Node {
         this.color = color;
     }
 
-    public void setNeighbourNodes(){
-        for(RoadSegment segment: linkedSegments){
-            Node otherNode = segment.neighbourNode(this);
-            neighbourNodes.add(otherNode);
-        }
-    }
+
 }

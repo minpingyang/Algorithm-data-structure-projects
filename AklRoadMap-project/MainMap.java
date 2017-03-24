@@ -210,22 +210,6 @@ public class MainMap extends GUI{
 
         currentDragPoint = new Location(e.getX(), e.getY());
 
-
-//        if(currentDragPoint == null){
-//            Point betterDrageStartPoint = new Point (e.getPoint().x - (int) (getDrawingAreaDimension().getWidth()/2), e.getPoint().y -  (int) (getDrawingAreaDimension().getHeight()/2));
-//            currentDragPoint = betterDrageStartPoint;
-//            return;
-//        }
-//        betterDragEndPoint = new Point (e.getPoint().x - (int) (getDrawingAreaDimension().getWidth()/2), e.getPoint().y -  (int) (getDrawingAreaDimension().getHeight()/2));
-//
-//        double releasedPointX = betterDragEndPoint.getX();
-//        double releasedPointY = betterDragEndPoint.getY();
-//        double movingDistanceX = -releasedPointX + currentDragPoint.getX();
-//        double movingDistanceY = releasedPointY - currentDragPoint.getY();
-//        currentDragPoint = null;
-//        betterDragEndPoint = null;
-//        currentOrigin = currentOrigin.moveBy(movingDistanceX/currentScale/2,movingDistanceY/currentScale/2);
-
     }
 
 
