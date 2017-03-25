@@ -38,3 +38,16 @@ Step1: print out if user input has been recorded and passed into findMatchingRoa
 Step2: print out “roads type” in add() method of RoadTrie class, check if add successful ---------------find it works
 Step3: go back to findMatchingRoads() method, check if traverse each node successfully. print out if temRootNode really doing things. ---------------fail
 Step4: fix …silly mistakes.  Change temRootNode = temRootNode.children.get(c);
+
+Issue2: the input of finding matching roads should ignore the space. String.trim() is used to achieve this feature.
+
+Test5 dragging and scrolling
+Scrolling is quite easy no big issues. 
+Dragging is bit tricky for me.
+Issue1: After every time dragging the map. The start dragging point and end dragging point both should reset as null, in order to avoid the map jumping on the second dragging. 
+Issue2: Declaring reset dragging points to null should on onClick() method, which can avoid the MouseEven clash with click node method.
+Issue3: Set the limit range of allowing find and highlight closet node. Otherwise, there is always a node highlight when dragging the map.
+
+Test6 polygon:
+Issue1: load polygon data, there is a trick I experience, since the location of polygon is lat-lon. Every time, read the coordinators data pairs by pairs, instead one by one. 
+Issue2:  different type of places should be set different reasonable colour, fix it by following a post on 261 forums. 
