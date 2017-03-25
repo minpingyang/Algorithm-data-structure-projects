@@ -24,3 +24,17 @@ For example, I used to think use “case Move.North:” instead of “case North
 Second issue I sort out by testing is about how many pixels the map should move by each clicking. To make sure the moving pixels should correspond to current scale, each time the moving value should be divided by current scale, otherwise, the moving will not move properly under different scale. “FACTOR_MOVE” is constant which is used to make sure moving nice.
 Third issue is about zooming centre. In this issue, I have to change drawing coordinator system of the programme, because zooming should work based the centre of display panel instead of the corner of left-top. By testing, I find the issue, then change all data points of drawing method become points based on the centre of display panel. Then, the zooming works well.
 
+Test3: Click a road to show the information
+Issue1: MouseEvent provided different coordinator system from coordinator of drawing nodes, so the coordinator of clicking point have to be changed to a “better point” which base on the centre of panel same as drawing nodes origin. By running programme, find the reason of the issue. 
+Issue2: The previous click node should reset to null and change their colour back to default colour. By testing, if not, all the nodes which were clicked will keep the clicked_color. 
+Issue3: the duplicate information of road segments happened when use click a node. 
+By testing, there are same information of road segment appearing on the output text area. By fixing this issue. 
+by adding an if statement to check if the information already existed. 
+
+Test4 searching roads with same prefix by implement Tries structure
+Issue: Typing random character does not show anything on text-out area.
+
+Step1: print out if user input has been recorded and passed into findMatchingRoads() method. --------find it works.
+Step2: print out “roads type” in add() method of RoadTrie class, check if add successful ---------------find it works
+Step3: go back to findMatchingRoads() method, check if traverse each node successfully. print out if temRootNode really doing things. ---------------fail
+Step4: fix …silly mistakes.  Change temRootNode = temRootNode.children.get(c);
