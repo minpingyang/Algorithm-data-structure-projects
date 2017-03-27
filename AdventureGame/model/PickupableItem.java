@@ -15,7 +15,7 @@ public abstract class PickupableItem implements Item {
 		}
 	}
 	
-	private boolean pickupThisItem(Player player) {		
+	protected boolean pickupThisItem(Player player) {		
 		Room r = player.getLocation();
 		// Determine location of item in room
 		Room.Location l = r.containsItem(this);
@@ -31,7 +31,7 @@ public abstract class PickupableItem implements Item {
 		}		
 	}
 	
-	private boolean dropThisItem(Player player) {
+	protected boolean dropThisItem(Player player) {
 		List<Item> inventory = player.getInventory();
 		if(inventory.contains(this)) {
 			Room r = player.getLocation();

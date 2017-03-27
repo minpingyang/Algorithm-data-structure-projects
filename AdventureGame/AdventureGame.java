@@ -1,7 +1,5 @@
 package swen221.lab3;
 
-import java.util.*;
-
 import swen221.lab3.model.*;
 import swen221.lab3.util.GameFile;
 import swen221.lab3.view.GraphicalUserInterface;
@@ -59,20 +57,22 @@ public class AdventureGame {
 	 * @return
 	 */
 	private Object createObject(GameFile.Item item) {
-		Item r;
+		// Item r;
 		switch (item.name()) {
-		case "Book":
-			return createRoomObject(item);
 		case "Room":
 			return createRoomObject(item);
 		case "Door":
 			return createDoorObject(item);			
 		case "Coin":
-			return  createCoinObject(item);	
+			return createCoinObject(item);	
 		case "Key":
-			return  createKeyObject(item);	
+			return createKeyObject(item);	
 		case "Obelisk":
-			return  createObeliskObject(item);	
+			return createObeliskObject(item);
+		case "Book":
+		    return createBookbject(item);
+		
+	
 		default:
 			// If we get here, then we've encountered an object kind we don't
 			// know
@@ -80,13 +80,8 @@ public class AdventureGame {
 			throw new IllegalArgumentException("Unknown GameFile.Item name");
 		}	
 	}
-	
-	private Object createBookObject(GameFile.Item item) {
-		 Book b = new Book((String)item.field("title"));
-	        return addItemToRoom((Integer) item.field("location"), b);
-	}
-	ß
-	/**
+
+    /**
 	 * Create a Room within the game.
 	 * 
 	 * @param item
@@ -114,6 +109,8 @@ public class AdventureGame {
 		return d;
 	}
 	
+	
+ 
 	/**
 	 * Create a Coin within the game.
 	 * 
@@ -148,6 +145,12 @@ public class AdventureGame {
 		return addItemToRoom((Integer) item.field("location"),c);		
 	}
 	
+	
+	private Object createBookbject(GameFile.Item item) {
+        Book b = new Book((String)item.field("title"));
+        return addItemToRoom((Integer) item.field("location"), b);
+    }
+	
 	/**
 	 * Add a given item into a room.
 	 * 
@@ -169,7 +172,6 @@ public class AdventureGame {
 		// The set of items which constitute the default game. You can add more
 		// items to this if you wish.
 		String[] items = {
-				"Book { location: 0, title: \"Great Expectations\"}",
 				"Room { description: \"The Great Hall\"}",
 				"Room { description: \"The Dining Room\"}",				
 				"Door { from: 0, to: 1 }",
