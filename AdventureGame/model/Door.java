@@ -11,8 +11,8 @@ import java.awt.Graphics;
  * 
  */
 public class Door implements Item {	
-	private Room oneSide;	
-	private Room otherSide;
+	protected Room oneSide;	
+	protected Room otherSide;
 	
 	public Door(Room oneSide, Room otherSide) {			
 		this.oneSide = oneSide;
