@@ -1,8 +1,10 @@
 package ass1.swen221;
 
 import maze.Direction;
+import maze.View;
 import maze.Walker;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,12 +30,12 @@ public class Leftwalker extends Walker {
     }
 
     public Direction move(View view){
-        pause(3000);
+        pause(3000);//able to clearly watch simulation of walking in the maze
         if(!unvisitedDirections.containsKey(coordinateOfwalker)){
             List<Direction> alternativeDirections = judgePotentialDirections(view);
             unvisitedDirections.put(coordinateOfwalker,alternativeDirections);
         }
-        resetWalls(view);
+        resetDirections(view);
         if(isFindingWall)
             lookLeftWall();
         else
@@ -42,6 +44,79 @@ public class Leftwalker extends Walker {
         memorise();
         return currentDirection;
     }
+
+    /**
+     * This method is used to get all potential available direction from walker view
+     * @param view reflects the view the walker has from the current position in the maze
+     *  @return all potential available direction from walker view
+     * **/
+    private List<Direction> judgePotentialDirections(View view){
+        Direction[] directions = Direction.values();
+        List<Direction> potentialDirections = new ArrayList<Direction>();
+        for (Direction direction : directions){
+            if(view.mayMove(direction)) //judge if move successfully
+                potentialDirections.add(direction);
+        }
+        return potentialDirections;
+    }
+    private void resetDirections(View view){
+        isBackWall =
+    }
+
+   /**
+    * get the left/right direciton value of passing direction
+    * @param direction given direction
+    * @return  left/right direciton value of passing direction
+    * **/
+    private Direction getDirectionValue(Direction direction,boolean left){
+        Direction tempdirection = null;
+        get the left direciton value of passing direction
+        if(left){
+            switch (currentDirection){
+                case EAST:
+                    tempdirection = Direction.NORTH;
+                    break;
+                case NORTH:
+                    tempdirection = Direction.WEST;
+                    break;
+                case SOUTH:
+                    tempdirection = Direction.EAST;
+                    break;;
+                case WEST:
+                    tempdirection = Direction.SOUTH;
+                    break;
+                default:
+                    System.out.println("current direction does not exist");
+            }
+        }
+        // get the right direciton value of passing direction
+        else{
+            switch (currentDirection){
+                case EAST:
+                    tempdirection = Direction.SOUTH;
+                    break;
+                case NORTH:
+                    tempdirection = Direction.EAST;
+                    break;
+                case SOUTH:
+                    tempdirection = Direction.WEST;
+                    break;;
+                case WEST:
+                    tempdirection = Direction.NORTH;
+                    break;
+                default:
+                    System.out.println("current direction does not exist");
+            }
+
+        }
+
+
+
+        return tempdirection;
+    }
+   
+
+
 
     private class coordSystemBaseOnWalker {
         private int x;
