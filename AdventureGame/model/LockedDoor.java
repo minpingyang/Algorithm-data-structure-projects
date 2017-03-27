@@ -1,15 +1,15 @@
 package swen221.lab3.model;
 
-import java.awt.Color;
+
 import java.awt.Graphics;
 import java.util.ArrayList;
 
 public class LockedDoor extends Door{
-	private int screteCode;
+	private int code;
 	private boolean isLocked;
 	public LockedDoor(Room oneSide, Room otherSide,int code){
 		super(oneSide, otherSide);
-		this.screteCode = code;
+		this.code = code;
 		this.isLocked = true;
 	}
 	@Override
@@ -29,7 +29,7 @@ public class LockedDoor extends Door{
 		}
 		//check if find the screteCode
 		boolean isFoundKey = false;
-		if(codes.contains(this.screteCode)){
+		if(codes.contains(this.code)){
 			isFoundKey = true;
 		}else{
 			isFoundKey = false;
@@ -44,7 +44,7 @@ public class LockedDoor extends Door{
 			
 		}else if(action.equals("Unlock")){
 			if(isFoundKey){
-				this.isLocked = true;
+				this.isLocked = false;
 				return true;
 			}else{
 				return false;
@@ -72,34 +72,19 @@ public class LockedDoor extends Door{
 	public String getDescription() {
 		String s = "A door between \"" + this.oneSide().getDescription() +"\" and \""+ this.otherSide().getDescription() + "\"; it is ";
 		if(isLocked){
-			return s + "locked";
+			return s + "locked.";
 		}else{
-			return s + "unlocked";
+			return s + "unlocked.";
 		}
 	}
 	public int getCode(){
-		return this.screteCode;
+		return this.code;
 	}
 	public void unlockDoor(boolean bool){
 		this.isLocked = bool;
 		
 	}
-	/**
-	 * Return the room on one side of the door
-	 * 
-	 * @return
-	 */
-	public Room oneSide() { return oneSide; }
-	
-	/**
-	 * Return the room on the other side of the door
-	 * 
-	 * @return
-	 */
-	public Room otherSide() { return otherSide; }	
 
-	@Override
-	public void draw(Graphics g) {
-		
-	}
+
+
 }

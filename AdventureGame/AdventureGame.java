@@ -71,6 +71,8 @@ public class AdventureGame {
 			return createObeliskObject(item);
 		case "Book":
 		    return createBookbject(item);
+		case "LockedDoor":
+			return createLockedDoorObject(item);
 		
 	
 		default:
@@ -80,6 +82,19 @@ public class AdventureGame {
 			throw new IllegalArgumentException("Unknown GameFile.Item name");
 		}	
 	}
+	
+	private LockedDoor createLockedDoorObject(GameFile.Item item){
+		int from = (Integer) item.field("from");
+		int to =(Integer)item.field("to");
+		Room oneSide = (Room) objects[from];
+		Room otherSide = (Room) objects[to];
+		int code = (Integer) item.field("code");
+		LockedDoor d = new LockedDoor(oneSide, otherSide, code);
+		oneSide.addItem(d);
+		otherSide.addItem(d);
+		return d;
+	}
+	
 
     /**
 	 * Create a Room within the game.
