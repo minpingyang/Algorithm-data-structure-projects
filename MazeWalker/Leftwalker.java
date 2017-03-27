@@ -1,8 +1,6 @@
 package ass1.swen221;
 
-import maze.Coordinate;
 import maze.Direction;
-import maze.View;
 import maze.Walker;
 
 import java.util.HashMap;
@@ -17,27 +15,38 @@ public class Leftwalker extends Walker {
 
     private boolean isFrontWall, isRightWall,isLeftWall,isBackWall;
     private boolean isFindingWall; // if the walker is looking for a wall on his left side
-    private Coordinate coordinate;
-    private HashMap<newCoordSystem,List<Direction>> t
-
+    private coordSystemBaseOnWalker coordinateOfwalker;
+    //a map collection of visited square ---> list of directions of unvisited corresponding to this square
+    private HashMap<coordSystemBaseOnWalker,List<Direction>> unvisitedDirections;
+    /***constructor****/
     public Leftwalker(){
         super("Left Walker");
         currentDirection = Direction.NORTH;
         isFindingWall = true;
-        coordinate = new Coordinate(0,0);
-
-
+        coordinateOfwalker = new coordSystemBaseOnWalker(0,0);
+        unvisitedDirections = new HashMap<>();
     }
-    @Override
-    protected Direction move(View view) {
-        return null;
-    }
-    //
 
-    private class newCoordSystem(){
+    public Direction move(View view){
+        pause(3000);
+        if(!unvisitedDirections.containsKey(coordinateOfwalker)){
+            List<Direction> alternativeDirections = judgePotentialDirections(view);
+            unvisitedDirections.put(coordinateOfwalker,alternativeDirections);
+        }
+        resetWalls(view);
+        if(isFindingWall)
+            lookLeftWall();
+        else
+            clockwiseFollowWall();
+
+        memorise();
+        return currentDirection;
+    }
+
+    private class coordSystemBaseOnWalker {
         private int x;
         private int y;
-        public newCoordSystem(int x, int y){
+        public coordSystemBaseOnWalker(int x, int y){
             this.x = x;
             this.y = y;
         }

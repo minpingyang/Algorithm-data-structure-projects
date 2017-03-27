@@ -73,7 +73,8 @@ public class AdventureGame {
 		    return createBookbject(item);
 		case "LockedDoor":
 			return createLockedDoorObject(item);
-		
+		case "SecretButton":
+			return createSecretButtonObject(item);
 	
 		default:
 			// If we get here, then we've encountered an object kind we don't
@@ -81,6 +82,12 @@ public class AdventureGame {
 			// about. Therefore, through an exception to indicate this.
 			throw new IllegalArgumentException("Unknown GameFile.Item name");
 		}	
+	}
+	private Object createSecretButtonObject (GameFile.Item item){
+		int code = (int) item.field("code");
+		SecretButton secretButton = new SecretButton(code);
+		return addItemToRoom((int) item.field("location"), secretButton);
+		
 	}
 	
 	private LockedDoor createLockedDoorObject(GameFile.Item item){
