@@ -1,4 +1,5 @@
-package ass1.swen221;
+package swen221.assignment1;
+
 
 import maze.Direction;
 import maze.View;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * Created by minpingyang on 21/03/17.
  */
-public class Leftwalker extends Walker {
+public class LeftWalker extends Walker {
     //the currentDirection of walker heading in
     private Direction currentDirection;
 
@@ -21,7 +22,7 @@ public class Leftwalker extends Walker {
     //a map collection of visited square ---> list of directions of unvisited corresponding to this square
     private HashMap<CoordSystemBaseOnWalker,List<Direction>> unvisitedDirections;
     /***constructor****/
-    public Leftwalker(){
+    public LeftWalker(){
         super("Left Walker");
         currentDirection = Direction.NORTH;
         isFindingWall = true;
@@ -30,7 +31,7 @@ public class Leftwalker extends Walker {
     }
 
     public Direction move(View view){
-        pause(3000);//able to clearly watch simulation of walking in the maze
+       // pause(3000);//able to clearly watch simulation of walking in the maze
         if(!unvisitedDirections.containsKey(coordinateOfwalker)){
             List<Direction> alternativeDirections = judgePotentialDirections(view);
             unvisitedDirections.put(coordinateOfwalker,alternativeDirections);
@@ -47,7 +48,12 @@ public class Leftwalker extends Walker {
     private void memorise(){
         //store all available directions as a list
         List<Direction> availableDirections = unvisitedDirections.get(coordinateOfwalker);
-
+        if(!availableDirections.contains(currentDirection) && !availableDirections.isEmpty()){
+            currentDirection = availableDirections.get(0);
+            isFindingWall = true;
+        }
+        unvisitedDirections.get(coordinateOfwalker).remove(currentDirection);
+        coordinateOfwalker = coordinateOfwalker.moveTo(currentDirection);
     }
     /**
      * change currentDirection to avaiableDirection
@@ -78,6 +84,8 @@ public class Leftwalker extends Walker {
         }
         else if(!existRightWall){
             currentDirection =getDirectionValue(currentDirection,"right");
+
+
         }else if (!existBackWall){
             currentDirection =getDirectionValue(currentDirection,"opposite");
         }

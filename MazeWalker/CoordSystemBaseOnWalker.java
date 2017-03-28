@@ -1,4 +1,5 @@
-package ass1.swen221;
+package swen221.assignment1;
+
 
 import maze.Direction;
 
@@ -35,7 +36,7 @@ public class CoordSystemBaseOnWalker {
      * narrow the equals() method,
      * force two CoordSystemBaseOnWalker objects should equals each other
      * if they have same cooridanator(x,y)
-     * 
+     *
      * */
     @Override
     public boolean equals(Object object){
@@ -77,3 +78,4 @@ public class CoordSystemBaseOnWalker {
         return c;
     }
 }
+
