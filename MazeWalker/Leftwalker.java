@@ -17,15 +17,15 @@ public class Leftwalker extends Walker {
 
     private boolean existForwardWall, existRightWall, existLeftWall, existBackWall;
     private boolean isFindingWall; // if the walker is looking for a wall on his left side
-    private coordSystemBaseOnWalker coordinateOfwalker;
+    private CoordSystemBaseOnWalker coordinateOfwalker;
     //a map collection of visited square ---> list of directions of unvisited corresponding to this square
-    private HashMap<coordSystemBaseOnWalker,List<Direction>> unvisitedDirections;
+    private HashMap<CoordSystemBaseOnWalker,List<Direction>> unvisitedDirections;
     /***constructor****/
     public Leftwalker(){
         super("Left Walker");
         currentDirection = Direction.NORTH;
         isFindingWall = true;
-        coordinateOfwalker = new coordSystemBaseOnWalker(0,0);
+        coordinateOfwalker = new CoordSystemBaseOnWalker(0,0);
         unvisitedDirections = new HashMap<>();
     }
 
@@ -43,6 +43,11 @@ public class Leftwalker extends Walker {
 
         memorise();
         return currentDirection;
+    }
+    private void memorise(){
+        //store all available directions as a list
+        List<Direction> availableDirections = unvisitedDirections.get(coordinateOfwalker);
+
     }
     /**
      * change currentDirection to avaiableDirection
@@ -172,16 +177,5 @@ public class Leftwalker extends Walker {
         return tempdirection;
     }
 
-
-
-
-    private class coordSystemBaseOnWalker {
-        private int x;
-        private int y;
-        public coordSystemBaseOnWalker(int x, int y){
-            this.x = x;
-            this.y = y;
-        }
-    }
 
 }
