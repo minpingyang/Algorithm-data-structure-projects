@@ -31,23 +31,27 @@ public class LeftWalker extends Walker {
     }
 
     public Direction move(View view){
-       // pause(3000);//able to clearly watch simulation of walking in the maze
+        pause(1000);//used for testing 
+        //store possible choices of directions the walker could move from current viwe
         if(!unvisitedDirections.containsKey(coordinateOfwalker)){
             List<Direction> alternativeDirections = judgePotentialDirections(view);
             unvisitedDirections.put(coordinateOfwalker,alternativeDirections);
         }
+        //Reset boolean values that are the four different walls from walker view
         checkAllCurrentWallsStatus(view);
+        //By following left hand rule to find the correct direction
         if(isFindingWall)
             changeCurrentDirection_toAvaiableDirection();
         else
             clockwiseFollowWall();
-
-        memorise();
+        //avoid the walker going same direction on the same position
+        smartMove();
         return currentDirection;
     }
-    private void memorise(){
+    private void smartMove(){
         //store all available directions as a list
         List<Direction> availableDirections = unvisitedDirections.get(coordinateOfwalker);
+        //check if contain 
         if(!availableDirections.contains(currentDirection) && !availableDirections.isEmpty()){
             currentDirection = availableDirections.get(0);
             isFindingWall = true;
@@ -76,6 +80,7 @@ public class LeftWalker extends Walker {
             currentDirection =getDirectionValue(currentDirection,"left");
         }
     }
+    /*follow left wall to walk**/
     private void clockwiseFollowWall(){
         if(!existLeftWall)
             currentDirection = getDirectionValue(currentDirection,"left");
