@@ -4,14 +4,17 @@ Declare keyword "throws" in the function which potential exists exception
 //import java.io.*;
 
 class ExceptionDemo1{
-	public static void main(String[] args) {
-		try{
-			div(2,0);
-		}catch (Exception e){
-			e.printStackTrace();
-		}
+	public static void main(String[] args) throws Exception{
+		div(2,0);
 		System.out.println("OVER");
-	}
+	// 	//one way
+	// 	try{
+	// 		div(2,0);
+	// 	}catch (Exception e){
+	// 		e.printStackTrace();
+	// 	}
+	// 	System.out.println("OVER");
+	// }
 	//throws declare there is a potential exception in the function
 	public static void div(int x,int y) throws Exception{
 		if( y == 0){
@@ -25,6 +28,13 @@ class ExceptionDemo1{
 }
 
 
+// throw和throws的区别
+// 1.	相同：都是用于做异常的抛出处理的。
+// 2.	不同点：
+// 1.	使用的位置: throws 使用在函数上，throw使用在函数内
+// 2.	后面接受的内容的个数不同: 
+// 1.	throws 后跟的是异常类，可以跟多个，用逗号隔开。
+// 2.	throw 后跟异常对象。
 
 
 
