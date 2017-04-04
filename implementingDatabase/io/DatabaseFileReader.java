@@ -96,8 +96,26 @@ public class DatabaseFileReader {
 	 * @param schemaLine
 	 * @return
 	 */
-	private int findKeyField(String schemaLine) {
-		// FIXME: you need to implement this
-		throw new RuntimeException("Implementation not provided");
+//	This method is supposed to return the index at which the column containing the key field starts.
+//			Note that each input line (representing a database row) separates its columns with a comma and
+//			remember that the key field is identifable by ending with an asterisk. You will therefore find the
+//			methods String.split(separator) and String.endsWith(postfix) helpful. Having implemented
+//			findKeyField(), you should now find the first test is passing
+	private int findKeyField(String schemaLine) throws DuplicateKeyException, InvalidRowException {
+		String[] columns = schemaLine.split(",");
+		int keyField = -1;
+		for (int i = 0; i < columns.length; i++) {
+			if (columns[i].endsWith("*")) {
+				if(keyField <= 0){  //initial keyfield < 0
+					keyField = i; 
+				}else{
+					throw new DuplicateKeyException(); //maxium 1
+			}
+		}
+		if(keyField >= 0){
+			return keyField;
+		}else{
+			throw new InvalidRowException();
+		}
 	}
 }
