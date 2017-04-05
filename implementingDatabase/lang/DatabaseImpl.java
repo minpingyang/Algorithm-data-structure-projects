@@ -53,6 +53,7 @@ public class DatabaseImpl implements Database {
 				throw new DuplicateKeyException();
 			}
 		}
+		rows.add(tempRow);
 		
 	}
 
