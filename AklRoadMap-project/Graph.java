@@ -10,7 +10,7 @@ import java.util.List;
  * include the heaps of onLoad methods corresponding to different files(roade, node, polygon, etc)
  * do the redraw method as well.
  *
- * @author Minping
+ * @author Frederick
  * **/
 
 public class Graph {
@@ -126,9 +126,11 @@ public class Graph {
             while (line != null) {
                 RoadSegment segment = new RoadSegment(line, nodeMap, roadMap);
                 roadSegmentSet.add(segment);
+                //roadSegments---->node
                 segment.startNode.linkedSegments.add(segment);
                 segment.endNode.linkedSegments.add(segment);
                 //node is indexed by its ID
+                //roadsegements --->> road
                 roadMap.get(segment.roadId).roadSegments.add(segment);
                 line = bufferedReader.readLine(); // next line
                 // System.out.println("segmentRun: "+(segmentRun++));
@@ -166,6 +168,7 @@ public class Graph {
                     while (!line.equals("[END]")) {
                         if (line.startsWith("Type")) {
                             //cover the hexdecimal integer which is after "type=0x" into decimal
+                            //NumberFormatException
                             type = Integer.parseInt(line.substring(7), 16);
                         } //use subString() to only get the number of each variable;
                         else if (line.startsWith("Label")) {

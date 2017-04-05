@@ -7,7 +7,7 @@ import java.util.*;
  * internal class is created for this RoadTrie class, which is RoadTrieNode class.
  *This class is used to  finding matching road with same prefix
  *
- * @author  Minping
+ * @author  Frederick
  * ***/
 public class RoadTrie{
 

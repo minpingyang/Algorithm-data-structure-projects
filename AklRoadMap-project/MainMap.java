@@ -18,7 +18,7 @@ import java.util.Set;
  * In addition, use all of the object I created to achieve those implementing methods.
  *
  *
- * @author Minping
+ * @author Frederick
  * */
 
 public class MainMap extends GUI{
@@ -150,6 +150,7 @@ public class MainMap extends GUI{
         //The reason is the points of nodes is based on center of display panel. In order to make clicking point
         //corresponding to the coordinator of drawing node, use clickpoint.x - half horizontal size of panel
         //clickpoint.y as well.
+        //became origin point first
        Point betterPoint = new Point (pointClicking.x - (int) (getDrawingAreaDimension().getWidth()/2), pointClicking.y -  (int) (getDrawingAreaDimension().getHeight()/2));
        Location locationClicking =Location.newFromPoint(betterPoint,currentOrigin,currentScale);
         Node nodeClicking = graph.findClosestNode(locationClicking);
