@@ -47,7 +47,11 @@ public class MainMap extends GUI{
     Graph graph;
     private Location currentDragPoint;
     private Point betterDragEndPoint;
-
+//    fields are used for A* searching
+    boolean shortestDistance;
+    private Node navigatingStartNode;
+    private Node navigatingEndNode;
+    private List<RoadSegment> shortestPathFound;
     /**main method**/
     public static void main(String[] args) {
         new MainMap();
@@ -62,6 +66,10 @@ public class MainMap extends GUI{
         currentOrigin = CENTREAKL;
         //the initial scale is related on current display panel. 55 is a good constant factor by testing.
         currentScale = Math.max(getDrawingAreaDimension().getHeight(),getDrawingAreaDimension().getWidth())/55;
+        shortestDistance = true; //default find shortest path first
+        navigatingStartNode = null;
+        navigatingEndNode = null;
+        shortestPathFound = new ArrayList<>();
     }
 
     /**
@@ -259,6 +267,7 @@ public class MainMap extends GUI{
         String lineSeparator = System.lineSeparator();
         StringBuilder stringBuilder = new StringBuilder("Roads are found:"+ searchedRoads.size() + lineSeparator);
         for (Road road : searchedRoads){
+
             stringBuilder.append("RoadID: ")
                     .append(road.roadId).append(", Road Name: ")
                     .append(road.label).append(", City: ")
