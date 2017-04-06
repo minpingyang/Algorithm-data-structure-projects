@@ -20,6 +20,8 @@ import java.io.File;
  * @author tony
  */
 public abstract class GUI {
+    private boolean isSelectedTagetNode;
+    private boolean isSelectedStartNode;
     /**
      * defines the different types of movement the user can perform, the
      * appropriate one is passed to your code when the move(Move) method is
@@ -274,6 +276,36 @@ public abstract class GUI {
                 redraw();
             }
         });
+
+        /*****add more button***********/
+        JButton naviStartNode = new JButton("Navigating Start Node");
+        naviStartNode.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                if(naviStartNode.isSelected() && !isSelectedTagetNode){
+                    naviStartNode.setBackground(Color.RED);
+                    isSelectedStartNode = true;
+                }else{
+                    naviStartNode.setSelected(false);
+                    naviStartNode.setBackground(Color.white);
+                }
+
+            }
+        });
+
+        JButton naviTargetNode = new JButton("Navigating Target Node");
+        naviTargetNode.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                if(naviTargetNode.isSelected() && !isSelectedStartNode){
+                    naviStartNode.setBackground(Color.RED);
+                    isSelectedTagetNode = true;
+                } else {
+                    naviStartNode.setBackground(Color.white);
+                    naviTargetNode.setSelected(false);
+                }
+
+            }
+        });
+
 
         // next, make the search box at the top-right. we manually fix
         // it's size, and add an action listener to call your code when

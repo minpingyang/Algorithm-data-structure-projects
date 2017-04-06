@@ -70,6 +70,7 @@ public class MainMap extends GUI{
         navigatingStartNode = null;
         navigatingEndNode = null;
         shortestPathFound = new ArrayList<>();
+
     }
 
     /**
