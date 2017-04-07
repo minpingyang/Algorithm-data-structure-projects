@@ -73,6 +73,11 @@ public class MainMap extends GUI{
 
     }
 
+    @Override
+    protected void fromShortestToFastest() {
+
+    }
+
     /**
      * core part; which is read the files of the chosen folder
      * Meantime, intialise all the filed of the class.(which is pretty much similar to constructor)

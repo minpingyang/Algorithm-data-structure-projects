@@ -284,11 +284,10 @@ public abstract class GUI {
             public void actionPerformed(ActionEvent ev) {
 //                System.out.println("1111111111111111111111111111" + naviStartNode.getModel().isSelected());
                 if(naviStartNode.isSelected() && !isSelectedTagetNode){
-//                    naviStartNode.setBackground();
+
                     isSelectedStartNode = true;
                 }else{
                     naviStartNode.setSelected(false);
-//                    naviStartNode.setBackground(Color.white);
                 }
 
             }
@@ -305,9 +304,19 @@ public abstract class GUI {
 
             }
         });
-//        JButton distanceFirst = new JButton()
 
-
+        JButton distanceFirst = new JButton("\u2197 ShortestPath?");
+        distanceFirst.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                if (distanceFirst.getText().equals("\u2197 ShortestPath?")) {
+                    distanceFirst.setText("\u2198 FastestPath");
+                } else{
+                  distanceFirst.setText("\u2197 ShortestPath?"); //reset back
+                }
+                fromShortestToFastest();
+                redraw();
+            }
+        });
         // next, make the search box at the top-right. we manually fix
         // it's size, and add an action listener to call your code when
         // the user presses enter.
@@ -376,6 +385,7 @@ public abstract class GUI {
         navigation.add(east);
         navigation.add(naviStartNode);
         navigation.add(naviTargetNode);
+        navigation.add(distanceFirst);
         controls.add(navigation);
         controls.add(Box.createRigidArea(new Dimension(15, 0)));
         // glue is another invisible component that grows to take up all the
@@ -476,6 +486,8 @@ public abstract class GUI {
         frame.pack();
         frame.setVisible(true);
     }
+
+    protected abstract void fromShortestToFastest();
 }
 
 // code for COMP261 assignments
