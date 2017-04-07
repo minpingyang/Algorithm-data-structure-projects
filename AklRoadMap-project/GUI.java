@@ -20,8 +20,8 @@ import java.io.File;
  * @author tony
  */
 public abstract class GUI {
-    private boolean isSelectedTagetNode;
-    private boolean isSelectedStartNode;
+    private boolean isSelectedTagetNode = false;
+    private boolean isSelectedStartNode =false;
     /**
      * defines the different types of movement the user can perform, the
      * appropriate one is passed to your code when the move(Move) method is
@@ -272,39 +272,40 @@ public abstract class GUI {
         JButton out = new JButton("\u2012");
         out.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
+                System.out.println("1111111111111111111111111111" + out.getModel().isPressed() );
                 onMove(Move.ZOOM_OUT);
                 redraw();
             }
         });
 
         /*****add more button***********/
-        JButton naviStartNode = new JButton("Navigating Start Node");
+        JToggleButton naviStartNode = new JToggleButton("Navigating Start Node");
         naviStartNode.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
+//                System.out.println("1111111111111111111111111111" + naviStartNode.getModel().isSelected());
                 if(naviStartNode.isSelected() && !isSelectedTagetNode){
-                    naviStartNode.setBackground(Color.RED);
+//                    naviStartNode.setBackground();
                     isSelectedStartNode = true;
                 }else{
                     naviStartNode.setSelected(false);
-                    naviStartNode.setBackground(Color.white);
+//                    naviStartNode.setBackground(Color.white);
                 }
 
             }
         });
 
-        JButton naviTargetNode = new JButton("Navigating Target Node");
+        JToggleButton naviTargetNode = new JToggleButton("Navigating Target Node");
         naviTargetNode.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 if(naviTargetNode.isSelected() && !isSelectedStartNode){
-                    naviStartNode.setBackground(Color.RED);
                     isSelectedTagetNode = true;
                 } else {
-                    naviStartNode.setBackground(Color.white);
                     naviTargetNode.setSelected(false);
                 }
 
             }
         });
+//        JButton distanceFirst = new JButton()
 
 
         // next, make the search box at the top-right. we manually fix
@@ -373,6 +374,8 @@ public abstract class GUI {
         navigation.add(west);
         navigation.add(south);
         navigation.add(east);
+        navigation.add(naviStartNode);
+        navigation.add(naviTargetNode);
         controls.add(navigation);
         controls.add(Box.createRigidArea(new Dimension(15, 0)));
         // glue is another invisible component that grows to take up all the
