@@ -15,6 +15,7 @@ public class Node {
 	private Color color;
 	public static final Color DEFAULT_COLOR = new Color(104, 145, 213);
 	public static final Color CLICKED_COLOR = new Color(255, 46, 12);
+	public static final Color NAVIGA_COLOR = new Color(33, 211, 12);
 
 	// if nodes are linked with a node, then they are the neighbours of the node.
 	//linkedSegments is used to find all the segments of a node which is clicked.

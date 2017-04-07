@@ -73,6 +73,34 @@ public class MainMap extends GUI{
 
     }
 
+    private void selectNavigationNode(Node naviNode,boolean startNode){
+
+        //rest clicking node
+        if (clickedNode !=null){
+            clickedNode.setColor(Node.DEFAULT_COLOR);
+            clickedNode = null;
+        }
+
+        if(startNode){
+           //REST navigating node
+           if(navigatingStartNode != null){
+               navigatingStartNode.setColor(Node.DEFAULT_COLOR);
+           }
+           //start select starting navigating node
+           navigatingStartNode = naviNode;
+           navigatingStartNode.setColor(Node.NAVIGA_COLOR);
+       }else{
+           //REST navigating node
+           if(navigatingEndNode != null){
+               navigatingEndNode.setColor(Node.DEFAULT_COLOR);
+           }
+           //start select target node
+           navigatingEndNode = naviNode;
+           navigatingEndNode.setColor(Node.NAVIGA_COLOR);
+       }
+
+    }
+
     @Override
     protected void fromShortestToFastest() {
 
