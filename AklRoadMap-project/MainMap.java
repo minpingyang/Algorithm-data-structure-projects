@@ -219,41 +219,40 @@ public class MainMap extends GUI{
        Location locationClicking =Location.newFromPoint(betterPoint,currentOrigin,currentScale);
         Node nodeClicking = graph.findClosestNode(locationClicking);
         if(nodeClicking != null){
-            //reset the previous node color to default color before user clicked a new node every time
+            //case1: click node
+            if (!getisSelectedStartNode()&& !getisSelectedTagetNode()){
+                selectNodeHelper(nodeClicking,"clickNode");
+                /***show info of the clicking node**/
+                int count = 1; //count how many roads the node belong to, and list them out in the TextOutArea
+                // line Separator is =======> "\n" new line in C
+                String lineSeparator = System.lineSeparator();
+                //basic information of the clicked node
+                StringBuilder stringBuilder = new StringBuilder("Click on Node which ID is: "+clickedNode.nodeId
+                        + lineSeparator + "Roads the intersection belong to: " + lineSeparator);
+                //information of information of the road which the node belong to
+                //different roadSegment probably belong to same road, due to this case,
+                // if statement is used to avoid duplication road information
 
-//            if(clickedNode!=null)
-//                clickedNode.setColor(Node.DEFAULT_COLOR);
-//            clickedNode = nodeClicking;
-//            clickedNode.setColor(Node.CLICKED_COLOR);
-
-
-            /**
-             * using stringBuilder to create a string object to edit the information of node, finally, which is used to pass to SetText() method
-             * lineSeparator is used to format the information
-             * linkedSegment field is used to find all segments of the roads the node belong to
-             * **/
-
-            int count = 1; //count how many roads the node belong to, and list them out in the TextOutArea
-            // line Separator is =======> "\n" new line in C
-            String lineSeparator = System.lineSeparator();
-            //basic information of the clicked node
-            StringBuilder stringBuilder = new StringBuilder("Click on Node which ID is: "+clickedNode.nodeId
-                    + lineSeparator + "Roads the intersection belong to: " + lineSeparator);
-            //information of information of the road which the node belong to
-            //different roadSegment probably belong to same road, due to this case,
-            // if statement is used to avoid duplication road information
-
-            Set<String> infoSet =new HashSet<>();
-            for(RoadSegment roadSegment: clickedNode.linkedSegments){
-                String string = roadSegment.road.label +","+ roadSegment.road.city + ", road ID: "+roadSegment.roadId;
-                if(!infoSet.contains(string))    //avoid duplicate information
-                    infoSet.add(string);
+                Set<String> infoSet =new HashSet<>();
+                for(RoadSegment roadSegment: clickedNode.linkedSegments){
+                    String string = roadSegment.road.label +","+ roadSegment.road.city + ", road ID: "+roadSegment.roadId;
+                    if(!infoSet.contains(string))    //avoid duplicate information
+                        infoSet.add(string);
+                }
+                //format information
+                for (String string:infoSet){
+                    stringBuilder.append("( ").append(count++).append(" )").append(string).append(lineSeparator);
+                }
+                getTextOutputArea().setText(stringBuilder.toString());
+            //case2: select navigation start node
+            }else if(getisSelectedStartNode()){
+                selectNodeHelper(nodeClicking,"navigationStart");
+                //case3: select navigation target node
+            }else if (getisSelectedTagetNode()){
+                selectNodeHelper(nodeClicking,"navigationTarget");
             }
-            //format information
-            for (String string:infoSet){
-                stringBuilder.append("( ").append(count++).append(" )").append(string).append(lineSeparator);
-            }
-            getTextOutputArea().setText(stringBuilder.toString());
+
+
         }else{
             getTextOutputArea().setText(null);
         }

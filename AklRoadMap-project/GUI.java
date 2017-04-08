@@ -22,6 +22,13 @@ import java.io.File;
 public abstract class GUI {
     private boolean isSelectedTagetNode = false;
     private boolean isSelectedStartNode =false;
+
+    public boolean getisSelectedStartNode(){
+        return isSelectedStartNode;
+    }
+    public boolean getisSelectedTagetNode(){
+        return isSelectedTagetNode;
+    }
     /**
      * defines the different types of movement the user can perform, the
      * appropriate one is passed to your code when the move(Move) method is
@@ -283,9 +290,8 @@ public abstract class GUI {
         naviStartNode.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
 //                System.out.println("1111111111111111111111111111" + naviStartNode.getModel().isSelected());
-                if(naviStartNode.isSelected() && !isSelectedTagetNode){
-
-                    isSelectedStartNode = true;
+                if( !isSelectedTagetNode){
+                    isSelectedStartNode = naviStartNode.isSelected(); //fixed
                 }else{
                     naviStartNode.setSelected(false);
                 }
@@ -296,8 +302,8 @@ public abstract class GUI {
         JToggleButton naviTargetNode = new JToggleButton("Navigating Target Node");
         naviTargetNode.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                if(naviTargetNode.isSelected() && !isSelectedStartNode){
-                    isSelectedTagetNode = true;
+                if( !isSelectedStartNode){
+                    isSelectedTagetNode = naviTargetNode.isSelected(); //fixed
                 } else {
                     naviTargetNode.setSelected(false);
                 }
