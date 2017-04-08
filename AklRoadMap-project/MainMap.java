@@ -3,7 +3,6 @@ package code.comp261.ass1;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
-
 import java.awt.event.MouseWheelEvent;
 import java.io.File;
 import java.util.ArrayList;
@@ -72,8 +71,13 @@ public class MainMap extends GUI{
         shortestPathFound = new ArrayList<>();
 
     }
-
-    private void selectNavigationNode(Node naviNode,boolean startNode){
+    /****
+     * This method is used to select different kind of node, which means that click node could be used for showing information
+     * or click for starting navigation or for choosing the target for navigation
+     * @param  clickingNode node is being clicked
+     * @param  nodeType   distinguish the kind of node
+     * *******/
+    private void selectNodeHelper(Node clickingNode,String nodeType){
 
         //rest clicking node
         if (clickedNode !=null){
@@ -81,23 +85,41 @@ public class MainMap extends GUI{
             clickedNode = null;
         }
 
-        if(startNode){
-           //REST navigating node
-           if(navigatingStartNode != null){
-               navigatingStartNode.setColor(Node.DEFAULT_COLOR);
-           }
-           //start select starting navigating node
-           navigatingStartNode = naviNode;
-           navigatingStartNode.setColor(Node.NAVIGA_COLOR);
-       }else{
-           //REST navigating node
-           if(navigatingEndNode != null){
-               navigatingEndNode.setColor(Node.DEFAULT_COLOR);
-           }
-           //start select target node
-           navigatingEndNode = naviNode;
-           navigatingEndNode.setColor(Node.NAVIGA_COLOR);
-       }
+        if(nodeType.equals("navigationStart")){
+            //REST navigating node
+            if(navigatingStartNode != null){
+                navigatingStartNode.setColor(Node.DEFAULT_COLOR);
+            }
+            //start select starting navigating node
+            navigatingStartNode = clickingNode;
+            navigatingStartNode.setColor(Node.NAVIGA_COLOR);
+        }else if (nodeType.equals("navigationTarget")) {
+            //REST navigating end node
+            if(navigatingEndNode != null){
+                navigatingEndNode.setColor(Node.DEFAULT_COLOR);
+            }
+            //start select target node
+            navigatingEndNode = clickingNode;
+            navigatingEndNode.setColor(Node.NAVIGA_COLOR);
+        }else {
+            // reset everything about navigation
+            if(navigatingStartNode != null){
+                navigatingStartNode.setColor(Node.DEFAULT_COLOR);
+                navigatingStartNode = null;
+            }
+            if(navigatingEndNode != null){
+                navigatingEndNode.setColor(Node.DEFAULT_COLOR);
+                navigatingEndNode = null;
+            }
+            if(!shortestPathFound.isEmpty()){
+                for(RoadSegment segment: shortestPathFound){
+                    segment.setColor(RoadSegment.DEFAULT_COLOUR);
+                }
+            }
+            //start to select click node
+            clickedNode = clickingNode;
+            clickedNode.setColor(Node.CLICKED_COLOR);
+        }
 
     }
 
@@ -198,10 +220,12 @@ public class MainMap extends GUI{
         Node nodeClicking = graph.findClosestNode(locationClicking);
         if(nodeClicking != null){
             //reset the previous node color to default color before user clicked a new node every time
-            if(clickedNode!=null)
-                clickedNode.setColor(Node.DEFAULT_COLOR);
-            clickedNode = nodeClicking;
-            clickedNode.setColor(Node.CLICKED_COLOR);
+
+//            if(clickedNode!=null)
+//                clickedNode.setColor(Node.DEFAULT_COLOR);
+//            clickedNode = nodeClicking;
+//            clickedNode.setColor(Node.CLICKED_COLOR);
+
 
             /**
              * using stringBuilder to create a string object to edit the information of node, finally, which is used to pass to SetText() method
@@ -233,7 +257,24 @@ public class MainMap extends GUI{
         }else{
             getTextOutputArea().setText(null);
         }
+
+        if(navigatingStartNode != null && navigatingEndNode != null){
+            pathFinding();
+        }
+
     }
+    /**A* search path finding**/
+    private  void pathFinding(){
+        //set the displaying navigation path to default colour
+        if(!shortestPathFound.isEmpty()){
+            for(RoadSegment roadSegment : shortestPathFound){
+                roadSegment.setColor(RoadSegment.DEFAULT_COLOUR);
+            }
+            shortestPathFound.clear();
+        }
+//        shortestPathFound =
+    }
+
 
     @Override
     protected void onDrag(MouseEvent e) {
