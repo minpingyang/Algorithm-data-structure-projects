@@ -264,14 +264,25 @@ public class MainMap extends GUI{
     }
     /**A* search path finding**/
     private  void pathFinding(){
-        //set the displaying navigation path to default colour
+        //rest path
         if(!shortestPathFound.isEmpty()){
-            for(RoadSegment roadSegment : shortestPathFound){
+            for(RoadSegment roadSegment: shortestPathFound ){
                 roadSegment.setColor(RoadSegment.DEFAULT_COLOUR);
             }
+            //delete the previous segements in the list
             shortestPathFound.clear();
         }
-//        shortestPathFound =
+
+        shortestPathFound = ASearchUtil.findShortestPath(navigatingStartNode,navigatingEndNode,shortestDistance);
+        //start highlight current shortest path
+        if(!shortestPathFound.isEmpty()){
+            for(RoadSegment roadSegment : shortestPathFound){
+                roadSegment.setColor(RoadSegment.NAVI_COLOUR);
+            }
+
+            //show the info of the shortestPath
+        }
+
     }
 
 

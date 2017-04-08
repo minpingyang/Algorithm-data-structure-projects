@@ -22,6 +22,7 @@ public class RoadSegment{
 	private Color color;
 	public static final Color DEFAULT_COLOUR = new Color(132, 130, 147);
 	public static final Color SEARCHED_COLOUR = new Color(222, 3, 255);
+	public static final Color NAVI_COLOUR = new Color(255, 14, 22);
 	/**constructor
 	 * This is used by loadSegment method of Graph class
 	 * **/
