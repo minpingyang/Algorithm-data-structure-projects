@@ -41,17 +41,33 @@ public class GuardBot extends Robot {
 		if(!robotsInSight.isEmpty()) {
 			// shoot a robot then!
 			Robot target = robotsInSight.get(0);			
-			battle.actions.add(new Shoot(this,target,1));			
+			battle.actions.add(new Shoot(this,target,1));
+			target.strength = target.strength - 1;
+			if(this.strength < 0) {
+				isDead = true;
+			}
 		}
 		
 		// Now, move robot
 		int radius = 5;
 		
 		int dy = getyPosition() - startYPosition;
+		int dx = getxPosition() - startXPosition;
 		int newXPosition = getxPosition();		
 		int newYPosition = getyPosition();
 		
 		// This implements a simple alternating walk pattern.
+		
+		if(dx >0 && dx < radius && newXPosition < battle.arenaWidth -2){
+			newXPosition++;
+		}else if(dx >0 && dx > di){
+			
+		}
+		
+		
+		
+		
+		
 		if(getxPosition() < startXPosition) {
 			if(dy < radius && getyPosition() < battle.arenaHeight) {
 				newYPosition = getyPosition() + 1;
@@ -67,5 +83,19 @@ public class GuardBot extends Robot {
 		}
 		battle.actions.add(new Move(newXPosition,newYPosition,this));
 		
+	}
+	public void common(Battle battle){
+		// First, look to see if there is anything to fire at.
+				ArrayList<Robot> robotsInSight = findRobotsInSight(battle, 10);
+				
+				if(!robotsInSight.isEmpty()) {
+					// shoot a robot then!
+					Robot target = robotsInSight.get(0);			
+					battle.actions.add(new Shoot(this,target,1));
+					target.strength = target.strength - 1;
+					if(this.strength < 0) {
+						isDead = true;
+					}
+				}
 	}
 }
