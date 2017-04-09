@@ -23,7 +23,7 @@ public class RandomBot extends Robot {
 	@Override
 	public void takeTurn(Battle battle) {		
 		// First, look to see if there is anything to fire at.
-		LinkedList<Robot> robotsInSight = findRobotsInSight(battle, 10);
+		ArrayList<Robot> robotsInSight = findRobotsInSight(battle, 10);
 		
 		if(!robotsInSight.isEmpty()) {
 			// shoot a robot then!

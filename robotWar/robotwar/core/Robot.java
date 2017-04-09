@@ -74,11 +74,11 @@ public abstract class Robot {
 	 *            the distance that this robot can see.
 	 * @return list of robots in sight
 	 */
-	protected LinkedList<Robot> findRobotsInSight(Battle battle,
+	protected ArrayList<Robot> findRobotsInSight(Battle battle,
 			int distance) {
 		
-		LinkedList<Robot> robots = battle.robots;
-		LinkedList<Robot> visibleRobots = new LinkedList<Robot>();
+		ArrayList<Robot> robots = battle.robots;
+		ArrayList<Robot> visibleRobots = new ArrayList<Robot>();
 		for(Robot r : robots) {
 			if(r != this && !r.isDead) {
 				int dx = xPosition - r.xPosition;
