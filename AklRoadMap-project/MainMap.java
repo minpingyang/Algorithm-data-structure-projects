@@ -279,10 +279,20 @@ public class MainMap extends GUI{
             for(RoadSegment roadSegment : shortestPathFound){
                 roadSegment.setColor(RoadSegment.NAVI_COLOUR);
             }
-
-            //show the info of the shortestPath
         }
-
+        //show info of the found path
+        if(shortestPathFound == null || shortestPathFound.isEmpty()){
+            return;
+        }
+        String lineSeparator = System.lineSeparator();
+        List<String> stringList = new ArrayList<>();
+        double lengthOfRoad = 0;
+        stringList.add(shortestPathFound.)
+        for(int i = 0; i < shortestPathFound.size() -1; i++){
+            if(!shortestPathFound.get(i).road.label.equals(shortestPathFound.get(i+1).road.label)){
+                lengthOfRoad =
+            }
+        }
     }
 
 
