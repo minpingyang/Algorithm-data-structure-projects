@@ -64,6 +64,9 @@ public abstract class Robot {
 	 */
 	public void isShot(int strength) {
 		this.strength = this.strength - 1;
+		if(this.strength<0){
+			this.isDead = true;
+		}
 		// should check isDead here?
 	}
 	
@@ -96,19 +99,19 @@ public abstract class Robot {
 		
 		return visibleRobots;
 	}
-	protected void common(Battle battle,String robotType, int strength){
+	protected void common(Battle battle, int strength){
 		List<Robot> robotsInSight = findRobotsInSight(battle, 10);
 
 		if(!robotsInSight.isEmpty()) {
 			// shoot a robot then!
 			Robot target = robotsInSight.get(0);
 			battle.actions.add(new Shoot(this,target,strength));
-			if(robotType.equals("randomRobot")){
+
 				target.strength = target.strength - 1;
 				if(this.strength < 0) {
 					isDead = true;
 				}
-			}
+
 
 		}
 	}

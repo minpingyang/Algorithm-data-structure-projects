@@ -34,7 +34,7 @@ public class GuardBot extends Robot {
 	@Override
 	public void takeTurn(Battle battle) {
 
-		common(battle,"guardRobot",1);
+		common(battle,1);
 		// Now, move robot
 		int radius = 5;
 		int dy = getyPosition() - startYPosition;

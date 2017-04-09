@@ -21,7 +21,7 @@ public class RandomBot extends Robot {
 	@Override
 	public void takeTurn(Battle battle) {		
 
-		common(battle,"randomRobot",0);
+		common(battle,0);
 		// Now, make a random move
 		int dx = Main.randomInteger(3) - 1;
 		int dy = Main.randomInteger(3) - 1;
