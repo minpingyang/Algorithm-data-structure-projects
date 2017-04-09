@@ -24,6 +24,7 @@ public abstract class Robot {
 	}
 
 	public void setxPosition(int xPosition) {
+		
 		this.xPosition = xPosition;
 	}
 
@@ -74,11 +75,11 @@ public abstract class Robot {
 	 *            the distance that this robot can see.
 	 * @return list of robots in sight
 	 */
-	protected ArrayList<Robot> findRobotsInSight(Battle battle,
+	protected List<Robot> findRobotsInSight(Battle battle,
 			int distance) {
 		
-		ArrayList<Robot> robots = battle.robots;
-		ArrayList<Robot> visibleRobots = new ArrayList<Robot>();
+		List<Robot> robots = battle.robots;
+		List<Robot> visibleRobots = new ArrayList<Robot>();
 		for(Robot r : robots) {
 			if(r != this && !r.isDead) {
 				int dx = xPosition - r.xPosition;
@@ -95,4 +96,22 @@ public abstract class Robot {
 		
 		return visibleRobots;
 	}
+	protected void common(Battle battle,String robotType, int strength){
+		List<Robot> robotsInSight = findRobotsInSight(battle, 10);
+
+		if(!robotsInSight.isEmpty()) {
+			// shoot a robot then!
+			Robot target = robotsInSight.get(0);
+			battle.actions.add(new Shoot(this,target,strength));
+			if(robotType.equals("randomRobot")){
+				target.strength = target.strength - 1;
+				if(this.strength < 0) {
+					isDead = true;
+				}
+			}
+
+		}
+	}
+
+
 }

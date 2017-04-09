@@ -1,7 +1,5 @@
 package robotwar.core;
 
-import java.util.ArrayList;
-
 /**
  * The GuardBot marks out its starting location and hangs around there
  * protecting it.
@@ -13,17 +11,17 @@ public class GuardBot extends Robot {
 	public int guardArea;
 	public int startXPosition;
 	public int startYPosition;
-	
+
 	/**
 	 * Construct a gaurd bot with a given name, starting position, strength.
-	 *  
+	 * 
 	 * @param name
 	 * @param xPosition
 	 * @param yPosition
 	 * @param strength
 	 */
-	public GuardBot(String name,  int xPosition, int yPosition, int strength) {
-		super(name, xPosition,yPosition,strength);
+	public GuardBot(String name, int xPosition, int yPosition, int strength) {
+		super(name, xPosition, yPosition, strength);
 		startXPosition = xPosition;
 		startYPosition = yPosition;
 	}
@@ -34,68 +32,37 @@ public class GuardBot extends Robot {
 	 * sighted then it is attacked immediately.
 	 */
 	@Override
-	public void takeTurn(Battle battle) {		
-		// First, look to see if there is anything to fire at.
-		ArrayList<Robot> robotsInSight = findRobotsInSight(battle, 10);
-		
-		if(!robotsInSight.isEmpty()) {
-			// shoot a robot then!
-			Robot target = robotsInSight.get(0);			
-			battle.actions.add(new Shoot(this,target,1));
-			target.strength = target.strength - 1;
-			if(this.strength < 0) {
-				isDead = true;
-			}
-		}
-		
+	public void takeTurn(Battle battle) {
+
+		common(battle,"guardRobot",1);
 		// Now, move robot
 		int radius = 5;
-		
 		int dy = getyPosition() - startYPosition;
-		int dx = getxPosition() - startXPosition;
-		int newXPosition = getxPosition();		
-		int newYPosition = getyPosition();
-		
+		int newXPos = getxPosition();
+		int newYPos = getyPosition();
+
 		// This implements a simple alternating walk pattern.
-		
-		if(dx >0 && dx < radius && newXPosition < battle.arenaWidth -2){
-			newXPosition++;
-		}else if(dx >0 && dx > di){
-			
-		}
-		
-		
-		
-		
-		
-		if(getxPosition() < startXPosition) {
-			if(dy < radius && getyPosition() < battle.arenaHeight) {
-				newYPosition = getyPosition() + 1;
+		if (getxPosition() < startXPosition) {
+			if (dy < radius && getyPosition() < battle.arenaHeight) {
+				newYPos = getyPosition() + 1;
 			} else {
-				newXPosition = getxPosition() + 1;
+				newXPos = getxPosition() + 1;
 			}
 		} else {
-			if(dy > -radius && getyPosition() >= 0) {
-				newYPosition = getyPosition() - 1;
+			if (dy > -radius && getyPosition() >= 0) {
+				newYPos = getyPosition() - 1;
 			} else {
-				newXPosition = getxPosition() - 1;
-			}				
+				newXPos = getxPosition() - 1;
+			}
 		}
-		battle.actions.add(new Move(newXPosition,newYPosition,this));
-		
+//		battle.actions.add(new Move(newXPos, newYPos, this));
+
+		if(newXPos< 0 || newXPos>battle.arenaWidth || newYPos<0 || newYPos > battle.arenaHeight-1){
+			return;
+		}else{
+			battle.actions.add(new Move(newXPos,newYPos,this));
+		}
+
 	}
-	public void common(Battle battle){
-		// First, look to see if there is anything to fire at.
-				ArrayList<Robot> robotsInSight = findRobotsInSight(battle, 10);
-				
-				if(!robotsInSight.isEmpty()) {
-					// shoot a robot then!
-					Robot target = robotsInSight.get(0);			
-					battle.actions.add(new Shoot(this,target,1));
-					target.strength = target.strength - 1;
-					if(this.strength < 0) {
-						isDead = true;
-					}
-				}
-	}
+
 }

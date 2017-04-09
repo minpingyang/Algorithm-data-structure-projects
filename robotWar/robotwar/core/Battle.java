@@ -14,12 +14,12 @@ public class Battle {
 	/**
 	 * The list of robots in the arena, including those which are deceased.
 	 */
-	public ArrayList<Robot> robots = new ArrayList<Robot>();
+	public List<Robot> robots = new ArrayList<>();
 	
 	/**
 	 * The list of actions applied the current turn. 
 	 */
-	public ArrayList<Action> actions = new ArrayList<Action>();
+	public List<Action> actions = new ArrayList<Action>();
 	
 	public int arenaWidth;
 	public int arenaHeight;

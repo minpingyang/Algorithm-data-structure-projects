@@ -1,7 +1,5 @@
 package robotwar.core;
 
-import java.util.*;
-
 import robotwar.Main;
 
 /**
@@ -22,18 +20,8 @@ public class RandomBot extends Robot {
 	 */
 	@Override
 	public void takeTurn(Battle battle) {		
-		// First, look to see if there is anything to fire at.
-		ArrayList<Robot> robotsInSight = findRobotsInSight(battle, 10);
-		
-		if(!robotsInSight.isEmpty()) {
-			// shoot a robot then!
-			Robot target = robotsInSight.get(0);
-			battle.actions.add(new Shoot(this,target,0));
-			target.strength = target.strength - 1;
-			if(this.strength < 0) {
-				isDead = true;
-			}			
-		} 
+
+		common(battle,"randomRobot",0);
 		// Now, make a random move
 		int dx = Main.randomInteger(3) - 1;
 		int dy = Main.randomInteger(3) - 1;
@@ -49,8 +37,15 @@ public class RandomBot extends Robot {
 			}
 		} else {
 			battle.log("Robot " + name + " bumps into arena wall!");
-		}		
-		
-		battle.actions.add(new Move(newXPos,newYPos,this));
+		}
+
+		if(newXPos< 1 || newXPos>battle.arenaWidth-1 || newYPos<1 || newYPos > battle.arenaHeight-1){
+			return;
+		}else{
+			battle.actions.add(new Move(newXPos,newYPos,this));
+		}
+
+
+
 	}
 }
