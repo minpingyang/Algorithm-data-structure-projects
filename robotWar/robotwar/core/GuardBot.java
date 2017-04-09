@@ -46,22 +46,23 @@ public class GuardBot extends Robot {
 		
 		// Now, move robot
 		int radius = 5;
-		int dy = yPosition - startYPosition;
-		int newXPosition = xPosition;		
-		int newYPosition = yPosition;
+		
+		int dy = getyPosition() - startYPosition;
+		int newXPosition = getxPosition();		
+		int newYPosition = getyPosition();
 		
 		// This implements a simple alternating walk pattern.
-		if(xPosition < startXPosition) {
-			if(dy < radius && yPosition < battle.arenaHeight) {
-				newYPosition = yPosition + 1;
+		if(getxPosition() < startXPosition) {
+			if(dy < radius && getyPosition() < battle.arenaHeight) {
+				newYPosition = getyPosition() + 1;
 			} else {
-				newXPosition = xPosition + 1;
+				newXPosition = getxPosition() + 1;
 			}
 		} else {
-			if(dy > -radius && yPosition >= 0) {
-				newYPosition = yPosition - 1;
+			if(dy > -radius && getyPosition() >= 0) {
+				newYPosition = getyPosition() - 1;
 			} else {
-				newXPosition = xPosition - 1;
+				newXPosition = getxPosition() - 1;
 			}				
 		}
 		battle.actions.add(new Move(newXPosition,newYPosition,this));

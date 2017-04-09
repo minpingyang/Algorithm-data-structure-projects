@@ -11,10 +11,31 @@ import java.util.*;
  */
 public abstract class Robot {
 	public String name;
-	public int xPosition;	
-	public int yPosition;
+//	public int xPosition;	
+//	public int yPosition;
+	private int  xPosition;
+	private int yPosition;
 	public int strength;
 	public boolean isDead;
+	
+	/**setter and getter of coordinates**/
+	public int getxPosition() {
+		return xPosition;
+	}
+
+	public void setxPosition(int xPosition) {
+		this.xPosition = xPosition;
+	}
+
+	public int getyPosition() {
+		return yPosition;
+	}
+
+	public void setyPosition(int yPosition) {
+		this.yPosition = yPosition;
+	}
+
+	
 	
 	/**
 	 * Construct a robot at a given x and y position with a given strength.

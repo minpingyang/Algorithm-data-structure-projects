@@ -37,13 +37,13 @@ public class RandomBot extends Robot {
 		// Now, make a random move
 		int dx = Main.randomInteger(3) - 1;
 		int dy = Main.randomInteger(3) - 1;
-		int newXPos = xPosition + dx;
-		int newYPos = yPosition + dy;
+		int newXPos = getxPosition() + dx;
+		int newYPos = getyPosition() + dy;
 
 		// Try to move, whilst watching out for the arena wall!
 		if(newXPos >= 0 && newXPos < battle.arenaWidth) {
 			if(newYPos >= 0 && newYPos < battle.arenaHeight) {
-				battle.log("Robot " + name + " moves to " + xPosition + ", " + yPosition);
+				battle.log("Robot " + name + " moves to " + getxPosition() + ", " + getyPosition());
 			} else {
 				battle.log("Robot " + name + " bumps into arena wall!");
 			}
