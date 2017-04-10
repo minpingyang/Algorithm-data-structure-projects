@@ -146,11 +146,12 @@ public class BattleCanvas extends Canvas {
 //				int ryp = computePosition(m.yDestination * SQUARE_HEIGHT, m.yOriginal * SQUARE_HEIGHT, step);
 
 			}
-			if(a instanceof Shoot && (step==2||step == 4 || step ==6 || step == 8 || step== 9)) {
+			if(a instanceof Shoot && (step==2||step == 4 || step ==6 || step == 8 )) {
 
 				// shots only fired at beginning of movement phase.
 				drawShot(g2d, (Shoot)a);
 			}
+
 		}
 		// Draw any robots which didn't move in that turn.
 		for (Robot r : battle.getRobots()) {
@@ -160,15 +161,7 @@ public class BattleCanvas extends Canvas {
 		}
 		
 		
-//		 For each action, draw
-//		for (Action a : battle.getActions()) {
-//			System.out.println("**************************");
-//			System.out.println("**************************"+step);
-//			if((a instanceof Shoot && step == 0) ) {
-//				// shots only fired at beginning of movement phase.
-//				drawShot(g2d, (Shoot)a);
-//			}
-//		}
+
 		
 		step = (step + 1) % INTERPOLATION_STEPS;
 	}
