@@ -125,7 +125,8 @@ public class MainMap extends GUI{
 
     @Override
     protected void fromShortestToFastest() {
-
+       shortestDistance = !shortestDistance;
+       pathFinding();
     }
 
     /**

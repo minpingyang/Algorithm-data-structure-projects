@@ -36,7 +36,7 @@ public class ASearchNode {
 /***
  * set G cost which is the distance/time cost from part node to current node.
 * ***/
-    private void setGCostFromStart(boolean shortestDistance) {
+    public void setGCostFromStart(boolean shortestDistance) {
         if(parentNode == null){
             this.GcostFromStart = 0;
         }

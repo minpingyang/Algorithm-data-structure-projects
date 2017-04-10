@@ -89,5 +89,17 @@ public class RoadSegment{
 		this.color = color;
 	}
 
-
+	/******for A* search, find the end node of the segment by its start node***/
+	public Node getEndNode(Node startNodeOfSegment) {
+		//neither ends of segement
+		if(startNodeOfSegment.nodeId != startNode.nodeId && startNodeOfSegment.nodeId !=endNode.nodeId){
+			return null;
+		}
+		//it is the start node
+		if(startNodeOfSegment.nodeId == startNodeOfSegment.nodeId){
+			return endNode;
+		}else{
+			return startNode;
+		}
+	}
 }
