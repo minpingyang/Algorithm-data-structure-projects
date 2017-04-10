@@ -1,5 +1,11 @@
 package robotwar.core;
 
+import robotwar.ui.BattleCanvas;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.IOException;
+
 /**
  * The GuardBot marks out its starting location and hangs around there
  * protecting it.
@@ -59,10 +65,26 @@ public class GuardBot extends Robot {
 
 		if(newXPos< 0 || newXPos>battle.arenaWidth || newYPos<0 || newYPos > battle.arenaHeight-1){
 			return;
-		}else{
-			battle.actions.add(new Move(newXPos,newYPos,this));
+		}else if(!isDead){
+			battle.getActions().add(new Move(newXPos,newYPos,this));
 		}
 
 	}
+
+	@Override
+	public Image getRobotImage() {
+
+		java.net.URL imageURL = BattleCanvas.class.getResource("images/Robot4.png");
+		try {
+			Image img = ImageIO.read(imageURL);
+
+			return img;
+
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to load Guard robot image " );
+		}
+
+	}
+
 
 }

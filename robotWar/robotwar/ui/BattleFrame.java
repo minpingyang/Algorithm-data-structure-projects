@@ -99,7 +99,7 @@ public class BattleFrame extends JFrame implements ActionListener {
 
 			// Check whether there are any alive robots remaining!
 			aliveRobots = false;
-			for (Robot r : battle.robots) {
+			for (Robot r : battle.getRobots()) {
 				if (!r.isDead) {
 					aliveRobots = true;
 					count++;
@@ -108,6 +108,7 @@ public class BattleFrame extends JFrame implements ActionListener {
 			if(count<2){
 				battleCanvas.repaint();
 				aliveRobots = false;
+				battle.getRobots().clear();
 			}
 
 
@@ -117,7 +118,7 @@ public class BattleFrame extends JFrame implements ActionListener {
 						JOptionPane.YES_NO_CANCEL_OPTION,
 						JOptionPane.WARNING_MESSAGE);
 				if (r == JOptionPane.YES_OPTION) {
-					battle.robots.clear();
+					battle.getRobots().clear();
 					clock.setActive(false);
 				} else {
 					System.exit(0);
@@ -136,10 +137,10 @@ public class BattleFrame extends JFrame implements ActionListener {
 		} else if(e.getActionCommand().equals("Stop")) {
 			clock.setActive(false);
 		} else if(e.getActionCommand().equals("Clear")) {
-			battle.robots.clear();
+			battle.getRobots().clear();
 			battleCanvas.repaint();
 		} else if(e.getActionCommand().equals("Add Robot")) {
-			int index = battle.robots.size();
+			int index = battle.getRobots().size();
 			String robotKind = (String) robotCombo.getSelectedItem();
 			int xPos = Main.randomInteger(battle.arenaWidth);
 			int yPos = Main.randomInteger(battle.arenaHeight);
@@ -147,9 +148,9 @@ public class BattleFrame extends JFrame implements ActionListener {
 			if (robotKind.equals("RandomBot")) {
 				robot = new RandomBot("RandomBot" + index, xPos, yPos, 10);
 			} else if (robotKind.equals("GuardBot")) {
-				robot = new GuardBot("RandomBot" + index, xPos, yPos, 10);
+				robot = new GuardBot("GuardBot" + index, xPos, yPos, 10);
 			}
-			battle.robots.add(robot);
+			battle.getRobots().add(robot);
 			battleCanvas.repaint();
 		} 
 	}

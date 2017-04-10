@@ -1,6 +1,8 @@
 package robotwar.core;
 
-import java.util.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An abstract class representing a Robot in the battle. Subclasses of this can
@@ -81,7 +83,7 @@ public abstract class Robot {
 	protected List<Robot> findRobotsInSight(Battle battle,
 			int distance) {
 		
-		List<Robot> robots = battle.robots;
+		List<Robot> robots = battle.getRobots();
 		List<Robot> visibleRobots = new ArrayList<Robot>();
 		for(Robot r : robots) {
 			if(r != this && !r.isDead) {
@@ -105,7 +107,7 @@ public abstract class Robot {
 		if(!robotsInSight.isEmpty()) {
 			// shoot a robot then!
 			Robot target = robotsInSight.get(0);
-			battle.actions.add(new Shoot(this,target,strength));
+			battle.getActions().add(new Shoot(this,target,strength));
 
 				//target.strength = target.strength - 1;
 				if(this.strength < 1) {
@@ -115,6 +117,8 @@ public abstract class Robot {
 
 		}
 	}
+	public abstract Image getRobotImage();
+
 
 
 }

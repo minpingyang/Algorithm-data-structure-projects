@@ -1,13 +1,12 @@
 package robotwar.ui;
 
-import java.io.IOException;
-import java.awt.*;
-import java.util.*;
-import javax.imageio.ImageIO;
-import robotwar.core.Robot;
 import robotwar.core.*;
+import robotwar.core.Robot;
 
-import robotwar.core.Battle;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.IOException;
+import java.util.HashSet;
 
 /**
  * <p>
@@ -74,12 +73,12 @@ public class BattleCanvas extends Canvas {
 	/**
 	 * An image used to represent instances of "RandomBot".
 	 */
-	private static Image randomBot = loadImage("Robot5.png");
+//	private static Image randomBot = loadImage("Robot5.png");
 
 	/**
 	 * An image used to represent instances of "GuardBot".
 	 */
-	private static Image guardBot = loadImage("Robot4.png");
+//	private static Image guardBot = loadImage("Robot4.png");
 
 	/**
 	 * Provides access to the battle being displayed. Through this, the battle
@@ -137,23 +136,31 @@ public class BattleCanvas extends Canvas {
 		// robot it is. In doing this, we need to determine the actual x and y
 		// coordinates according to the interpolation scheme.
 		HashSet<Robot> moved = new HashSet<Robot>();
-		for (Action a : battle.actions) {
+		for (Action a : battle.getActions()) {
 			if(a instanceof Move) {
 				Move m = (Move) a;
 				drawRobotMoving(g, m);				
 				moved.add(m.robot);
+				int rxp = computePosition(m.xDestination * SQUARE_WIDTH, m.xOriginal * SQUARE_WIDTH, step);
+				int ryp = computePosition(m.yDestination * SQUARE_HEIGHT, m.yOriginal * SQUARE_HEIGHT, step);
+
+			}
+			if(a instanceof Shoot ) {
+
+				// shots only fired at beginning of movement phase.
+				drawShot(g2d, (Shoot)a);
 			}
 		}
 		// Draw any robots which didn't move in that turn.
-		for (Robot r : battle.robots) {
+		for (Robot r : battle.getRobots()) {
 			if(!moved.contains(r)) {
 				drawRobotStill(g,r);
 			}
 		}
 		
 		
-		// For each action, draw 
-		for (Action a : battle.actions) {
+//		 For each action, draw
+		for (Action a : battle.getActions()) {
 			if(a instanceof Shoot && step == 0) {
 				// shots only fired at beginning of movement phase.
 				drawShot(g2d, (Shoot)a);
@@ -164,25 +171,24 @@ public class BattleCanvas extends Canvas {
 	}
 
 	private void drawShot(Graphics2D g2d, Shoot shoot) {
+
 		g2d.setColor(Color.YELLOW);
 		g2d.setStroke(new BasicStroke(3));
-		g2d.drawLine(shoot.shooter.getxPosition() * SQUARE_WIDTH,
-				shoot.shooter.getyPosition() * SQUARE_HEIGHT,
-				shoot.shootee.getxPosition() * SQUARE_WIDTH, shoot.shootee.getyPosition()
-						* SQUARE_HEIGHT);
+		g2d.drawLine(shoot.shooter.getxPosition() * SQUARE_WIDTH+(SQUARE_WIDTH/2),
+				shoot.shooter.getyPosition() * SQUARE_HEIGHT+(SQUARE_HEIGHT/2),
+				shoot.shootee.getxPosition() * SQUARE_WIDTH + (SQUARE_WIDTH/2), shoot.shootee.getyPosition()
+						* SQUARE_HEIGHT+ (SQUARE_HEIGHT/2));
 	}
-	
+//	public Image getImage(){
+//
+//	}
+
 	private void drawRobotStill(Graphics g, Robot r) {
 		Image image;
 		if (r.isDead) {
 			image = deadBot;
-		} else if (r instanceof GuardBot) {
-			image = guardBot;
-		} else if (r instanceof RandomBot) {
-			image = randomBot;
 		} else {
-			// dead code
-			return;
+			image = r.getRobotImage();
 		}
 
 		// Finally, draw the robot!!
@@ -195,13 +201,8 @@ public class BattleCanvas extends Canvas {
 		Image image;
 		if (move.robot.isDead) {
 			image = deadBot;
-		} else if (move.robot instanceof GuardBot) {
-			image = guardBot;
-		} else if (move.robot instanceof RandomBot) {
-			image = randomBot;
-		} else {
-			// dead code
-			return;
+		} else{
+			image = move.robot.getRobotImage();
 		}
 
 		// Compute the actual x and y position based on the interpolation step.
@@ -211,6 +212,7 @@ public class BattleCanvas extends Canvas {
 		// Finally, draw the robot!!
 		g.drawImage(image, rxp, ryp, SQUARE_WIDTH, SQUARE_HEIGHT, null,
 				null);
+
 	}
 	
 	/**

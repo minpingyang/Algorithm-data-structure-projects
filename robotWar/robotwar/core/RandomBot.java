@@ -1,6 +1,11 @@
 package robotwar.core;
 
 import robotwar.Main;
+import robotwar.ui.BattleCanvas;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.IOException;
 
 /**
  * The RandomBot just moves around randomly within the arena and fires at
@@ -41,11 +46,25 @@ public class RandomBot extends Robot {
 
 		if(newXPos< 1 || newXPos>battle.arenaWidth-1 || newYPos<1 || newYPos > battle.arenaHeight-1){
 			return;
-		}else{
-			battle.actions.add(new Move(newXPos,newYPos,this));
+		}else if(!isDead){
+			battle.getActions().add(new Move(newXPos,newYPos,this));
 		}
 
 
+
+	}
+	@Override
+	public Image getRobotImage() {
+
+		java.net.URL imageURL = BattleCanvas.class.getResource("images/Robot5.png");
+		try {
+			Image img = ImageIO.read(imageURL);
+
+			return img;
+
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to load Random robot image " );
+		}
 
 	}
 }
