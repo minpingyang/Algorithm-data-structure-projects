@@ -9,7 +9,7 @@ import java.util.PriorityQueue;
  * A* search
  * Created by minpingyang
  */
-public class ASearchUtil {
+public class ASearch {
     /**
      * */
     public static List<RoadSegment> findShortestPath(Node startNode, Node endNode, boolean shortestDistance){

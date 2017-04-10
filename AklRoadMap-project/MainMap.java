@@ -273,7 +273,7 @@ public class MainMap extends GUI{
             shortestPathFound.clear();
         }
 
-        shortestPathFound = ASearchUtil.findShortestPath(navigatingStartNode,navigatingEndNode,shortestDistance);
+        shortestPathFound = ASearch.findShortestPath(navigatingStartNode,navigatingEndNode,shortestDistance);
         //start highlight current shortest path
         if(!shortestPathFound.isEmpty()){
             for(RoadSegment roadSegment : shortestPathFound){
@@ -285,14 +285,33 @@ public class MainMap extends GUI{
             return;
         }
         String lineSeparator = System.lineSeparator();
-        List<String> stringList = new ArrayList<>();
+        List<String> roadsInfoList = new ArrayList<>();
         double lengthOfRoad = 0;
-        stringList.add(shortestPathFound.)
-        for(int i = 0; i < shortestPathFound.size() -1; i++){
-            if(!shortestPathFound.get(i).road.label.equals(shortestPathFound.get(i+1).road.label)){
-                lengthOfRoad =
+        double totalDistance =0 ;
+        /**first segment*/
+        roadsInfoList.add(shortestPathFound.get(0).road.label + String.format(": %.3f km",shortestPathFound.get(0)
+        .lengthOfSegment));
+        totalDistance +=shortestPathFound.get(0).lengthOfSegment;
+        for(int i= 1;i<shortestPathFound.size();i++){
+            if(!shortestPathFound.get(i).road.label.equals(shortestPathFound.get(i-1).road.label)){
+                //case1: different roads in this piece of adjacency segments
+                lengthOfRoad =shortestPathFound.get(i).lengthOfSegment;
+                roadsInfoList.add(shortestPathFound.get(i).road.label+String.format(": %.3f km",lengthOfRoad));
+            } else{
+                //case2: same road that this piece of adjacency segments belonging to
+                lengthOfRoad += shortestPathFound.get(i).lengthOfSegment;
+                //set the last one(i-1) road info same as current(i) one
+                roadsInfoList.set(roadsInfoList.size()-1, shortestPathFound.get(i).road.label +String.format(": %.3f km",lengthOfRoad));
             }
+            totalDistance += shortestPathFound.get(i).lengthOfSegment;
         }
+        StringBuilder stringBuilder= new StringBuilder();
+        stringBuilder.append(lineSeparator);
+        for(String s : roadsInfoList){
+            stringBuilder.append(s).append(lineSeparator);
+        }
+       stringBuilder.append(lineSeparator).append(lineSeparator).append("Total DISTANCE = "+String.format("%.3f km",totalDistance));
+       getTextOutputArea().setText(stringBuilder.toString());
     }
 
 
