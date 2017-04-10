@@ -27,6 +27,7 @@ public class ClockThread extends Thread {
 				Thread.sleep(delay);
 				if(active) {
 					display.clockTick();
+
 				}
 			} catch(InterruptedException e) {
 				// should never happen

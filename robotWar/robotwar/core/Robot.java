@@ -64,7 +64,7 @@ public abstract class Robot {
 	 */
 	public void isShot(int strength) {
 		this.strength = this.strength - 1;
-		if(this.strength<0){
+		if(this.strength<1){
 			this.isDead = true;
 		}
 		// should check isDead here?
@@ -107,8 +107,8 @@ public abstract class Robot {
 			Robot target = robotsInSight.get(0);
 			battle.actions.add(new Shoot(this,target,strength));
 
-				target.strength = target.strength - 1;
-				if(this.strength < 0) {
+				//target.strength = target.strength - 1;
+				if(this.strength < 1) {
 					isDead = true;
 				}
 

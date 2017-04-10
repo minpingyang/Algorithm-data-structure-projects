@@ -1,19 +1,16 @@
 package robotwar.ui;
 
+import robotwar.Main;
+import robotwar.core.Battle;
+import robotwar.core.GuardBot;
+import robotwar.core.RandomBot;
+import robotwar.core.Robot;
+
+import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Random;
-
-import javax.swing.*;
-import javax.swing.border.*;
-
-import robotwar.Main;
-import robotwar.core.Battle;
-import robotwar.core.RandomBot;
-import robotwar.core.Robot;
-import robotwar.core.GuardBot;
 
 /**
  * Implements the outer window of the Robot War game. This includes any buttons,
@@ -98,14 +95,21 @@ public class BattleFrame extends JFrame implements ActionListener {
 
 			// Play the turn
 			battle.takeTurn();
+			int count = 0;
 
 			// Check whether there are any alive robots remaining!
 			aliveRobots = false;
 			for (Robot r : battle.robots) {
 				if (!r.isDead) {
 					aliveRobots = true;
+					count++;
 				}
 			}
+			if(count<2){
+				battleCanvas.repaint();
+				aliveRobots = false;
+			}
+
 
 			if (!aliveRobots) {
 				int r = JOptionPane.showConfirmDialog(this, new JLabel(
