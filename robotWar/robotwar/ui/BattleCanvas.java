@@ -131,21 +131,22 @@ public class BattleCanvas extends Canvas {
 				}
 			}
 		}
-		
+		int i = 0;
 		// For each robot, draw the appropriate image depending on what kind of
 		// robot it is. In doing this, we need to determine the actual x and y
 		// coordinates according to the interpolation scheme.
 		HashSet<Robot> moved = new HashSet<Robot>();
 		for (Action a : battle.getActions()) {
-			if(a instanceof Move) {
+			if(a instanceof Move ) {
 				Move m = (Move) a;
-				drawRobotMoving(g, m);				
+				drawRobotMoving(g, m);
 				moved.add(m.robot);
-				int rxp = computePosition(m.xDestination * SQUARE_WIDTH, m.xOriginal * SQUARE_WIDTH, step);
-				int ryp = computePosition(m.yDestination * SQUARE_HEIGHT, m.yOriginal * SQUARE_HEIGHT, step);
+				i = step;
+//				int rxp = computePosition(m.xDestination * SQUARE_WIDTH, m.xOriginal * SQUARE_WIDTH, step);
+//				int ryp = computePosition(m.yDestination * SQUARE_HEIGHT, m.yOriginal * SQUARE_HEIGHT, step);
 
 			}
-			if(a instanceof Shoot ) {
+			if(a instanceof Shoot && (step==2||step == 4 || step ==6 || step == 8 || step== 9)) {
 
 				// shots only fired at beginning of movement phase.
 				drawShot(g2d, (Shoot)a);
@@ -160,12 +161,14 @@ public class BattleCanvas extends Canvas {
 		
 		
 //		 For each action, draw
-		for (Action a : battle.getActions()) {
-			if(a instanceof Shoot && step == 0) {
-				// shots only fired at beginning of movement phase.
-				drawShot(g2d, (Shoot)a);
-			}
-		}
+//		for (Action a : battle.getActions()) {
+//			System.out.println("**************************");
+//			System.out.println("**************************"+step);
+//			if((a instanceof Shoot && step == 0) ) {
+//				// shots only fired at beginning of movement phase.
+//				drawShot(g2d, (Shoot)a);
+//			}
+//		}
 		
 		step = (step + 1) % INTERPOLATION_STEPS;
 	}
@@ -212,6 +215,7 @@ public class BattleCanvas extends Canvas {
 		// Finally, draw the robot!!
 		g.drawImage(image, rxp, ryp, SQUARE_WIDTH, SQUARE_HEIGHT, null,
 				null);
+
 
 	}
 	
