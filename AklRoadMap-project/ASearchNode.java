@@ -5,7 +5,7 @@ package code.comp261.ass1;
  *
  * Created by minpingyang on 5/04/17.
  */
-public class ASearchNode {
+public class ASearchNode implements Comparable<ASearchNode>{
     public Node node;
     ASearchNode parentNode;
     RoadSegment edge;
@@ -14,22 +14,26 @@ public class ASearchNode {
     double HcosttoTarget = 0;
 
 
-    /**constructor**/
-    public ASearchNode(Node startNode,ASearchNode parentNode, Node targetNode, boolean shortestDistance) {
+    /**constructor
+     *
+     * GcostFromStart and HeuristicCostToTarget both of them are initialised and updated by the constructor
+     * **/
+    public ASearchNode(Node node,ASearchNode parentNode, Node targetNode, boolean shortestDistance) {
     this.node = node;
     this.parentNode = parentNode;
     this.setEdge();
     this.setGCostFromStart(shortestDistance);
-    this.setHeuristicCost(targetNode,shortestDistance);
+    this.setHcosttoTarget(targetNode,shortestDistance);
 
     }
     /**
      * set H cost of distance/time from this node to target node.
      * */
-    private void setHeuristicCost(Node targetNode, boolean shortestDistance) {
+    private void setHcosttoTarget(Node targetNode, boolean shortestDistance) {
         if(shortestDistance){
             this.HcosttoTarget =  this.node.location.distance(targetNode.location);
         }else{
+            //100 km/h ---constance of speed is used to turn out the HuristicCose
             this.HcosttoTarget = this.node.location.distance(targetNode.location) / 100.0;
         }
     }
@@ -37,16 +41,20 @@ public class ASearchNode {
  * set G cost which is the distance/time cost from part node to current node.
 * ***/
     public void setGCostFromStart(boolean shortestDistance) {
+
+        //this == start node case, which mean it does not have parent node
         if(parentNode == null){
             this.GcostFromStart = 0;
+        }else{
+            if(shortestDistance){
+                //length cost + parent Gcost
+                this.GcostFromStart = this.edge.lengthOfSegment + this.parentNode.GcostFromStart;
+            }else {
+                // time = distance / speed.
+                this.GcostFromStart = (this.edge.lengthOfSegment / getRoadSpeed(this.edge)) + this.parentNode.GcostFromStart;
+            }
         }
-        if(shortestDistance){
-            //length cost + parent Gcost
-            this.GcostFromStart = this.edge.lengthOfSegment + this.parentNode.GcostFromStart;
-        }else {
-            // time = distance / speed.
-            this.GcostFromStart = (this.edge.lengthOfSegment / getRoadSpeed(this.edge)) + this.parentNode.GcostFromStart;
-        }
+
     }
 
 /***
@@ -69,6 +77,20 @@ public class ASearchNode {
                 this.edge = segment;
                 return;
             }
+        }
+    }
+
+
+    @Override
+    public int compareTo(ASearchNode otherNode){
+        double costNode1 = this.GcostFromStart + this.HcosttoTarget;
+        double costNode2 = otherNode.GcostFromStart + otherNode.HcosttoTarget;
+        if(costNode1 > costNode2){
+            return 1;
+        }else if (costNode1 < costNode2){
+            return -1;
+        }else{
+            return  0;
         }
     }
 }
