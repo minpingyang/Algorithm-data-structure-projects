@@ -11,58 +11,70 @@ public class ASearch {
     /**
      * */
     public static List<RoadSegment> findShortestPath(Node startNode, Node targetNode, boolean shortestDistance){
-        //store all visitedNodes
+        //collect all visitedNodes
         HashSet<Integer> vistiedNodeSet =new HashSet<>();
 
         PriorityQueue<ASearchNode> fringe = new PriorityQueue<>();
-        //enqueue * node
+
+        //enqueue start from the navigation start node
         fringe.offer(new ASearchNode(startNode,null,targetNode,shortestDistance));
+
+
+        //
         while(!fringe.isEmpty()){
             //first in first out
-            ASearchNode visitNode = fringe.poll();
+            ASearchNode visitNode = fringe.poll();  //firstly, it is start node
             //mark it visited
             vistiedNodeSet.add(visitNode.node.nodeId);
 
-            //once target Node was polled--->found the path
+            /***find all segments of the shortest path****/
+            //poll node until the node is the target node
             if(visitNode.node.nodeId == targetNode.nodeId){
                 List<RoadSegment>shortestPath = new ArrayList<>();
-                ASearchNode backTraceNode = visitNode;
-                //from end to start
-                while(backTraceNode.parentNode != null){
-                    shortestPath.add(backTraceNode.edge);
-                    backTraceNode = backTraceNode.parentNode;
+                ASearchNode lastNode = visitNode;
+                //add all edges from the last node to its " ancestor " node
+                while(lastNode.parentNode != null){
+                    shortestPath.add(lastNode.edge);
+                    lastNode = lastNode.parentNode;
                 }
-                //revers the cpllection of segments;
+                //revers the order of the arraylist
                 Collections.reverse(shortestPath);
                 return shortestPath;
             }
+            /***********************************************/
 
             Node startNodeOfSegment =visitNode.node;
-            outLoop: for(RoadSegment roadSegment:visitNode.node.linkedSegments){
+             for(RoadSegment roadSegment:visitNode.node.linkedSegments){
                 Node endNodeOfSegment = roadSegment.getEndNode(startNodeOfSegment);
                 //check if isForCar
-                if(roadSegment.road.isForCar){
+                if(roadSegment.road.notForCar){
                     continue;
                 }
-                //check if isOneWay (be careful about the direction )
-                if(roadSegment.road.isOneWay && startNodeOfSegment.nodeId == roadSegment.startNode.nodeId
-                        && endNodeOfSegment.nodeId == roadSegment.endNode.nodeId)
+                //check if (it isOneWay, but the direction of the path is wrong
+                if(roadSegment.road.isOneWay && startNodeOfSegment.nodeId == roadSegment.endNode.nodeId
+                        && endNodeOfSegment.nodeId == roadSegment.startNode.nodeId)
                 {
                     continue;
                 }
+                //go through all neighbour nodes which are not visited yet.
+                //if the endNodeOf this segment has not visited yet
+
                 if(!vistiedNodeSet.contains(endNodeOfSegment.nodeId)){
                     ASearchNode neighbourNode = new ASearchNode(endNodeOfSegment,visitNode,targetNode,shortestDistance);
                     boolean isOfFringe = false;
+
                     for(ASearchNode nodeOfFringe : fringe){
+                            //if this end node of the segment is added in the fringe already
                         if(nodeOfFringe.node.nodeId == endNodeOfSegment.nodeId){
-                            //case1 : it is already in fringe, check if its cost need to be updated
+
+                            //case1 : it is already in fringe, check if its cost need to be updated(its neighbour has small G cost)
                             if(neighbourNode.GcostFromStart < nodeOfFringe.GcostFromStart){
                                 nodeOfFringe.parentNode =neighbourNode.parentNode;
                                 nodeOfFringe.setEdge();
                                 nodeOfFringe.setGCostFromStart(shortestDistance);
                             }
                             isOfFringe =true;
-                            break ;
+                            break ; //break the update inner for loop
                         }
                     }
                     //Otherwise, add neighbournode int
