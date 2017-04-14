@@ -26,6 +26,7 @@ public class Node {
 	//two constant for adjusting shape and size of node during the process of zooming
 	public static final int NODE_WIDTH = 1;
 	public static final double NODE_LEAN = 0.6;
+	public Set<Node> neighbourNodeSet;
 	/***constructor
 	 * @param  string is a line of information of the node, including nodeID, lat-lon data.
 	 * r****/
@@ -38,6 +39,7 @@ public class Node {
 		location = Location.newFromLatLon(lat, lon);
 		color = DEFAULT_COLOR;  //Initialise color
 		linkedSegments = new HashSet<>();
+		neighbourNodeSet = new HashSet<Node>();
 
 	}
     /***
@@ -66,6 +68,13 @@ public class Node {
     public void setColor(Color color) {
         this.color = color;
     }
+    public void setNeighbours(){
+    	for(RoadSegment segmentL: this.linkedSegments){
+    		Node endNodeOfSegment =segmentL.getEndNode(this);
+			neighbourNodeSet.add(endNodeOfSegment);
+
+		}
+	}
 
 
 }
