@@ -7,6 +7,7 @@ import java.util.Set;
 
 public class Node {
 
+	public static final int MAX_DEPTH = Integer.MAX_VALUE ;
 	public final int nodeId;
 	//node file provide the lat-lon data of each node, but we need the transfer the lat-lon data into Location object
 	public final Location location;
@@ -44,7 +45,7 @@ public class Node {
 		linkedSegments = new HashSet<>();
 		neighbourNodeSet = new HashSet<>();
 
-		this.depth = Integer.MAX_VALUE;
+		this.depth = MAX_DEPTH;
 
 
 	}
@@ -74,9 +75,10 @@ public class Node {
     public void setColor(Color color) {
         this.color = color;
     }
+
     public void setNeighbours(){
-    	for(RoadSegment segmentL: this.linkedSegments){
-    		Node endNodeOfSegment =segmentL.getEndNode(this);
+    	for(RoadSegment segment: this.linkedSegments){
+    		Node endNodeOfSegment =segment.getEndNode(this);
 			neighbourNodeSet.add(endNodeOfSegment);
 
 		}

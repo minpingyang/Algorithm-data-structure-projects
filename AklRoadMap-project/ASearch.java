@@ -7,6 +7,24 @@ import java.util.*;
  * A* search
  * Created by minpingyang
  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public class ASearch {
     /**
      * */
@@ -30,7 +48,7 @@ public class ASearch {
             /***find all segments of the shortest path****/
             //poll node until the node is the target node
             if(visitNode.node.nodeId == targetNode.nodeId){
-                List<RoadSegment>shortestPath = new ArrayList<>();
+                List<RoadSegment> shortestPath = new ArrayList<>();
                 ASearchNode lastNode = visitNode;
                 //add all edges from the last node to its " ancestor " node
                 while(lastNode.parentNode != null){

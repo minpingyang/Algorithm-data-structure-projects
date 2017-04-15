@@ -96,7 +96,7 @@ public class RoadSegment{
 			return null;
 		}
 		//it is the start node
-		if(startNodeOfSegment.nodeId == startNodeOfSegment.nodeId){
+		if(startNodeOfSegment.nodeId == startNode.nodeId){
 			return endNode;
 		}else{
 			return startNode;
