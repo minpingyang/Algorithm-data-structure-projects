@@ -79,6 +79,30 @@ public class MainMap extends GUI{
         articulationPoints = new HashSet<>();
 
     }
+    /**
+     * core part; which is read the files of the chosen folder
+     * Meantime, intialise all the filed of the class.(which is pretty much similar to constructor)
+     * In particularly, call the onload method of graph passing all the files
+     * **/
+    @Override
+    protected void onLoad(File nodes, File roads, File segments, File polygons) {
+        currentOrigin = CENTREAKL;  //coordinator lat-lon data based on AucklandCentre of origin.
+        currentScale = Math.max(getDrawingAreaDimension().getHeight(),getDrawingAreaDimension().getWidth())/55;
+        //reset fields
+        searchedRoads = new ArrayList<>();
+        clickedNode = null;
+        navigatingEndNode = null;
+        navigatingStartNode = null;
+        articulationPoints = new HashSet<>();
+        doesDisplayArtPts = false;
+        shortestPathFound = new ArrayList<>();
+
+        graph.onload(nodes,roads,segments,polygons);
+
+
+    }
+
+
     /****
      * This method is used to select different kind of node, which means that click node could be used for showing information
      * or click for starting navigation or for choosing the target for navigation
@@ -137,28 +161,7 @@ public class MainMap extends GUI{
        pathFinding();
     }
 
-    /**
-     * core part; which is read the files of the chosen folder
-     * Meantime, intialise all the filed of the class.(which is pretty much similar to constructor)
-     * In particularly, call the onload method of graph passing all the files
-     * **/
-    @Override
-    protected void onLoad(File nodes, File roads, File segments, File polygons) {
-        currentOrigin = CENTREAKL;  //coordinator lat-lon data based on AucklandCentre of origin.
-        currentScale = Math.max(getDrawingAreaDimension().getHeight(),getDrawingAreaDimension().getWidth())/55;
-        //reset fields
-        searchedRoads = new ArrayList<>();
-        clickedNode = null;
-        navigatingEndNode = null;
-        navigatingStartNode = null;
-        articulationPoints = new HashSet<>();
-        doesDisplayArtPts = false;
 
-
-        graph.onload(nodes,roads,segments,polygons);
-
-
-    }
     /**
      * the redraw method will be called after everytimme movement or clicking, ect. which is used in GUI class .
      * **/
@@ -353,6 +356,36 @@ public class MainMap extends GUI{
 
     @Override
     protected void findArticulationPoints() {
+        if(!articulationPoints.isEmpty()){
+            if(doesDisplayArtPts){
+
+                for(Node n : articulationPoints){
+                    n.setColor(Node.DEFAULT_COLOR);
+                }
+
+
+            }else {
+                for(Node n : articulationPoints){
+                    n.setColor(Node.ARTICULATION_COLOR);
+                }
+            }
+
+            doesDisplayArtPts = !doesDisplayArtPts;
+            this.getTextOutputArea().setText("Number of Articulation points: "+ articulationPoints.size());
+            return;
+        }
+
+        articulationPoints = graph.findArticulationPoints();
+        this.getTextOutputArea().setText("Number of Articulation points: "+ articulationPoints.size());
+        if(!articulationPoints.isEmpty()){
+            for(Node n : articulationPoints){
+                n.setColor(Node.ARTICULATION_COLOR);
+            }
+            doesDisplayArtPts = !doesDisplayArtPts;
+        }
+
+
+
 
     }
 

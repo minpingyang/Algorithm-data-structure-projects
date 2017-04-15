@@ -268,6 +268,10 @@ public class Graph {
         return roadTries.findMatchingRoads(input);
     }
 
+    public Set<Node> findArticulationPoints() {
+        return ArticulationNode.findArticulationPoints(this.nodeMap.values());
+    }
+
 /*
     public Node findClosetNode(){
 
