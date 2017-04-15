@@ -47,10 +47,16 @@ public class MainMap extends GUI{
     private Location currentDragPoint;
     private Point betterDragEndPoint;
 //    fields are used for A* searching
-    boolean shortestDistance;
+    boolean isShortestDistance;
     private Node navigatingStartNode;
     private Node navigatingEndNode;
     private List<RoadSegment> shortestPathFound;
+
+    boolean doesDisplayArtPts;
+    private Set<Node> articulationPoints;
+
+
+
     /**main method**/
     public static void main(String[] args) {
         new MainMap();
@@ -65,10 +71,12 @@ public class MainMap extends GUI{
         currentOrigin = CENTREAKL;
         //the initial scale is related on current display panel. 55 is a good constant factor by testing.
         currentScale = Math.max(getDrawingAreaDimension().getHeight(),getDrawingAreaDimension().getWidth())/55;
-        shortestDistance = true; //default find shortest path first
+        isShortestDistance = true; //default find shortest path first
         navigatingStartNode = null;
         navigatingEndNode = null;
         shortestPathFound = new ArrayList<>();
+        doesDisplayArtPts = false;
+        articulationPoints = new HashSet<>();
 
     }
     /****
@@ -125,7 +133,7 @@ public class MainMap extends GUI{
 
     @Override
     protected void fromShortestToFastest() {
-       shortestDistance = !shortestDistance;
+       isShortestDistance = !isShortestDistance;
        pathFinding();
     }
 
@@ -141,7 +149,14 @@ public class MainMap extends GUI{
         //reset fields
         searchedRoads = new ArrayList<>();
         clickedNode = null;
+        navigatingEndNode = null;
+        navigatingStartNode = null;
+        articulationPoints = new HashSet<>();
+        doesDisplayArtPts = false;
+
+
         graph.onload(nodes,roads,segments,polygons);
+
 
     }
     /**
@@ -274,7 +289,7 @@ public class MainMap extends GUI{
             shortestPathFound.clear();
         }
 
-        shortestPathFound = ASearch.findShortestPath(navigatingStartNode,navigatingEndNode,shortestDistance);
+        shortestPathFound = ASearch.findShortestPath(navigatingStartNode,navigatingEndNode, isShortestDistance);
         //start highlight current shortest path
         if(!shortestPathFound.isEmpty()){
             for(RoadSegment roadSegment : shortestPathFound){
@@ -333,6 +348,11 @@ public class MainMap extends GUI{
         System.out.printf("%f, %f\n", xOff, yOff);
 
         currentDragPoint = new Location(e.getX(), e.getY());
+
+    }
+
+    @Override
+    protected void findArticulationPoints() {
 
     }
 

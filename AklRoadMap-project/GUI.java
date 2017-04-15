@@ -64,6 +64,8 @@ public abstract class GUI {
      * JTextField object that is the search box itself.
      */
 
+    protected abstract void findArticulationPoints();
+
     /**
      * Is called when the mouse wheel is scrolled, and is passed the MouseEvent
      * object for that scroll.
@@ -323,6 +325,17 @@ public abstract class GUI {
                 redraw();
             }
         });
+
+        JButton articulation = new JButton ("Articulation");
+        articulation.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                findArticulationPoints();
+                redraw();
+            }
+        });
+
+
+
         // next, make the search box at the top-right. we manually fix
         // it's size, and add an action listener to call your code when
         // the user presses enter.
@@ -392,6 +405,7 @@ public abstract class GUI {
         navigation.add(naviStartNode);
         navigation.add(naviTargetNode);
         navigation.add(distanceFirst);
+        navigation.add(articulation);  /// make changes here
         controls.add(navigation);
         controls.add(Box.createRigidArea(new Dimension(15, 0)));
         // glue is another invisible component that grows to take up all the
