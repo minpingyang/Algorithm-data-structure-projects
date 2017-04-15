@@ -54,19 +54,7 @@ public class ArticulationNode {
         return articulationPoints;
     }
 
-    /**
-     * This method adds all neighbour nodes into each node, make connections
-     * between every node and its neighbours. (For articulation point feature)
-     *
-     * @param nodes
-     *            a collection of nodes within which this method will search for
-     *            articulation points
-     */
-    private static void initialise(Collection<Node> nodes) {
-        for (Node node : nodes) {
-            node.setNeighbours();
-        }
-    }
+
 
 
     /**
