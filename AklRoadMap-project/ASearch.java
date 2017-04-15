@@ -10,25 +10,10 @@ import java.util.*;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 public class ASearch {
     /**
      * */
-    public static List<RoadSegment> findShortestPath(Node startNode, Node targetNode, boolean shortestDistance){
+    public static List<RoadSegment> findShortestPath(Node startNode, Node targetNode, boolean shortestDistance, Set<Restriction> restrictions){
         //collect all visitedNodes
         HashSet<Integer> vistiedNodeSet =new HashSet<>();
 
@@ -62,7 +47,7 @@ public class ASearch {
             /***********************************************/
 
             Node startNodeOfSegment =visitNode.node;
-             for(RoadSegment roadSegment:visitNode.node.linkedSegments){
+          outloop:   for(RoadSegment roadSegment:visitNode.node.linkedSegments){
                 Node endNodeOfSegment = roadSegment.getEndNode(startNodeOfSegment);
                 //check if isForCar
                 if(roadSegment.road.notForCar){
@@ -74,6 +59,21 @@ public class ASearch {
                 {
                     continue;
                 }
+                //check if this node is restriction intersection
+                 for(Restriction restriction: restrictions){
+                     boolean flag;
+                     flag = startNodeOfSegment.nodeId == restriction.rstNode.nodeId
+                             && visitNode.parentNode != null && visitNode.edge != null
+                             && visitNode.parentNode.node.nodeId == restriction.nodeOne.nodeId
+                             && visitNode.edge.roadId == restriction.roadOne.roadId
+                             && roadSegment.roadId == restriction.roadTwo.roadId
+                             && endNodeOfSegment.nodeId == restriction.nodeTwo.nodeId;
+                    if(flag){
+                        continue outloop;
+                    }
+                 }
+
+
                 //go through all neighbour nodes which are not visited yet.
                 //if the endNodeOf this segment has not visited yet
 
@@ -109,5 +109,7 @@ public class ASearch {
         //pathfind fails case:
         return new ArrayList<>();
 
-    };
+    }
+
+
 }

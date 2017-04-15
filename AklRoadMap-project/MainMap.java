@@ -85,7 +85,7 @@ public class MainMap extends GUI{
      * In particularly, call the onload method of graph passing all the files
      * **/
     @Override
-    protected void onLoad(File nodes, File roads, File segments, File polygons) {
+    protected void onLoad(File nodes, File roads, File segments, File polygons,File restrictions) {
         currentOrigin = CENTREAKL;  //coordinator lat-lon data based on AucklandCentre of origin.
         currentScale = Math.max(getDrawingAreaDimension().getHeight(),getDrawingAreaDimension().getWidth())/55;
         //reset fields
@@ -97,7 +97,7 @@ public class MainMap extends GUI{
         doesDisplayArtPts = false;
         shortestPathFound = new ArrayList<>();
 
-        graph.onload(nodes,roads,segments,polygons);
+        graph.onload(nodes,roads,segments,polygons,restrictions);
 
 
     }
@@ -292,7 +292,7 @@ public class MainMap extends GUI{
             shortestPathFound.clear();
         }
 
-        shortestPathFound = ASearch.findShortestPath(navigatingStartNode,navigatingEndNode, isShortestDistance);
+        shortestPathFound = ASearch.findShortestPath(navigatingStartNode,navigatingEndNode, isShortestDistance,graph.restrictions);
         //start highlight current shortest path
         if(!shortestPathFound.isEmpty()){
             for(RoadSegment roadSegment : shortestPathFound){

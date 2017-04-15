@@ -22,6 +22,7 @@ public class Graph {
     Set<RoadSegment> roadSegmentSet;
     Set<Polygon> polygonSet;
     RoadTrie roadTries; // Tries structure of adding information of a road
+    Set<Restriction> restrictions;
     /**
      * constructor
      **/
@@ -32,24 +33,47 @@ public class Graph {
         polygonSet = new HashSet<>();
         roadSegmentSet = new HashSet<>();
         roadTries = new RoadTrie();
+        restrictions = new HashSet<>();
     }
 
     /**
      * a wrapper method for different small onload methods
      ***/
-    public void onload(File nodeFile, File roadFile, File segmentFile, File polygonFile) {
+    public void onload(File nodeFile, File roadFile, File segmentFile, File polygonFile, File restrictionFile) {
         //initialise all field before we use those filed in load methods
         nodeMap = new HashMap<>();
         roadMap = new HashMap<>();
         polygonSet = new HashSet<>();
         roadSegmentSet = new HashSet<>();
-
+        restrictions = new HashSet<>();
         loadNodes(nodeFile);
         loadRoads(roadFile);
         loadRoadSegments(segmentFile);
         //small data fold probably does not exist polygon file. So should check if it exist first
         if (polygonFile == null) return;
         loadPolygons(polygonFile);
+
+        if (restrictionFile == null) return;
+        loadRestrictions(restrictionFile);
+    }
+
+    private void loadRestrictions(File restrictionFile) {
+        BufferedReader bfr;
+        try{
+            bfr = new BufferedReader(new FileReader(restrictionFile));
+            bfr.readLine();
+            String line = bfr.readLine();
+            while(line != null){
+                Restriction restriction = new Restriction(line,nodeMap,roadMap);
+                restrictions.add(restriction);
+                line = bfr.readLine();
+            }
+            bfr.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
