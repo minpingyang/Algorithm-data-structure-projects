@@ -226,7 +226,17 @@ public class Interpreter {
 		// TODO: For part 1 you'll need to complete this. What it should do is
 		// match '[' at the beginning and ']' at the end. In between it needs to
 		// extract the four numbers which should be separated by commas.
-		return null;
+		match("[");
+		int x = readNumber();
+		match(",");
+        int y = readNumber();
+        match(",");
+        int width = readNumber();
+        match(",");
+        int height = readNumber();
+        match("]");
+		Rectangle rectangle = new Rectangle(x,y, width, height);
+		return rectangle;
 	}
 
 	/**
