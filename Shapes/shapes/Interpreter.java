@@ -131,6 +131,30 @@ public class Interpreter {
 	 */
 	public void fillShape(Color color, Shape shape, Canvas canvas) {
 		// TODO: For part 1 you'll need to complete this
+		Rectangle boudingBox = shape.boundingBox();
+		
+		if(boudingBox == null)
+			return;
+		int leftBodary = boudingBox.getX();
+		int rightBodary = leftBodary + boudingBox.getHeight();
+		int topBodary = boudingBox.getY();
+		int bottomBodary = topBodary + boudingBox.getHeight();
+		
+		//fill shape with color
+		for(int x = leftBodary; x < rightBodary; x++)
+		{
+			for(int y = topBodary; y < bottomBodary; y++)
+			{
+				
+				if (shape.contains(x, y))
+				{
+					canvas.draw(x, y, color);
+				}
+			}
+				
+		}
+		
+		
 	}
 
 	/**
