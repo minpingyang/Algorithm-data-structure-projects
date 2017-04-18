@@ -2,6 +2,9 @@ package swen221.shapedrawer.shapes;
 
 public class Main {
 
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String input="";
@@ -9,9 +12,10 @@ public class Main {
 		Canvas canvas = new Interpreter(input).run();        
 
 		canvas.show();
+		
 
 		
-		//System.out.println(interpreter.run().toString());
+		//System.out.println(canvas.toString());
 	}
 
 }
