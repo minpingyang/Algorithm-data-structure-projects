@@ -278,7 +278,13 @@ public class Interpreter {
 
 		// TODO: For Part 2, you'll want to add code here to look for the
 		// symbols '+', '-', '&', etc. 
-
+		//Avoid index out of boundary
+		if (index < input.length()) {
+			lookahead = input.charAt(index);
+			if (lookahead == '+' || lookahead == '-' || lookahead == '&') {
+				char operator = readOp
+			}
+		}
 		return value;
 	}
 
@@ -383,6 +389,14 @@ public class Interpreter {
 			index++;
 		}
 		return input.substring(start, index);
+	}
+	
+	private char readOperator(char c) {
+		if (c != '+' && c!= '-' && c!= '&') {
+			error("invalid shape operator");
+		}
+		index++;
+		return c;
 	}
 
 	/**
