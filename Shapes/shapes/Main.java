@@ -6,13 +6,12 @@ public class Main {
 		// TODO Auto-generated method stub
 		String input="";
 		input = "fill [10,10,50,50] #000000";
-		                
-//		Canvas canvas = new Canvas();
+		Canvas canvas = new Interpreter(input).run();        
+
+		canvas.show();
+
 		
-		Interpreter interpreter = new Interpreter(input);
-//		canvas.show();
-		
-		System.out.println(interpreter.run().toString());
+		//System.out.println(interpreter.run().toString());
 	}
 
 }

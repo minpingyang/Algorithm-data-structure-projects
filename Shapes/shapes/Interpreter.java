@@ -206,7 +206,7 @@ public class Interpreter {
 						
 			}
 			//now the x = rightboudary 
-//			x = x - 1;
+			x = x - 1;
 			// for the right-most pixel
 			if (shape.contains(x-1, y) && shape.contains(x, y)) 
 			{
@@ -237,7 +237,8 @@ public class Interpreter {
 					canvas.draw(x, y-1, color);
 				}
 			}
-			//y--; y = bottom boundary 
+			// y = bottom boundary 
+			y--;
 			if(shape.contains(x, y-1) && shape.contains(x, y))
 			{
 				canvas.draw(x, y, color);
