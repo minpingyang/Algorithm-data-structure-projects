@@ -282,7 +282,11 @@ public class Interpreter {
 		if (index < input.length()) {
 			lookahead = input.charAt(index);
 			if (lookahead == '+' || lookahead == '-' || lookahead == '&') {
-				char operator = readOp
+				char operator = readOperator(lookahead);
+				Shape inputShape1= value;
+				Shape inputShape2 = evaluateShapeExpression();
+				//shape expression
+				value = new ShapeComposition(inputShape1, inputShape2, operator);
 			}
 		}
 		return value;
