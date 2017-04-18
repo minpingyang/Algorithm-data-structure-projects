@@ -135,12 +135,17 @@ public class Interpreter {
 		
 		if(boudingBox == null)
 			return;
+		
 		int leftBodary = boudingBox.getX();
 		int rightBodary = leftBodary + boudingBox.getHeight();
 		int topBodary = boudingBox.getY();
 		int bottomBodary = topBodary + boudingBox.getHeight();
 		
-		//fill shape with color
+		/*
+		 * it should iterate through the coordinates 
+		 * within that bounding box, whilst drawing those
+		 * contained in the Shape.
+		 * */
 		for(int x = leftBodary; x < rightBodary; x++)
 		{
 			for(int y = topBodary; y < bottomBodary; y++)
@@ -166,6 +171,79 @@ public class Interpreter {
 	 */
 	public void drawShape(Color color, Shape shape, Canvas canvas) {
 		// TODO: For part 1 you'll need to complete this
+		Rectangle boudingBox = shape.boundingBox();
+		if(boudingBox == null){
+			return;
+		}
+		int leftBodary = boudingBox.getX();
+		int rightBodary = leftBodary + boudingBox.getHeight();
+		int topBodary = boudingBox.getY();
+		int bottomBodary = topBodary + boudingBox.getHeight();
+		boolean wasIn;
+		boolean isIn;
+		//scan horizontally
+		for(int y = topBodary; y < bottomBodary; y++)
+		{
+			//for the left-most pixel
+			int x = leftBodary;
+			if(shape.contains(x, y) && shape.contains(x+1, y))
+			{
+				canvas.draw(x, y, color);
+			}
+			//for the part without left-most and right-most pixel
+			for(x = leftBodary + 1 ; x < rightBodary; x++)
+			{
+				wasIn = shape.contains(x-1, y);
+				isIn = shape.contains(x, y);
+				if ( isIn && !wasIn) 
+				{
+					//draw in the shape
+					canvas.draw(x, y, color);
+				}else if(!isIn && wasIn)
+				{   //exit the shape
+					canvas.draw(x-1, y, color);
+				}
+						
+			}
+			//now the x = rightboudary 
+//			x = x - 1;
+			// for the right-most pixel
+			if (shape.contains(x-1, y) && shape.contains(x, y)) 
+			{
+				canvas.draw(x, y, color);
+			}
+		}
+		//scan vertically
+		for(int x = leftBodary; x < rightBodary; x++)
+		{
+			//for the top pixels
+			int y = topBodary;
+			if(shape.contains(x, y)&&shape.contains(x, y+1))
+			{
+				canvas.draw(x, y, color);
+			}
+			// for the part pixels without up-most and down-most
+			for(y = topBodary+1; y < bottomBodary; y++)
+			{
+				wasIn =shape.contains(x, y-1);
+				isIn = shape.contains(x, y);
+				if(isIn && !wasIn)
+				{
+					//draw in the shape
+					canvas.draw(x, y, color);
+				}else if(!isIn && wasIn)
+				{	
+					//out of the shape
+					canvas.draw(x, y-1, color);
+				}
+			}
+			//y--; y = bottom boundary 
+			if(shape.contains(x, y-1) && shape.contains(x, y))
+			{
+				canvas.draw(x, y, color);
+			}
+			
+		}
 	}
 
 	/**

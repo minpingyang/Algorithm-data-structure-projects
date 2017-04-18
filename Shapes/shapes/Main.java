@@ -7,8 +7,11 @@ public class Main {
 		String input="";
 		input = "fill [10,10,50,50] #000000";
 		                
+//		Canvas canvas = new Canvas();
 		
 		Interpreter interpreter = new Interpreter(input);
+//		canvas.show();
+		
 		System.out.println(interpreter.run().toString());
 	}
 

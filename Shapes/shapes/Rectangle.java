@@ -15,9 +15,13 @@ public class Rectangle implements Shape {
 public Rectangle(int x,int y,int width,int height) 
 {	
 	
-	if(x < 0 || y < 0)
+	if(x < 0 )
 	{
-		throw new IllegalArgumentException("x, y should not less than 0");
+		throw new IllegalArgumentException("x should not less than 0");
+	}
+	if(y < 0 )
+	{
+		throw new IllegalArgumentException("y should not less than 0");
 	}
 	
 	if(width <= 0)
@@ -29,6 +33,7 @@ public Rectangle(int x,int y,int width,int height)
 	{
 		throw new IllegalArgumentException("height should not <= 0");
 	}
+	
 	this.x = x;
 	this.y = y;
 	this.width = width;
@@ -49,7 +54,6 @@ public Rectangle(int x,int y,int width,int height)
 
 	@Override
 	public Rectangle boundingBox() {
-		// TODO Auto-generated method stub
 		return this;
 	}
 
