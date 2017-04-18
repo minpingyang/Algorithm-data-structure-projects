@@ -137,7 +137,7 @@ public class Interpreter {
 			return;
 		
 		int leftBodary = boudingBox.getX();
-		int rightBodary = leftBodary + boudingBox.getHeight();
+		int rightBodary = leftBodary + boudingBox.getWidth();
 		int topBodary = boudingBox.getY();
 		int bottomBodary = topBodary + boudingBox.getHeight();
 		
@@ -176,7 +176,7 @@ public class Interpreter {
 			return;
 		}
 		int leftBodary = boudingBox.getX();
-		int rightBodary = leftBodary + boudingBox.getHeight();
+		int rightBodary = leftBodary + boudingBox.getWidth();
 		int topBodary = boudingBox.getY();
 		int bottomBodary = topBodary + boudingBox.getHeight();
 		boolean wasIn;
