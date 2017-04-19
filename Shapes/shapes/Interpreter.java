@@ -87,7 +87,7 @@ public class Interpreter {
 	 */
 	private void evaluateNextCommand(Canvas canvas) {
 		skipWhiteSpace();
-		String cmd = readWord();
+		String cmd = readVariable();
 		skipWhiteSpace();
 		if (cmd.equals("fill")) {
 			Shape shape = evaluateShapeExpression();
@@ -390,7 +390,7 @@ public class Interpreter {
 	 */
 	private String readVariable() {
 		int start = index;
-		//***add limited condition
+		//add limited condition
 		//A variable must startWith letter
 		if(!Character.isLetter(input.charAt(start))){
 			error("Illegal variabl");
@@ -401,7 +401,10 @@ public class Interpreter {
 		}
 		return input.substring(start, index);
 	}
-	
+	/***
+	 * 
+	 * This method is used to add method to read operator
+	**/
 	private char readOperator(char c) {
 		if (c != '+' && c!= '-' && c!= '&') {
 			error("invalid shape operator");
