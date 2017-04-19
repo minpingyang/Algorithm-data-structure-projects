@@ -103,6 +103,8 @@ public class Interpreter {
 			Shape rhs = evaluateShapeExpression();
 			environment.put(cmd, rhs);
 		}
+		//add space
+		skipWhiteSpace();
 	}
 
 	/**
@@ -276,8 +278,8 @@ public class Interpreter {
 
 		skipWhiteSpace();
 
-		// TODO: For Part 2, you'll want to add code here to look for the
-		// symbols '+', '-', '&', etc. 
+//		 TODO: For Part 2, you'll want to add code here to look for the
+//		 symbols '+', '-', '&', etc. 
 		//Avoid index out of boundary
 		if (index < input.length()) {
 			lookahead = input.charAt(index);
@@ -388,6 +390,11 @@ public class Interpreter {
 	 */
 	private String readVariable() {
 		int start = index;
+		//***add limited condition
+		//A variable must startWith letter
+		if(!Character.isLetter(input.charAt(start))){
+			error("Illegal variabl");
+		}
 		while (index < input.length()
 				&& (Character.isLetter(input.charAt(index)) || Character.isDigit(input.charAt(index)))) {
 			index++;
