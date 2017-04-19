@@ -288,6 +288,7 @@ public class Interpreter {
 				Shape inputShape1= value;
 				Shape inputShape2 = evaluateShapeExpression();
 				//shape expression
+
 				value = new ShapeComposition(inputShape1, inputShape2, operator);
 			}
 		}

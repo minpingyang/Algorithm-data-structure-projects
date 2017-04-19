@@ -46,7 +46,7 @@ public Rectangle(int x,int y,int width,int height)
 	@Override
 	public boolean contains(int x, int y) {
 		boolean flag = (x >= this.x)
-					  &&(x <= this.x + width)
+					  &&(x < this.x + width)
 					  && (y >= this.y) 
 					  && (y < this.y + height);
 		return flag ;
