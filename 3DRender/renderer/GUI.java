@@ -10,6 +10,8 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -47,7 +49,35 @@ public abstract class GUI {
 	 * interest are getKeyChar() and getKeyCode().
 	 */
 	protected abstract void onKeyPress(KeyEvent ev);
-
+	/*
+	 * Is called when the mouse wheel is scrolled in or out
+	 * @param e
+	 * */
+	protected abstract void onScroll(MouseWheelEvent e);
+	/*
+	 * Is called when the mouse is pressed. This can be used for memorising the location
+	 * where the mouse is pressed, and cooperate with onPressed() method to move or rotate the camera
+	 * @param e
+	 * **/
+	protected abstract void onPressed(MouseEvent e);
+	/*
+	 * Is called when the mouse is released. This can be used for moving or rotating the camera around
+	 * @param e
+	 * **/
+	protected abstract void onReleased(MouseEvent e);
+	/*
+	 * Is called when the mode switch button is clicked. It is intended to switch between dragging
+	 * **/
+	protected abstract void switchMoveRotation();
+	/**
+	 * Is called the default button is pressed. This button is intended to set the viewing as default scale
+	 * and direction.  
+	 * */
+	
+	public Dimension getDrawingDimentsion() {
+		return DRAWING_SIZE;
+	}
+	
 	/**
 	 * Is called every time the drawing canvas is drawn. This should return a
 	 * BufferedImage that is your render of the scene.
@@ -63,12 +93,20 @@ public abstract class GUI {
 	}
 
 	/**
-	 * Returns the values of the three sliders used for setting the ambient
+	 * Returns the Color values of the three sliders used for setting the ambient
 	 * light of the scene. The returned array in the form [R, G, B] where each
 	 * value is between 0 and 255.
 	 */
-	public int[] getAmbientLight() {
-		return new int[] { red.getValue(), green.getValue(), blue.getValue() };
+	public Color getAmbientLight() {
+		return new Color(ambientRed.getValue(),ambientGreen.getValue(),ambientBlue.getValue());
+	}
+	/**
+	 * Returns the Color values of the three sliders used for setting the direct
+	 * light of the scene. The returned array in the form [R, G, B] where each
+	 * value is between 0 and 255.
+	 */
+	public Color getDirectLight() {
+		return new Color(directRed.getValue(),directGreen.getValue(),directBlue.getValue());
 	}
 
 	public static final int CANVAS_WIDTH = 600;
@@ -81,9 +119,13 @@ public abstract class GUI {
 	// --------------------------------------------------------------------
 
 	private JFrame frame;
-	private final JSlider red = new JSlider(JSlider.HORIZONTAL, 0, 255, 128);
-	private final JSlider green = new JSlider(JSlider.HORIZONTAL, 0, 255, 128);
-	private final JSlider blue = new JSlider(JSlider.HORIZONTAL, 0, 255, 128);
+	private final JSlider ambientRed = new JSlider(JSlider.HORIZONTAL, 0, 255, 128);
+	private final JSlider ambientGreen = new JSlider(JSlider.HORIZONTAL, 0, 255, 128);
+	private final JSlider ambientBlue = new JSlider(JSlider.HORIZONTAL, 0, 255, 128);
+	
+	private final JSlider directRed = new JSlider(JSlider.HORIZONTAL, 0, 255, 128);
+	private final JSlider directGreen = new JSlider(JSlider.HORIZONTAL, 0, 255, 128);
+	private final JSlider directBlue = new JSlider(JSlider.HORIZONTAL, 0, 255, 128);
 
 	private static final Dimension DRAWING_SIZE = new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT);
 	private static final Dimension CONTROLS_SIZE = new Dimension(150, 600);
