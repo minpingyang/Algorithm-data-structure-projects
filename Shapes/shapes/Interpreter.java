@@ -114,6 +114,7 @@ public class Interpreter {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String readWord() {
 		int start = index;
 		// Advance through the input string from the current position whilst the
@@ -134,25 +135,27 @@ public class Interpreter {
 	public void fillShape(Color color, Shape shape, Canvas canvas) {
 		// TODO: For part 1 you'll need to complete this
 		Rectangle boudingBox = shape.boundingBox();
-		
+		//to prevent invalid bunding box
 		if(boudingBox == null)
 			return;
-		
+		//get the value of four boundaries
 		int leftBodary = boudingBox.getX();
 		int rightBodary = leftBodary + boudingBox.getWidth();
 		int topBodary = boudingBox.getY();
 		int bottomBodary = topBodary + boudingBox.getHeight();
 		
-		/*
-		 * it should iterate through the coordinates 
-		 * within that bounding box, whilst drawing those
-		 * contained in the Shape.
-		 * */
+		
+		
+//		  it should iterate through the coordinates 
+//		  within that bounding box, whilst drawing those
+//		  contained in the Shape.
+		//fill shape
 		for(int x = leftBodary; x < rightBodary; x++)
 		{
 			for(int y = topBodary; y < bottomBodary; y++)
 			{
-				
+				//determine if these points
+				//existing in the shape
 				if (shape.contains(x, y))
 				{
 					canvas.draw(x, y, color);
@@ -181,33 +184,39 @@ public class Interpreter {
 		int rightBodary = leftBodary + boudingBox.getWidth();
 		int topBodary = boudingBox.getY();
 		int bottomBodary = topBodary + boudingBox.getHeight();
-		boolean wasIn;
+		//a flag represents : the last pixel was inside the shape
+		boolean lastIn;
+		//a flag represents : the current pixel is inside the shape
 		boolean isIn;
-		//scan horizontally
+		
+		/***scan horizontally****/
+		//Check From   left-most -----> middle part ---> rightmost
 		for(int y = topBodary; y < bottomBodary; y++)
 		{
-			//for the left-most pixel
+			//For the left-most pixel
 			int x = leftBodary;
 			if(shape.contains(x, y) && shape.contains(x+1, y))
 			{
 				canvas.draw(x, y, color);
 			}
-			//for the part without left-most and right-most pixel
+			
+			
+			//For the part without neither left-most or right-most pixel
 			for(x = leftBodary + 1 ; x < rightBodary; x++)
 			{
-				wasIn = shape.contains(x-1, y);
+				lastIn = shape.contains(x-1, y);
 				isIn = shape.contains(x, y);
-				if ( isIn && !wasIn) 
+				if ( isIn && !lastIn) 
 				{
-					//draw in the shape
+					//draw it within the shape
 					canvas.draw(x, y, color);
-				}else if(!isIn && wasIn)
-				{   //exit the shape
+				}else if(!isIn && lastIn)
+				{   
 					canvas.draw(x-1, y, color);
 				}
 						
 			}
-			//now the x = rightboudary 
+			//now the x = value of rightboudary 
 			x = x - 1;
 			// for the right-most pixel
 			if (shape.contains(x-1, y) && shape.contains(x, y)) 
@@ -215,10 +224,13 @@ public class Interpreter {
 				canvas.draw(x, y, color);
 			}
 		}
-		//scan vertically
+		
+		/***scan vertically****/
+		//Check From Top-most -----> middle part ---> bottom-most
+	
 		for(int x = leftBodary; x < rightBodary; x++)
 		{
-			//for the top pixels
+			//for the top-most pixels
 			int y = topBodary;
 			if(shape.contains(x, y)&&shape.contains(x, y+1))
 			{
@@ -227,19 +239,19 @@ public class Interpreter {
 			// for the part pixels without up-most and down-most
 			for(y = topBodary+1; y < bottomBodary; y++)
 			{
-				wasIn =shape.contains(x, y-1);
+				lastIn =shape.contains(x, y-1);
 				isIn = shape.contains(x, y);
-				if(isIn && !wasIn)
+				if(isIn && !lastIn)
 				{
 					//draw in the shape
 					canvas.draw(x, y, color);
-				}else if(!isIn && wasIn)
+				}else if(!isIn && lastIn)
 				{	
 					//out of the shape
 					canvas.draw(x, y-1, color);
 				}
 			}
-			// y = bottom boundary 
+			//now y = bottom boundary 
 			y--;
 			if(shape.contains(x, y-1) && shape.contains(x, y))
 			{
@@ -289,7 +301,7 @@ public class Interpreter {
 				Shape inputShape2 = evaluateShapeExpression();
 				//shape expression
 
-				value = new ShapeComposition(inputShape1, inputShape2, operator);
+				value = new CompoundShape(inputShape1, inputShape2, operator);
 			}
 		}
 		return value;
@@ -403,8 +415,10 @@ public class Interpreter {
 		return input.substring(start, index);
 	}
 	/***
-	 * 
 	 * This method is used to add method to read operator
+	 * 
+	 * @param c ---- passing a operator character
+	 * @return return the operator if it exists
 	**/
 	private char readOperator(char c) {
 		if (c != '+' && c!= '-' && c!= '&') {
