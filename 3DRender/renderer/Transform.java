@@ -1,4 +1,4 @@
-package renderer;
+package code.renderer;
 /**
  * 3x4 array representing an affine transformation (= a 4x4 martrix in which the
  * bottom row is always {0 0 0 1} ) Note that this cannot be used for

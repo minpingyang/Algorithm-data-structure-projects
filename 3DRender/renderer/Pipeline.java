@@ -1,8 +1,6 @@
-package renderer;
-
+package code.renderer;
 import java.awt.Color;
 
-import renderer.Scene.Polygon;
 
 /**
  * The Pipeline class has method stubs for all the major components of the
