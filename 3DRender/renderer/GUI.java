@@ -10,8 +10,10 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -161,6 +163,29 @@ public abstract class GUI {
 				}
 			}
 		};
+		//After initialise
+		/***********Add mouse control feature below    @author minpingyang ****************/
+		//dragging to move
+		//TODO 1
+		drawing.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e){
+				onPressed(e);
+			}
+			public void mouseReleased(MouseEvent e){
+				onReleased(e);
+				redraw();
+			}
+			
+		});
+		drawing.addMouseWheelListener(new MouseWheelListener() {
+			
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				onScroll(e);
+				redraw();
+			}
+		});
+		/******************done******/
 		// fix its size
 		drawing.setPreferredSize(DRAWING_SIZE);
 		drawing.setMinimumSize(DRAWING_SIZE);
@@ -185,6 +210,23 @@ public abstract class GUI {
 				}
 			}
 		});
+		
+		/***********Implement to switch Move and Rotate    @author minpingyang ****************/
+		JButton moveRoate = new JButton("Move");
+		moveRoate.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(moveRoate.getText().equals("Move")){
+					moveRoate.setText("Rotate");
+				}else {
+					moveRoate.setText("Move");
+				}
+				switchMoveRotation();
+			}
+		});
+		/*******Add ******/
+		
 		// we have to put the button in its own panel to ensure it fills the
 		// full width of the control bar.
 		JPanel loadpanel = new JPanel(new BorderLayout());
