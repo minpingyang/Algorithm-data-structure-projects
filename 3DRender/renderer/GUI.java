@@ -75,6 +75,7 @@ public abstract class GUI {
 	 * Is called the default button is pressed. This button is intended to set the viewing as default scale
 	 * and direction.  
 	 * */
+	protected abstract void onDefalut();
 	
 	public Dimension getDrawingDimentsion() {
 		return DRAWING_SIZE;
@@ -212,20 +213,37 @@ public abstract class GUI {
 		});
 		
 		/***********Implement to switch Move and Rotate    @author minpingyang ****************/
-		JButton moveRoate = new JButton("Move");
-		moveRoate.addActionListener(new ActionListener() {
+		JButton moveRoateButton = new JButton("Move");
+		moveRoateButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(moveRoate.getText().equals("Move")){
-					moveRoate.setText("Rotate");
+				if(moveRoateButton.getText().equals("Move")){
+					moveRoateButton.setText("Rotate");
 				}else {
-					moveRoate.setText("Move");
+					moveRoateButton.setText("Move");
 				}
 				switchMoveRotation();
 			}
 		});
-		/*******Add ******/
+		/*******Implement default button--- set back to default position and default scale******/
+		JButton defaultButton = new JButton("Default");
+		defaultButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//set value back to initial value
+				ambientRed.setValue(128);
+				ambientGreen.setValue(128);
+				ambientBlue.setValue(128);
+				directRed.setValue(128);
+				directGreen.setValue(128);
+				directBlue.setValue(128);
+				onDefalut();
+				redraw();
+			}
+		});
+		
 		
 		// we have to put the button in its own panel to ensure it fills the
 		// full width of the control bar.
