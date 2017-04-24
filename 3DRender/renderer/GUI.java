@@ -27,6 +27,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * A simple GUI, similar to the one in assignments 1 and 2, that you can base
@@ -251,21 +253,105 @@ public abstract class GUI {
 		loadpanel.setMaximumSize(new Dimension(1000, 25));
 		loadpanel.setPreferredSize(new Dimension(1000, 25));
 		loadpanel.add(load, BorderLayout.CENTER);
-
+		loadpanel.add(moveRoateButton, BorderLayout.CENTER);
+		loadpanel.add(defaultButton, BorderLayout.CENTER);
+		
 		// set up the sliders for ambient light. they were instantiated in
 		// the field definition, as for some reason they need to be final to
 		// pull the set background trick.
-		red.setBackground(new Color(230, 50, 50));
-		green.setBackground(new Color(50, 230, 50));
-		blue.setBackground(new Color(50, 50, 230));
+		ambientRed.setBackground(new Color(230, 50, 50));
+		ambientGreen.setBackground(new Color(50, 230, 50));
+		ambientBlue.setBackground(new Color(50, 50, 230));
 
-		JPanel sliderparty = new JPanel();
-		sliderparty.setLayout(new BoxLayout(sliderparty, BoxLayout.PAGE_AXIS));
-		sliderparty.setBorder(BorderFactory.createTitledBorder("Ambient Light"));
-
-		sliderparty.add(red);
-		sliderparty.add(green);
-		sliderparty.add(blue);
+		JPanel sliderpartyAmbient = new JPanel();
+		sliderpartyAmbient.setLayout(new BoxLayout(sliderpartyAmbient, BoxLayout.PAGE_AXIS));
+		sliderpartyAmbient.setBorder(BorderFactory.createTitledBorder("Ambient Light"));
+		
+		
+		/***add a another slider for direct light*/
+		directRed.setBackground(new Color(230, 50, 50));
+		directGreen.setBackground(new Color(50, 230, 50));
+		directBlue.setBackground(new Color(50, 50, 230));
+		
+		JPanel sliderpartyDirect = new JPanel();
+		sliderpartyDirect.setLayout(new BoxLayout(sliderpartyDirect, BoxLayout.PAGE_AXIS));
+		sliderpartyDirect.setBorder(BorderFactory.createTitledBorder("Direct Light"));
+		
+		
+		/****Add a feature for showing instant ambient color by dragging slider *********/
+		JComponent ambientReview = new JComponent() {
+			@Override
+			protected void paintComponent(Graphics graphics){
+				graphics.setColor(new Color(ambientRed.getValue(), ambientGreen.getValue(), ambientBlue.getValue()));
+				graphics.fillRect(0, 0, CONTROLS_SIZE.width, 40);
+			
+			}
+		};
+		
+		Dimension reviewDimension = new Dimension(160, 20);
+		ambientReview.setPreferredSize(reviewDimension);
+		ambientReview.setMinimumSize(reviewDimension);
+		ambientReview.setMaximumSize(reviewDimension);
+		ambientReview.setVisible(true);
+		ChangeListener ambientListener = new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				// TODO Auto-generated method stub
+				ambientReview.repaint();
+				redraw();
+			}
+		};
+		ambientRed.addChangeListener(ambientListener);
+		ambientGreen.addChangeListener(ambientListener);
+		ambientBlue.addChangeListener(ambientListener);
+		
+	
+		sliderpartyAmbient.add(ambientRed);
+		sliderpartyAmbient.add(ambientGreen);
+		sliderpartyAmbient.add(ambientBlue);
+		sliderpartyAmbient.add(ambientReview);
+		/**************done***************************************/
+		//Similarly, add a instant review for direct light by dragging sliders
+		JComponent directReview = new JComponent() {
+			@Override
+			protected void paintComponent(Graphics graphics){
+				graphics.setColor(new Color(directRed.getValue(), directGreen.getValue(), directBlue.getValue()));
+				graphics.fillRect(0, 0, CONTROLS_SIZE.width, 40);
+			
+			}
+		};
+		
+		directReview.setPreferredSize(reviewDimension);
+		directReview.setMinimumSize(reviewDimension);
+		directReview.setMaximumSize(reviewDimension);
+		directReview.setVisible(true);
+		ChangeListener directListener = new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				// TODO Auto-generated method stub
+				directReview.repaint();
+				redraw();
+			}
+		};
+		directRed.addChangeListener(directListener);
+		directGreen.addChangeListener(directListener);
+		directBlue.addChangeListener(directListener);
+		
+	
+		sliderpartyDirect.add(directRed);
+		sliderpartyDirect.add(directGreen);
+		sliderpartyDirect.add(directBlue);
+		sliderpartyDirect.add(directReview);
+		/************done ********/
+		
+		
+		
+		
+		
+		
+		
 
 		// this is not a best-practices way of doing key listening; instead you
 		// should use either a KeyListener or an InputMap/ActionMap combo. but
@@ -294,7 +380,9 @@ public abstract class GUI {
 
 		controls.add(loadpanel);
 		controls.add(Box.createRigidArea(new Dimension(0, 15)));
-		controls.add(sliderparty);
+		controls.add(sliderpartyAmbient);
+		controls.add(Box.createRigidArea(new Dimension(0, 15)));
+		controls.add(sliderpartyDirect);
 		// if i were going to add more GUI components, i'd do it here.
 		controls.add(Box.createVerticalGlue());
 

@@ -2,6 +2,8 @@ package code.renderer;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -56,6 +58,36 @@ public class Renderer extends GUI {
 
 	public static void main(String[] args) {
 		new Renderer();
+	}
+
+	@Override
+	protected void onScroll(MouseWheelEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onPressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void switchMoveRotation() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onDefalut() {
+		// TODO Auto-generated method stub
+		
 	}
 }
 

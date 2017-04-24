@@ -1,11 +1,11 @@
-package tests;
+package code.tests;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import renderer.Pipeline;
-import renderer.Scene.Polygon;
+import code.renderer.Pipeline;
+import code.renderer.Scene.Polygon;
 
 /**
  * @author tony

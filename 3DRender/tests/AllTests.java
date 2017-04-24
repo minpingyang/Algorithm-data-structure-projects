@@ -1,4 +1,4 @@
-package tests;
+package code.tests;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -15,5 +15,3 @@ import org.junit.runners.Suite.SuiteClasses;
 public class AllTests {
 
 }
-
-//code for COMP261 assignments

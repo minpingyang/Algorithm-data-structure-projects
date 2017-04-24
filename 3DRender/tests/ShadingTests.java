@@ -1,4 +1,4 @@
-package tests;
+package code.tests;
 
 import static org.junit.Assert.*;
 
@@ -6,9 +6,9 @@ import java.awt.Color;
 
 import org.junit.Test;
 
-import renderer.Pipeline;
-import renderer.Scene.Polygon;
-import renderer.Vector3D;
+import code.renderer.Pipeline;
+import code.renderer.Scene.Polygon;
+import code.renderer.Vector3D;
 
 /**
  * @author tony

@@ -1,4 +1,4 @@
-package tests;
+package code.tests;
 
 import static org.junit.Assert.assertTrue;
 
@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.junit.Test;
 
-import renderer.Pipeline;
-import renderer.Scene;
-import renderer.Scene.Polygon;
-import renderer.Vector3D;
+import code.renderer.Pipeline;
+import code.renderer.Scene;
+import code.renderer.Scene.Polygon;
+import code.renderer.Vector3D;
 
 /**
  * @author tony

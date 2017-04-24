@@ -1,4 +1,4 @@
-package tests;
+package code.tests;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,8 +6,8 @@ import java.awt.Color;
 
 import org.junit.Test;
 
-import renderer.EdgeList;
-import renderer.Pipeline;
+import code.renderer.EdgeList;
+import code.renderer.Pipeline;
 
 /**
  * @author tony
