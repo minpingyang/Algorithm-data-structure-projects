@@ -41,7 +41,8 @@ public class ArticulationNode {
             }
 //            At root:
 //            if there is more than one edge to an unvisited node,
-//            then  root is an articulation point.
+//            then  root is an articulation point
+            // a root vertex with two independent children then this is an articulation point
 
             if (numSubtrees > 1) {
                 articulations.add(start);
@@ -93,7 +94,11 @@ public class ArticulationNode {
                 // last time:determine if parent is articulation point, update parent's reachBack
             } else {
                 if (node.nodeId != neighbourNode.nodeId) {
-                    if (peekElem.reachBack >= peekElem.parent.count) {
+//                    At other node:
+//                    If there is a subtree that has no
+//                    edge up to an ancestor node then node is an articulation point.
+                    if (peekElem.parent.count <= peekElem.reachBack) {
+
                         artPoints.add(peekElem.parent.node);
                     }
                     peekElem.parent.reachBack = Math.min(peekElem.parent.reachBack, peekElem.reachBack);
@@ -118,7 +123,8 @@ public class ArticulationNode {
 // which are reachable from the given vertex in the DFS traversal.
         ArtStackObject parent;
         int count;
-        List<Node> children;
+        List<Node> children;//queue of unvisited neighbours to be processed in turn
+
 
         public ArtStackObject(Node node, int count, ArtStackObject parent) {
             this.node = node;
