@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class Node {
 
-	public static final int MAX_DEPTH = Integer.MAX_VALUE ;
+	public static final int MAX_COUNT = Integer.MAX_VALUE ;
 	public final int nodeId;
 	//node file provide the lat-lon data of each node, but we need the transfer the lat-lon data into Location object
 	public final Location location;
@@ -29,7 +29,7 @@ public class Node {
 	public static final int NODE_WIDTH = 1;
 	public static final double NODE_LEAN = 0.6;
 	public Set<Node> neighbourNodeSet;
-	public int depth;
+	public int count;
 
 	/***constructor
 	 * @param  string is a line of information of the node, including nodeID, lat-lon data.
@@ -45,7 +45,7 @@ public class Node {
 		linkedSegments = new HashSet<>();
 		neighbourNodeSet = new HashSet<>();
 
-		this.depth = MAX_DEPTH;
+		this.count = MAX_COUNT;
 
 
 	}

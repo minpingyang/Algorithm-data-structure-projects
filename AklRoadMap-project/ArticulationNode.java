@@ -9,7 +9,6 @@ import java.util.*;
  */
 public class ArticulationNode {
 
-    // this field controls either to use iterative or recursive algorithm.
 
 
     /**
@@ -25,33 +24,33 @@ public class ArticulationNode {
         for (Node node : nodes) {
             node.setNeighbours();
         }
-        /*
-         * Auckland map contains several disconnected sets. This set keeps track
-         * of those nodes that are unvisited, so that all disconnected graphs
-         * will be searched through.
-         */
+
         Set<Node> unvisitedNodes = new HashSet<>(nodes);
-        Set<Node> articulationPoints = new HashSet<>();
+        Set<Node> articulations = new HashSet<>();
 
         while (!unvisitedNodes.isEmpty()) {
             int numSubtrees = 0;
             Node start = unvisitedNodes.iterator().next();
-            start.depth = 0;
+            start.count = 0;
             for (Node neighbour : start.neighbourNodeSet) {
-                if (neighbour.depth == Node.MAX_DEPTH) {
-                    iterArtPts(neighbour, start, articulationPoints, unvisitedNodes);
+                //initially, count of all unvisited nodes equal MAX_COUNT;
+                if (neighbour.count == Node.MAX_COUNT) {
+                    iterArtPts(neighbour, start, articulations, unvisitedNodes);
                     numSubtrees++;
                 }
             }
+//            At root:
+//            if there is more than one edge to an unvisited node,
+//            then  root is an articulation point.
 
             if (numSubtrees > 1) {
-                articulationPoints.add(start);
+                articulations.add(start);
             }
 
             unvisitedNodes.remove(start);
         }
         // could return empty set
-        return articulationPoints;
+        return articulations;
     }
 
 
@@ -60,42 +59,47 @@ public class ArticulationNode {
     /**
      * Iterative version of articulation points search
      *
-     * @param firstNode
-     * @param root
+     * @param neighbourNode
+     * @param startNode
      * @param artPoints
      * @param unvisitedNodes
      */
-    private static void iterArtPts(Node firstNode, Node root, Set<Node> artPoints, Set<Node> unvisitedNodes) {
-        Stack<IteArtStackElement> stack = new Stack<>();
-        stack.push(new IteArtStackElement(firstNode, 1, new IteArtStackElement(root, 0, null)));
+    private static void iterArtPts(Node neighbourNode, Node startNode, Set<Node> artPoints, Set<Node> unvisitedNodes) {
+        Stack<ArtStackObject> stack = new Stack<>();
+        stack.push(new ArtStackObject(neighbourNode, 1, new ArtStackObject(startNode, 0, null)));
 
         while (!stack.isEmpty()) {
-            IteArtStackElement elem = stack.peek();
-            Node node = elem.node;
-            if (elem.children == null) { // first time
-                node.depth = elem.reach = elem.depth;
-                elem.children = new ArrayList<>();
+            ArtStackObject peekElem = stack.peek(); // look not remove,  pop -->return and remove
+            Node node = peekElem.node;
+            // first time: initialise and construct children
+            if (peekElem.children == null) {
+                node.count = peekElem.reachBack = peekElem.count;
+                peekElem.children = new ArrayList<>();
                 for (Node neighbour : node.neighbourNodeSet) {
-                    if (neighbour.nodeId != elem.parent.node.nodeId) {
-                        elem.children.add(neighbour);
+                    if (neighbour.nodeId != peekElem.parent.node.nodeId) {
+                        peekElem.children.add(neighbour);
                     }
                 }
-            } else if (!elem.children.isEmpty()) {  // children to process
-                Node child = elem.children.remove(0);
-                if (child.depth < Node.MAX_DEPTH) {
-                    elem.reach = Math.min(elem.reach, child.depth);
+                // children to process
+            } else if (!peekElem.children.isEmpty()) {
+                Node child = peekElem.children.remove(0); // remove until children is empty
+                if (child.count < Node.MAX_COUNT) {
+                    //update reachBack,if visited
+                    peekElem.reachBack = Math.min(peekElem.reachBack, child.count);
                 } else {
-                    stack.push(new IteArtStackElement(child, node.depth + 1, elem));
+                    //else push on fringe
+                    stack.push(new ArtStackObject(child, node.count + 1, peekElem));
                 }
-            } else {  // last time
-                if (node.nodeId != firstNode.nodeId) {
-                    if (elem.reach >= elem.parent.depth) {
-                        artPoints.add(elem.parent.node);
+                // last time:determine if parent is articulation point, update parent's reachBack
+            } else {
+                if (node.nodeId != neighbourNode.nodeId) {
+                    if (peekElem.reachBack >= peekElem.parent.count) {
+                        artPoints.add(peekElem.parent.node);
                     }
-                    elem.parent.reach = Math.min(elem.parent.reach, elem.reach);
+                    peekElem.parent.reachBack = Math.min(peekElem.parent.reachBack, peekElem.reachBack);
                 }
-                stack.pop();
-                unvisitedNodes.remove(elem.node);
+                stack.pop(); //remove the first node
+                unvisitedNodes.remove(peekElem.node); // remove the node from unvisitedNode
             }
         }
     }
@@ -106,19 +110,19 @@ public class ArticulationNode {
      * @author minping
      *
      */
-    private static class IteArtStackElement {
+    private static class ArtStackObject {
 
         Node node;
-        int reach;
-        IteArtStackElement parent;
-        int depth;
+        int reachBack;
+        ArtStackObject parent;
+        int count;
         List<Node> children;
 
-        public IteArtStackElement(Node node, int depth, IteArtStackElement parent) {
+        public ArtStackObject(Node node, int count, ArtStackObject parent) {
             this.node = node;
-            this.reach = Node.MAX_DEPTH;
+            this.reachBack = Node.MAX_COUNT;
             this.parent = parent;
-            this.depth = depth;
+            this.count = count;
             this.children = null;
         }
     }

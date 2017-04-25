@@ -80,7 +80,9 @@ public class ASearchNode implements Comparable<ASearchNode>{
         }
     }
 
-
+/**
+ * this method is used for affecting the order of the priority queue
+ * **/
     @Override
     public int compareTo(ASearchNode otherNode){
         double costNode1 = this.GcostFromStart + this.HcosttoTarget;

@@ -26,31 +26,31 @@ public class ASearch {
         //literate through the priority queue, until it poll out all elements
         while(!fringe.isEmpty())
         {
-
-            ASearchNode visitNode = fringe.poll();  //firstly, it is start node
+            //poll out the small cost (g+H) node of the priority
+            ASearchNode visitNode = fringe.poll();
             //mark it visited and add it to the set
             vistiedNodeSet.add(visitNode.node.nodeId);
 
-            /***find all segments of the shortest path****/
-            //poll node until the node is the target node
-            if(visitNode.node.nodeId == targetNode.nodeId){
-                //create a list of path to store all segment orderly
-                List<RoadSegment> shortestPath = new ArrayList<>();
-                //last node is also the target node
-                ASearchNode lastNode = visitNode;
-                //add all edges from the last node to its " ancestor " node
-                while(lastNode.parentNode != null){
-                    //store all the edges
-                    shortestPath.add(lastNode.edge);
-                    //go to find its grandparent
-                    lastNode = lastNode.parentNode;
-                }
+                    /***find shortest path successfully case****/
+                    //poll node until the node is the target node
+                    if(visitNode.node.nodeId == targetNode.nodeId){
+                        //create a list of path to store all segment orderly
+                        List<RoadSegment> shortestPath = new ArrayList<>();
+                        //last node is also the target node
+                        ASearchNode lastNode = visitNode;
+                        //add all edges from the last node to its " ancestor " node
+                        while(lastNode.parentNode != null){
+                            //store all the edges
+                            shortestPath.add(lastNode.edge);
+                            //go to find its grandparent
+                            lastNode = lastNode.parentNode;
+                        }
 
-                //revers the order of the arraylist
-                Collections.reverse(shortestPath);
-                return shortestPath;
-            }
-            /***********************************************/
+                        //revers the order of the arraylist
+                        Collections.reverse(shortestPath);
+                        return shortestPath;
+                    }
+                    /***********************************************/
 
             Node startNodeOfSegment =visitNode.node;
             //literally go through all segements from current node
@@ -86,32 +86,36 @@ public class ASearch {
                     }
                  }
 
-
+                //the segment is valid
                 //check if current neighbour node is visited yet.
 
                 if(!vistiedNodeSet.contains(endNodeOfSegment.nodeId))
                 {
+                    //transfer neighbour node become A search node type which is used to add the priority queue
                     ASearchNode neighbourNode = new ASearchNode(endNodeOfSegment,visitNode,targetNode,shortestDistance);
-                    boolean isOfFringe = false; // mark it not belong to the priority queue yet
+                    // flag is used to check if the node is in the priority queue
+                    boolean isOfFringe = false;
 
                     for(ASearchNode nodeOfFringe : fringe)
                     {
-                            //if this end node of the segment is added in the fringe already
+                       // check if the node is in the priority queue
                         if(nodeOfFringe.node.nodeId == endNodeOfSegment.nodeId)
                         {
 
-                            //case1 : it is already in fringe, check if its cost need to be updated(its neighbour has small G cost)
+                            // check if its start cost need to be updated( because it probably has smaller parent node cost, even it is same node)
                             if(neighbourNode.GcostFromStart < nodeOfFringe.GcostFromStart)
-                            {
+                            {   //if it is, then set the neighbour node to their priority que
                                 nodeOfFringe.parentNode =neighbourNode.parentNode;
+                                //set the edge between this Asearch node and its parent Asearch node as the segement between them.
                                 nodeOfFringe.setEdge();
+                                //set the smaller G cost to the current Asearch node
                                 nodeOfFringe.setGCostFromStart(shortestDistance);
                             }
                             isOfFringe =true;
                             break ; //break the update inner for loop
                         }
                     }
-                    //Otherwise, add neighbournode int
+                    //Otherwise, add all unvisited neighbour node to the priority queue through the loop
                     if(!isOfFringe)
                     {
                         fringe.offer(neighbourNode);
@@ -125,6 +129,9 @@ public class ASearch {
 
 
         }
+
+
+
         //pathfind fails case:
         return new ArrayList<>();
 

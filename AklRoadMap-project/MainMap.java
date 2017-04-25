@@ -315,6 +315,7 @@ public class MainMap extends GUI{
             if(!shortestPathFound.get(i).road.label.equals(shortestPathFound.get(i-1).road.label)){
                 //case1: different roads in this piece of adjacency segments
                 lengthOfRoad =shortestPathFound.get(i).lengthOfSegment;
+                //avoid duplicates
                 roadsInfoList.add(shortestPathFound.get(i).road.label+String.format(": %.3f km",lengthOfRoad));
             } else{
                 //case2: same road that this piece of adjacency segments belonging to

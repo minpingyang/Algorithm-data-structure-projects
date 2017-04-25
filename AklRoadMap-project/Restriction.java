@@ -22,6 +22,8 @@ public class Restriction {
         this.roadTwo = roadMap.get(Integer.parseInt(values[3]));
         this.nodeTwo = nodeMap.get(Integer.parseInt(values[4]));
 
+
     }
+
 
 }
