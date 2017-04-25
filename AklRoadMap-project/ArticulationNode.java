@@ -114,6 +114,8 @@ public class ArticulationNode {
 
         Node node;
         int reachBack;
+//        a reachBack of a vertex is the the minimum of count of all the adjacent vertices
+// which are reachable from the given vertex in the DFS traversal.
         ArtStackObject parent;
         int count;
         List<Node> children;
