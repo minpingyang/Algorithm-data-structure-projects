@@ -1,17 +1,38 @@
 package code.renderer;
 
 import java.awt.Color;
+import java.awt.List;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.ArrayList;
 
 import org.omg.CORBA.PRIVATE_MEMBER;
 
 
 
 public class Renderer extends GUI {
+			//the 3D model
+			private Scene scene;
+			private Scene centralisedScene;
+			//the viewing angle for rotation
+			private float xRotation = 0f, yRotation = 0f;
+			private float rotatAngle = 0.2f;	
+			//the viewing position for translation
+			private Vector3D viewerPosition = new Vector3D(0f, 0f, 0f);
+			private float translationDistance = 2.0f;
+			//constants for zoomig
+			private float currentScale = 1.0f;
+			private static final float ZOOMING_FACTOR = 1.5f;
+			private static final float ZOOMING_MIN = 0.5f, ZOOMING_MAX = 6.0f;
+			//For rotation 
+			private boolean isRotation = true;
+			private Point dragStart;
 	@Override
 	protected void onLoad(File file) {
 		// TODO fill this in.
@@ -20,22 +41,21 @@ public class Renderer extends GUI {
 		 * This method should parse the given file into a Scene object, which
 		 * you store and use to render an image.
 		 */
-		//the 3D model
-		private Scene scene;
-		private Scene centralisedScene;
-		//the viewing angle for rotation
-		private float xRotation = 0f, yRotation = 0f;
-		private float rotatAngle = 0.2f;	
-		//the viewing position for translation
-		private Vector3D viewerPosition = new Vector3D(0f, 0f, 0f);
-		private float translationDistance = 2.0f;
-		//constants for zoomig
-		private float currentScale = 1.0f;
-		private static final float ZOOMING_FACTOR = 1.5f;
-		private static final float ZOOMING_MIN = 0.5f, ZOOMING_MAX = 6.0f;
-		//For rotation 
-		private boolean isRotation = true;
-		private Point dragStart;
+		xRotation = yRotation = 0f;
+		viewerPosition = new Vector3D(0f, 0f, 0f);
+		currentScale = 1.0f;
+		isRotation = true;
+		centralisedScene = null;
+		List<Polygon> polygons = new ArrayList<>();
+		Vector3D lightPosition;
+		BufferedReader bufferReader;
+		try {
+			bufferReader = new BufferedReader(new FileReader(file));
+			
+		} catch (FileNotFoundException e) {
+			// TODO: handle exception
+	
+		}
 		
 	}
 
