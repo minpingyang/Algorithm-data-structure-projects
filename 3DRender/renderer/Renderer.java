@@ -57,7 +57,7 @@ public class Renderer extends GUI {
 				bufferReader.close();
 				return;
 			}
-			String[] values = line.split("");
+			String[] values = line.split(" ");
 			//parse the light source
 			float x =Float.parseFloat(values[0]);
 			float y =Float.parseFloat(values[1]);
@@ -67,7 +67,20 @@ public class Renderer extends GUI {
 			line =bufferReader.readLine();
 			
 			//parse polygons one by one
-
+			while(line != null){
+				values = line.split(" ");
+				//coordinators of polygon
+				float aX = Float.parseFloat(values[0]);
+				float aY = Float.parseFloat(values[1]);
+				float az = Float.parseFloat(values[2]);
+				float bX = Float.parseFloat(values[3]);
+				float bY = Float.parseFloat(values[4]);
+				float bZ = Float.parseFloat(values[5]);
+				float cX = Float.parseFloat(values[6]);
+				float cY = Float.parseFloat(values[7]);
+				float cZ = Float.parseFloat(values[8]);
+				
+			}
 			
 			
 		} catch (FileNotFoundException e) {
