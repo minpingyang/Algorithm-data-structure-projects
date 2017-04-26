@@ -51,6 +51,24 @@ public class Renderer extends GUI {
 		BufferedReader bufferReader;
 		try {
 			bufferReader = new BufferedReader(new FileReader(file));
+			String  line = bufferReader.readLine();
+			if (line == null) {
+				System.out.println("The file is empty");
+				bufferReader.close();
+				return;
+			}
+			String[] values = line.split("");
+			//parse the light source
+			float x =Float.parseFloat(values[0]);
+			float y =Float.parseFloat(values[1]);
+			float z =Float.parseFloat(values[2]);
+			lightPosition = new Vector3D(x, y, z);
+			
+			line =bufferReader.readLine();
+			
+			//parse polygons one by one
+
+			
 			
 		} catch (FileNotFoundException e) {
 			// TODO: handle exception
