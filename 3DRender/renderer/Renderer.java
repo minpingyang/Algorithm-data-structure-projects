@@ -7,6 +7,10 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+import org.omg.CORBA.PRIVATE_MEMBER;
+
+
+
 public class Renderer extends GUI {
 	@Override
 	protected void onLoad(File file) {
@@ -16,6 +20,23 @@ public class Renderer extends GUI {
 		 * This method should parse the given file into a Scene object, which
 		 * you store and use to render an image.
 		 */
+		//the 3D model
+		private Scene scene;
+		private Scene centralisedScene;
+		//the viewing angle for rotation
+		private float xRotation = 0f, yRotation = 0f;
+		private float rotatAngle = 0.2f;	
+		//the viewing position for translation
+		private Vector3D viewerPosition = new Vector3D(0f, 0f, 0f);
+		private float translationDistance = 2.0f;
+		//constants for zoomig
+		private float currentScale = 1.0f;
+		private static final float ZOOMING_FACTOR = 1.5f;
+		private static final float ZOOMING_MIN = 0.5f, ZOOMING_MAX = 6.0f;
+		//For rotation 
+		private boolean isRotation = true;
+		private Point dragStart;
+		
 	}
 
 	@Override
