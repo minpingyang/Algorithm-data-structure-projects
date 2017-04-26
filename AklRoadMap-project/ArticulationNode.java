@@ -33,7 +33,7 @@ public class ArticulationNode {
             Node start = unvisitedNodes.iterator().next();
             start.count = 0;
             for (Node neighbour : start.neighbourNodeSet) {
-                //initially, count of all unvisited nodes equal MAX_COUNT;
+                //initially, count of all unvisited nodes equal MAX_COUNT, which means the node is unvisited;
                 if (neighbour.count == Node.MAX_COUNT) {
                     iterArtPts(neighbour, start, articulations, unvisitedNodes);
                     numSubtrees++;
