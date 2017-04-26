@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.omg.CORBA.PRIVATE_MEMBER;
@@ -72,31 +73,59 @@ public class Renderer extends GUI {
 				//coordinators of polygon
 				float aX = Float.parseFloat(values[0]);
 				float aY = Float.parseFloat(values[1]);
-				float az = Float.parseFloat(values[2]);
+				float aZ = Float.parseFloat(values[2]);
 				float bX = Float.parseFloat(values[3]);
 				float bY = Float.parseFloat(values[4]);
 				float bZ = Float.parseFloat(values[5]);
 				float cX = Float.parseFloat(values[6]);
 				float cY = Float.parseFloat(values[7]);
 				float cZ = Float.parseFloat(values[8]);
+				float[] points = new float[]{aX,aY,aZ,bX,bY,bZ,cX,cY,cZ};
 				
+				int surfaceRed = Integer.parseInt(values[9]);
+				int surfaceGreen = Integer.parseInt(values[10]);
+				int surfaceBlue = Integer.parseInt(values[11]);
+				int[] color = new int[]{surfaceRed,surfaceGreen,surfaceBlue};
+				polygons.add(new Polygon(points,color));
+				line = bufferReader.readLine();			
 			}
-			
+			bufferReader.close();
+			this.scene = new Scene(polygons, lightPosition);			
 			
 		} catch (FileNotFoundException e) {
-			// TODO: handle exception
-	
+			System.err.println("FileNotFoundException");
+		}catch (IOException e) {
+			System.err.println("IOeException");
 		}
 		
 	}
-
+	
+    private void rotationX(float amount) {
+		xRotation += amount;
+	}
+    private void rotationY(float amount) {
+		yRotation += amount;
+	}
+    private void moveDown(float amount) {
+		viewerPosition = viewerPosition.plus(new Vector3D(0f,amount, 0f));
+	}
+    private void moveRight() {
+		
+	}
+    
+    
+	/*
+	 * This method should be used to rotate the user's viewpoint.
+	 */
 	@Override
 	protected void onKeyPress(KeyEvent ev) {
 		// TODO fill this in.
-
-		/*
-		 * This method should be used to rotate the user's viewpoint.
-		 */
+		char c = ev.getKeyChar();
+		//Roatation
+		if (ev.getKeyCode() == KeyEvent.VK_UP) {
+			rotateX
+		}
+		
 	}
 
 	@Override
