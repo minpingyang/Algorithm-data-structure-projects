@@ -14,7 +14,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.omg.CORBA.PRIVATE_MEMBER;
 
 public class Renderer extends GUI {
 	// the 3D model
@@ -36,8 +35,18 @@ public class Renderer extends GUI {
 	
 	/*
 	 * Convert a 2D array of color values into a BufferedUmage.
-	 * Assumes that bitmap is indexed by column then row and 
+	 * Assumes that bitmap is indexed by column then row and has imageHeight rows 
+	 * and imageWidth columns, Note that image.setRGB requires x(col) and y (row) are given in that order
 	 * */
+	private BufferedImage getImage(Color[][] colors) {
+		BufferedImage bufferedImage = new BufferedImage(CANVAS_WIDTH, CANVAS_HEIGHT, BufferedImage.TYPE_INT_RGB);
+		for (int i = 0; i < CANVAS_WIDTH; i++) {
+			for (int j = 0; j < CANVAS_HEIGHT; j++) {
+			bufferedImage.setRGB(i, j, colors[i][j].getRGB());
+			}
+		}
+		return bufferedImage;
+	}
 	
 	
 	
@@ -96,7 +105,7 @@ public class Renderer extends GUI {
 		currentScale = 1.0f;
 		isRotation = true;
 		centralisedScene = null;
-		List<Polygon> polygons = new ArrayList<>();
+		List<Polygon> polygons = new ArrayList<Polygon>();
 		Vector3D lightPosition;
 		BufferedReader bufferReader;
 		try {
@@ -165,10 +174,29 @@ public class Renderer extends GUI {
 	@Override
 	protected void onKeyPress(KeyEvent ev) {
 		// TODO fill this in.
-		char c = ev.getKeyChar();
-		//Roatation
+		char key = ev.getKeyChar();
+		//Rotation
 		if (ev.getKeyCode() == KeyEvent.VK_UP) {
-			rotateX
+			rotationX(-rotatAngle);
+		}else if (ev.getKeyCode() == KeyEvent.VK_DOWN) {
+			rotationX(rotatAngle);
+		}else if (ev.getKeyCode() == KeyEvent.VK_LEFT) {
+			rotationY(rotatAngle);
+		}else if (ev.getKeyCode() == KeyEvent.VK_RIGHT) {
+			rotationY(-rotatAngle);
+		}//Translation
+		else if (key == 'w' || key == 'W') {
+			moveDown(-translationDistance);
+		} else if (key == 's' || key == 'S') {
+			moveDown(translationDistance);
+		} else if (key == 'a' || key == 'A') {
+			moveRight(-translationDistance);
+		}else if (key == 'd' || key == 'D') {
+			moveRight(translationDistance);
+		}else if (key == 'q' || key == 'Q') {
+			zoom(1.0f / ZOOMING_FACTOR);
+		}else if (key == 'e' || key == 'E') {
+			zoom(ZOOMING_FACTOR);
 		}
 		
 	}
@@ -202,9 +230,7 @@ public class Renderer extends GUI {
 		return image;
 	}
 
-	public static void main(String[] args) {
-		new Renderer();
-	}
+	
 
 	@Override
 	protected void onScroll(MouseWheelEvent e) {
@@ -222,7 +248,9 @@ public class Renderer extends GUI {
 	protected void switchMoveRotation() {
 		isRotation =! isRotation;
 	}
-
+	public static void main(String[] args) {
+		new Renderer();
+	}
 	
 }
 
