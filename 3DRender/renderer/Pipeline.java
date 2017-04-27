@@ -61,7 +61,7 @@ public class Pipeline {
 		green = green > 255 ? 255 : green;
 		blue = blue > 255 ? 255 : blue;
 		return new Color(red,green,blue);
-		
+
 	}
 
 	/**
@@ -81,8 +81,12 @@ public class Pipeline {
 	 *         rotated accordingly.
 	 */
 	public static Scene rotateScene(Scene scene, float xRot, float yRot) {
-		// TODO fill this in.
-		return null;
+
+		//the Rotation matrix
+		Transform rotationMatrix = Transform.newXRotation(xRot).compose(Transform.newYRotation(yRot));
+
+		return processMatrix(scene,rotationMatrix);
+		
 	}
 
 	/**
