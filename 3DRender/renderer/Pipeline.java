@@ -20,8 +20,7 @@ public class Pipeline {
 	 * should be hidden), and false otherwise.
 	 */
 	public static boolean isHidden(Polygon poly) {
-		// TODO fill this in.
-		return false;
+		return poly.getNormal().z > 1e-5;
 	}
 
 	/**
@@ -39,8 +38,30 @@ public class Pipeline {
 	 *            on the direction.
 	 */
 	public static Color getShading(Polygon poly, Vector3D lightDirection, Color lightColor, Color ambientLight) {
-		// TODO fill this in.
-		return null;
+
+		Vector3D normal = poly.getNormal();
+		double cos = normal.cosTheta(lightDirection);
+
+		int red,green,blue;
+
+		// (ambient light color + light color*dotProduct)* reflection
+		if(cos>0){
+
+			red = (int)(poly.reflectance.getRed() / 255.0f * (ambientLight.getRed() + lightColor.getRed() * cos));
+			green = (int)(poly.reflectance.getGreen() / 255.0f*(ambientLight.getGreen() + lightColor.getGreen()*cos));
+			blue = (int)(poly.reflectance.getBlue() / 255.0f * (ambientLight.getBlue() + lightColor.getBlue()*cos));
+
+		}else{
+			red = (int)(poly.reflectance.getRed() / 255.0f*ambientLight.getRed());
+			green = (int)(poly.reflectance.getGreen() / 255.0f*ambientLight.getGreen());
+			blue = (int)(poly.reflectance.getBlue() / 255.0f*ambientLight.getBlue());
+		}
+
+		red = red > 255 ? 255 : red;
+		green = green > 255 ? 255 : green;
+		blue = blue > 255 ? 255 : blue;
+		return new Color(red,green,blue);
+		
 	}
 
 	/**
