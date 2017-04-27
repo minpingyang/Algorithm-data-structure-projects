@@ -1,19 +1,13 @@
 package code.renderer;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.List;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Renderer extends GUI {
@@ -33,15 +27,14 @@ public class Renderer extends GUI {
 	// For rotation
 	private boolean isRotation = true;
 	private Point pressStart;
-	
+
+
+
 	/*
 	 * Convert a 2D array of color values into a BufferedUmage.
-	 * Assumes that bitmap is indexed by column then row and has imageHeight rows 
+	 * Assumes that bitmap is indexed by column then row and has imageHeight rows
 	 * and imageWidth columns, Note that image.setRGB requires x(col) and y (row) are given in that order
 	 * */
-	
-
-	
 	private void rotationX(float amount) {
 		xRotation += amount;
 	}
@@ -109,8 +102,8 @@ public class Renderer extends GUI {
 		currentScale = 1.0f;
 		isRotation = true;
 		centralisedScene = null;
-		
-		ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+
+		List<Polygon> polygons = new ArrayList<>();
 		Vector3D lightPosition;
 		BufferedReader bufferReader;
 		try {
@@ -163,7 +156,7 @@ public class Renderer extends GUI {
 
 	}
 
-	
+
 	private void zoom(float scale) {
 		currentScale *= scale;
 		if (currentScale > ZOOMING_MAX) {
@@ -203,9 +196,9 @@ public class Renderer extends GUI {
 		}else if (key == 'e' || key == 'E') {
 			zoom(ZOOMING_FACTOR);
 		}
-		
+
 	}
-	
+
 	/*
 	 * This method should put together the pieces of your renderer, as
 	 * described in the lecture. This will involve calling each of the
@@ -240,24 +233,26 @@ public class Renderer extends GUI {
 		//re-centralise the scene again
 		float[] newBoundary = scaledScene.getBoundary();
 		Scene reCenteredScene =Pipeline.reTranslation(scaledScene,newBoundary,dimension);
-		
+
 		//translate the scene towards the viewer position
 		Scene translatedScene = Pipeline.translateScene(reCenteredScene,viewerPosition.x,viewerPosition.y,viewerPosition.z);
-		
+
 		//initialise the depth of all pixels
 		for (int i = 0; i < zDepth.length; i++) {
 			for (int j = 0; j < zDepth[i].length; j++) {
 				zDepth[i][j] = Float.POSITIVE_INFINITY;
 			}
 		}
-		
+
 		// update colors in zBuffer
 		Color lightColor = getDirectLight();
 		Color ambientColor = getAmbientLight();
 		Vector3D lightVector = translatedScene.getLight();
-		List<Polygon> polygonList = translatedScene.getPolygons();
+		List<Polygon> polygons = translatedScene.getPolygons();
 
-		for(Polygon polygon: polygonList){
+
+
+		for(Polygon polygon: polygons){
 			if(Pipeline.isHidden(polygon)){
 				continue;
 			}
@@ -268,10 +263,10 @@ public class Renderer extends GUI {
 
 		return convertBitmapToImage(zBuffer);
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * Converts a 2D array of Colors to a BufferedImage. Assumes that bitmap is
 	 * indexed by column then row and has imageHeight rows and imageWidth
@@ -286,10 +281,10 @@ public class Renderer extends GUI {
 			}
 		}
 		return image;
-		
+
 	}
 
-	
+
 
 
 	@Override
@@ -299,7 +294,7 @@ public class Renderer extends GUI {
 	public static void main(String[] args) {
 		new Renderer();
 	}
-	
+
 }
 
 // code for comp261 assignments

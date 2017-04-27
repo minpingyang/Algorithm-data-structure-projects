@@ -55,9 +55,9 @@ public class Polygon
 		return vertices;
 	}
 
-	public Color getReflectance() {
-		return reflectance;
-	}
+//	public Color getReflectance() {
+//		return reflectance;
+//	}
 	public Vector3D getNormal(){
 		Vector3D vec0_1 = vertices[1].minus(vertices[0]);
 		Vector3D vec1_2 = vertices[2].minus(vertices[1]);
