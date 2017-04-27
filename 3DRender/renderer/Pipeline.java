@@ -93,7 +93,7 @@ public class Pipeline {
 		Vector3D processedLightPos = scaleMatrix.multiply(scene.getLight());
 		//process polygons
 		List<Polygon> processedPolygons = new ArrayList<>();
-		for (Polygon polygon : scene.getPolygons()) {
+		for (Polygon polygon : scene.g) {
 			Vector3D[] processedVectors = new Vector3D[3];
 			for (int i = 0; i < processedVectors.length; i++) {
 				processedVectors[i] = scaleMatrix.multiply(polygon.vertices[i]);
