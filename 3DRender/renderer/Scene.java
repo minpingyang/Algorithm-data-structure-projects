@@ -14,21 +14,32 @@ import java.util.List;
  * to store more information in this class.
  */
 public class Scene {
-
+	//the collection of polygons that construct into this 3D model
+	private final List<Polygon> polygons;
+	//the Vector that represents the direction of the light source
+	private final Vector3D lightPos;
+	
 	public Scene(List<Polygon> polygons, Vector3D lightPos) {
-          // TODO fill this in.
+         this.polygons = polygons;
+         this.lightPos = lightPos;
 	}
 
 	public Vector3D getLight() {
-          // TODO fill this in.
-          return null;
+         return lightPos;
 	}
 
 	public List<Polygon> getPolygons() {
-          // TODO fill this in.
-          return null;
+          return polygons;
 	}
-
+	/**
+	 * Get the bounding box of this scene, i.e. the leftmost, rightmost, topMost,bottomMost,
+	 * closest and farthest vertex of it.
+	 * @return float[]   -- an array of float numbers: left, right, top, bottom, closest,farthest boundaries
+	 * /
+	
+	
+	
+	
 	/**
 	 * Polygon stores data about a single polygon in a scene, keeping track of
 	 * (at least!) its three vertices and its reflectance.
@@ -84,7 +95,11 @@ public class Scene {
 		public Color getReflectance() {
 			return reflectance;
 		}
-
+		public Vector3D getNormal(){
+			Vector3D vec0_1 = vertices[1].minus(vertices[0]);
+			Vector3D vec1_2 = vertices[2].minus(vertices[1]);
+			return vec0_1.crossProduct(vec1_2);
+		}
 		@Override
 		public String toString() {
 			String str = "polygon:";
@@ -96,6 +111,11 @@ public class Scene {
 
 			return str;
 		}
+	}
+
+	public float[] getBoundary() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
 

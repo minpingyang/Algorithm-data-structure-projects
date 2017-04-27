@@ -1,5 +1,8 @@
 package code.renderer;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -78,9 +81,26 @@ public class Pipeline {
 	 * @param scene
 	 * @return
 	 */
-	public static Scene scaleScene(Scene scene) {
-		// TODO fill this in.
-		return null;
+	public static Scene scaleScene(Scene scene,float offset_x, float offset_y,float offset_z ) {
+		//the scale matrix
+		Transform scaleMatrix = Transform.newScale(offset_x,offset_y,offset_z);
+		return processMatrix(scene, scaleMatrix);
+
+	}
+
+	private static Scene processMatrix(Scene scene, Transform scaleMatrix) {
+		//process light
+		Vector3D processedLightPos = scaleMatrix.multiply(scene.getLight());
+		//process polygons
+		List<Polygon> processedPolygons = new ArrayList<>();
+		for (Polygon polygon : scene.getPolygons()) {
+			Vector3D[] processedVectors = new Vector3D[3];
+			for (int i = 0; i < processedVectors.length; i++) {
+				processedVectors[i] = scaleMatrix.multiply(polygon.vertices[i]);
+			}
+			Polygon processedPolygon = new Polygon(processedVectors[0], processedVectors[1],processedVectors[2],polygon.reflectance);
+			
+		}
 	}
 
 	/**
@@ -112,6 +132,11 @@ public class Pipeline {
 	 */
 	public static void computeZBuffer(Color[][] zbuffer, float[][] zdepth, EdgeList polyEdgeList, Color polyColor) {
 		// TODO fill this in.
+	}
+
+	public static Scene scaleAndTranslate(Scene scene, float[] boundary, Dimension dimension) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
 

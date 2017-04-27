@@ -1,6 +1,7 @@
 package code.renderer;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.List;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -38,17 +39,8 @@ public class Renderer extends GUI {
 	 * Assumes that bitmap is indexed by column then row and has imageHeight rows 
 	 * and imageWidth columns, Note that image.setRGB requires x(col) and y (row) are given in that order
 	 * */
-	private BufferedImage getImage(Color[][] colors) {
-		BufferedImage bufferedImage = new BufferedImage(CANVAS_WIDTH, CANVAS_HEIGHT, BufferedImage.TYPE_INT_RGB);
-		for (int i = 0; i < CANVAS_WIDTH; i++) {
-			for (int j = 0; j < CANVAS_HEIGHT; j++) {
-			bufferedImage.setRGB(i, j, colors[i][j].getRGB());
-			}
-		}
-		return bufferedImage;
-	}
 	
-	
+
 	
 	private void rotationX(float amount) {
 		xRotation += amount;
@@ -200,17 +192,40 @@ public class Renderer extends GUI {
 		}
 		
 	}
-
+	
+	/*
+	 * This method should put together the pieces of your renderer, as
+	 * described in the lecture. This will involve calling each of the
+	 * static method stubs in the Pipeline class, which you also need to
+	 * fill in.
+	 */
 	@Override
 	protected BufferedImage render() {
-		// TODO fill this in.
-
-		/*
-		 * This method should put together the pieces of your renderer, as
-		 * described in the lecture. This will involve calling each of the
-		 * static method stubs in the Pipeline class, which you also need to
-		 * fill in.
-		 */
+		Color[][] zBuffer = new Color[CANVAS_WIDTH][CANVAS_HEIGHT];
+		float[][] zDepth = new float[CANVAS_WIDTH][CANVAS_HEIGHT];
+		//initialise all pixels as default color
+		Color backgroundColor = new Color(200, 200, 200); //light grey
+		for (int i = 0; i < zBuffer.length; i++) {
+			for (int j = 0; j < zBuffer[i].length; j++) {
+				zBuffer[i][j] = backgroundColor;
+			}
+		}
+		//before loading in anything,display a playground
+		if (scene == null) {
+			return convertBitmapToImage(zBuffer);
+		}
+		Dimension dimension =getDrawingDimentsion();
+		if (centralisedScene == null) {
+			//scale the scene to fit in the canvas
+			float[] boundary = scene.getBoundary();
+			centralisedScene = Pipeline.scaleAndTranslate(scene,boundary,dimension);
+		}
+		//rotate the camera
+		Scene rotatedScene = Pipeline.rotateScene(centralisedScene, xRotation, yRotation);
+		//scale the scene
+		Scene scaledScene = Pipeline.scaleScene(rotatedScene,currentScale,currentScale,currentScale);
+		
+		
 		return null;
 	}
 
@@ -228,6 +243,7 @@ public class Renderer extends GUI {
 			}
 		}
 		return image;
+		
 	}
 
 	
