@@ -216,7 +216,45 @@ public class Pipeline {
 	 *            The colour of the polygon to add into the zbuffer.
 	 */
 	public static void computeZBuffer(Color[][] zbuffer, float[][] zdepth, EdgeList polyEdgeList, Color polyColor) {
-		// TODO fill this in.
+		int startY = polyEdgeList.getStartY();
+		int endY = polyEdgeList.getStartY();
+		int height = endY - startY;
+		int y = 0;
+
+		while ( y < height){
+			// do not render pixels that are out-of-boundary
+			if( y+startY < 0 || y+startY >= zbuffer[0].length){
+				y++;
+				continue;
+			}
+
+			int x = (int) polyEdgeList.getXLeft(y);
+			int xRight = (int) polyEdgeList.getXRight(y);
+			float z = polyEdgeList.getZLeft(y);
+			float zRight = polyEdgeList.getZRight(y);
+			float mz =( zRight -z) / (xRight - x);
+
+			while(x < xRight){
+			    //do not render pixels that are out-of-boundary
+                if(x<0 || x>=zbuffer.length){
+                    z += mz;
+                    x++;
+                    continue;
+                }
+                if(z < zdepth[x][y + startY]){
+                    zdepth[x][y + startY] = z;
+                    zbuffer[x][y + startY] = polyColor;
+
+                }
+                z += mz;
+                x++;
+
+            }
+
+			y++;
+
+		}
+
 	}
 
 	public static Scene scaleAndTranslate(Scene scene, float[] boundary, Dimension dimension) {
