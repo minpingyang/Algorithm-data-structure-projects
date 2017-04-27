@@ -257,9 +257,45 @@ public class Pipeline {
 
 	}
 
-	public static Scene scaleAndTranslate(Scene scene, float[] boundary, Dimension dimension) {
-		// TODO Auto-generated method stub
-		return null;
+	public static Scene fitByScaleTranslate(Scene scene, float[] boundary, Dimension dimension) {
+
+	    float left = boundary[0];
+		float right = boundary[1];
+		float up = boundary[2];
+		float down = boundary[3];
+		float close = boundary[4];
+		float far = boundary[5];
+
+		float objectWidth = right - left;
+		float objectHeight = down - up;
+		float objectDepth = far - close;
+		int canvasWidth = dimension.width;
+		int canvasHeight = dimension.height;
+        // scale;
+		float ratioHorizontal = canvasWidth / 2 /  objectWidth;
+		float ratioVertical = canvasHeight / 2 / objectHeight;
+		float ratioDepth = Math.min(canvasWidth, canvasHeight) / 2 / objectDepth;
+
+		float scale = Math.min(Math.min(ratioHorizontal,ratioVertical),ratioDepth);
+		Transform scaleMatrix = Transform.newScale(scale,scale,scale);
+		Scene scaledScene = processMatrix(scene,scaleMatrix);
+
+		//Auto-translate
+        float scaledLeft = left * scale;
+        float scaledUp = up * scale;
+
+        //how far it will shift horizontally
+        float scaledObjectWidth = objectWidth * scale;
+        float centralPosX = (canvasWidth - scaledObjectWidth) / 2;
+        float shift_horizontal =centralPosX -scaledLeft;
+        //how far it will shift vertically
+        float scaledObjectHeight = objectHeight * scale;
+        float centralPosY = (canvasHeight - scaledObjectHeight) / 2;
+        float shift_vertial = centralPosY - scaledUp;
+
+        Transform translationMatrix = Transform.newTranslation(shift_horizontal,shift_vertial,0f);
+        return processMatrix(scaledScene,translationMatrix);
+
 	}
 
 	public static Scene reTranslation(Scene scaledScene, float[] newBoundary, Dimension dimension) {

@@ -224,7 +224,7 @@ public class Renderer extends GUI {
 		if (centralisedScene == null) {
 			//scale the scene to fit in the canvas
 			float[] boundary = scene.getBoundary();
-			centralisedScene = Pipeline.scaleAndTranslate(scene,boundary,dimension);
+			centralisedScene = Pipeline.fitByScaleTranslate(scene,boundary,dimension);
 		}
 		//rotate the camera
 		Scene rotatedScene = Pipeline.rotateScene(centralisedScene, xRotation, yRotation);
