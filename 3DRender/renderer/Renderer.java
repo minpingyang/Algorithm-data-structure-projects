@@ -58,7 +58,19 @@ public class Renderer extends GUI {
 		viewerPosition = viewerPosition.plus(new Vector3D(amount, 0f, 0f));
 	}
 
-	
+	@Override
+	protected void onScroll(MouseWheelEvent e) {
+		// TODO Auto-generated method stub
+		int i = e.getWheelRotation();
+		if (i < 0) {
+			// zoom out
+			zoom(ZOOMING_FACTOR);
+		} else {
+			zoom(1.0f / ZOOMING_FACTOR);
+		}
+	}
+
+
 	@Override
 	protected void onPressed(MouseEvent e) {
 		pressStart = e.getPoint();
@@ -229,7 +241,32 @@ public class Renderer extends GUI {
 		float[] newBoundary = scaledScene.getBoundary();
 		Scene reCenteredScene =Pipeline.reTranslation(scaledScene,newBoundary,dimension);
 		
-		return null;
+		//translate the scene towards the viewer position
+		Scene translatedScene = Pipeline.translateScene(reCenteredScene,viewerPosition.x,viewerPosition.y,viewerPosition.z);
+		
+		//initialise the depth of all pixels
+		for (int i = 0; i < zDepth.length; i++) {
+			for (int j = 0; j < zDepth[i].length; j++) {
+				zDepth[i][j] = Float.POSITIVE_INFINITY;
+			}
+		}
+		
+		// update colors in zBuffer
+		Color lightColor = getDirectLight();
+		Color ambientColor = getAmbientLight();
+		Vector3D lightVector = translatedScene.getLight();
+		List<Polygon> polygonList = translatedScene.getPolygons();
+
+		for(Polygon polygon: polygonList){
+			if(Pipeline.isHidden(polygon)){
+				continue;
+			}
+			Color shading = Pipeline.getShading(polygon,lightVector,lightColor,ambientColor);
+			EdgeList edgeList = Pipeline.computeEdgeList(polygon);
+			Pipeline.computeZBuffer(zBuffer,zDepth,edgeList,shading);
+		}
+
+		return convertBitmapToImage(zBuffer);
 	}
 	
 	
@@ -254,17 +291,6 @@ public class Renderer extends GUI {
 
 	
 
-	@Override
-	protected void onScroll(MouseWheelEvent e) {
-		// TODO Auto-generated method stub
-		int i = e.getWheelRotation();
-		if (i < 0) {
-			// zoom out
-			zoom(ZOOMING_FACTOR);
-		} else {
-			zoom(1.0f / ZOOMING_FACTOR);
-		}
-	}
 
 	@Override
 	protected void switchMoveRotation() {

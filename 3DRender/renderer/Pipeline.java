@@ -73,9 +73,10 @@ public class Pipeline {
 	 * @param x 
 	 * @return
 	 */
-	public static Scene translateScene(Scene scene, float x, float y, float z) {
-		// TODO fill this in.
-		return null;
+	public static Scene translateScene(Scene scene, float offset_x, float offset_y, float offset_z) {
+		//the translation matrix
+		Transform translationMatrix = Transform.newTranslation(offset_x,offset_y,offset_z);
+		return processMatrix(scene, translationMatrix);
 	}
 
 	/**
