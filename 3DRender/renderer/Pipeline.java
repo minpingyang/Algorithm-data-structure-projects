@@ -86,7 +86,7 @@ public class Pipeline {
 		Transform rotationMatrix = Transform.newXRotation(xRot).compose(Transform.newYRotation(yRot));
 
 		return processMatrix(scene,rotationMatrix);
-		
+
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class Pipeline {
 		}
 		
 		return new Scene(processedPolygonList, processedLightPos);
-		
+
 	}
 
 	
@@ -152,8 +152,49 @@ public class Pipeline {
 	 * slides.
 	 */
 	public static EdgeList computeEdgeList(Polygon poly) {
-		// TODO fill this in.
-		return null;
+		Vector3D vertex1 = poly.vertices[0];
+		Vector3D vertex2 = poly.vertices[1];
+		Vector3D vertex3 = poly.vertices[2];
+
+		int startY = (int) Math.min(Math.min(vertex1.y,vertex2.y),vertex3.y);
+		int endY = (int) Math.max(Math.max(vertex1.y,vertex2.y),vertex3.y);
+
+		EdgeList edgeList = new EdgeList(startY,endY);
+
+		for(int i = 0; i < poly.vertices.length;i++){
+			int j = i + 1;
+			j = j == 3 ? 0 : j; //to prevent index out of boundary exception
+			Vector3D vertexUp, vertexDown;
+
+			if(poly.vertices[i].y == poly.vertices[j].y){
+				continue; //these two vertices have same y value
+			} else if (poly.vertices[i].y < poly.vertices[j].y){
+				vertexUp = poly.vertices[i];
+				vertexDown = poly.vertices[j];
+			} else{
+				vertexDown = poly.vertices[i];
+				vertexUp = poly.vertices[j];
+			}
+
+			float x = vertexUp.x;
+			float z = vertexUp.z;
+
+			float mx = (vertexDown.x - x) / (vertexDown.y -vertexUp.y);
+			float mz = (vertexDown.z - z) / (vertexDown.y - vertexUp.y);
+
+			int y = (int) vertexUp.y;
+			int yEnd = (int) vertexDown.y;
+
+			while(y < yEnd){
+				edgeList.addRow(y-startY,x,z);
+				y++;
+				x += mx;
+				z += mz;
+			}
+
+
+		}
+		return edgeList;
 	}
 
 	/**
