@@ -68,9 +68,12 @@ public class Pipeline {
 	 * This should translate the scene by the appropriate amount.
 	 * 
 	 * @param scene
+	 * @param z 
+	 * @param y 
+	 * @param x 
 	 * @return
 	 */
-	public static Scene translateScene(Scene scene) {
+	public static Scene translateScene(Scene scene, float x, float y, float z) {
 		// TODO fill this in.
 		return null;
 	}
@@ -87,22 +90,37 @@ public class Pipeline {
 		return processMatrix(scene, scaleMatrix);
 
 	}
-
+	/**
+	 * This method process a scene (polygons and light) with a given matrix.
+	 * 
+	 * @param scene
+	 * @param matrix   --the given matrix, can be a rotation, translation, or a scaling matrix
+	 * 
+	 * @return a Scene object
+	 * */
 	private static Scene processMatrix(Scene scene, Transform scaleMatrix) {
 		//process light
 		Vector3D processedLightPos = scaleMatrix.multiply(scene.getLight());
 		//process polygons
-		List<Polygon> processedPolygons = new ArrayList<>();
-		for (Polygon polygon : scene.g) {
+		List<Polygon> processedPolygonList = new ArrayList<>();
+		for (Polygon polygon : scene.getPolygons()) {
 			Vector3D[] processedVectors = new Vector3D[3];
 			for (int i = 0; i < processedVectors.length; i++) {
 				processedVectors[i] = scaleMatrix.multiply(polygon.vertices[i]);
 			}
 			Polygon processedPolygon = new Polygon(processedVectors[0], processedVectors[1],processedVectors[2],polygon.reflectance);
-			
+			processedPolygonList.add(processedPolygon);
 		}
+		
+		return new Scene(processedPolygonList, processedLightPos);
+		
 	}
 
+	
+
+	
+	
+	
 	/**
 	 * Computes the edgelist of a single provided polygon, as per the lecture
 	 * slides.
@@ -137,6 +155,28 @@ public class Pipeline {
 	public static Scene scaleAndTranslate(Scene scene, float[] boundary, Dimension dimension) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public static Scene reTranslation(Scene scaledScene, float[] newBoundary, Dimension dimension) {
+		
+		float left = newBoundary[0];
+		float right = newBoundary[1];
+		float top = newBoundary[2];
+		float bottom = newBoundary[3];
+		
+		float objectWidth = right -left;
+		float objectHeight = bottom - top;
+		
+		//how much remove horizontally
+		float centralPosX = (dimension.width - objectWidth) /2;
+		float shiftingHorizontally =centralPosX - left;
+		//how much remove vertically
+		float centralPosY = (dimension.height - objectHeight)/2;
+		float shiftVertically = centralPosY - top;
+		
+		Transform translationMatrix = Transform.newTranslation(shiftingHorizontally,shiftVertically,0f);
+		return processMatrix(scaledScene, translationMatrix);
+		
 	}
 }
 

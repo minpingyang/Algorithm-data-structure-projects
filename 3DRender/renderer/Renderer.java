@@ -91,13 +91,14 @@ public class Renderer extends GUI {
 	 */
 	@Override
 	protected void onLoad(File file) {
-		
+		//set to default value
 		xRotation = yRotation = 0f;
 		viewerPosition = new Vector3D(0f, 0f, 0f);
 		currentScale = 1.0f;
 		isRotation = true;
 		centralisedScene = null;
-		List<Polygon> polygons = new ArrayList<Polygon>();
+		
+		ArrayList<Polygon> polygons = new ArrayList<Polygon>();
 		Vector3D lightPosition;
 		BufferedReader bufferReader;
 		try {
@@ -224,11 +225,16 @@ public class Renderer extends GUI {
 		Scene rotatedScene = Pipeline.rotateScene(centralisedScene, xRotation, yRotation);
 		//scale the scene
 		Scene scaledScene = Pipeline.scaleScene(rotatedScene,currentScale,currentScale,currentScale);
-		
+		//re-centralise the scene again
+		float[] newBoundary = scaledScene.getBoundary();
+		Scene reCenteredScene =Pipeline.reTranslation(scaledScene,newBoundary,dimension);
 		
 		return null;
 	}
-
+	
+	
+	
+	
 	/**
 	 * Converts a 2D array of Colors to a BufferedImage. Assumes that bitmap is
 	 * indexed by column then row and has imageHeight rows and imageWidth
