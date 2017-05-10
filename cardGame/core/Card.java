@@ -1,7 +1,10 @@
 package swen221.cardgame.cards.core;
 
-public class Card implements Comparable<Card> {
+import java.io.Serializable;
+
+public class Card implements Comparable<Card>, Serializable {
 	
+	private static final long serialVersionUID = 4831238945214021387L;
 	/**
 	 * Represents a card suit.
 	 * 
@@ -65,7 +68,34 @@ public class Card implements Comparable<Card> {
 	public Suit suit() {
 		return suit;
 	}
-
+	/**
+	 * Override the hash code to suit the project
+	 * *****/
+	@Override
+	public int hashCode(){
+		final int prime = 31;
+		int result = 1;
+		result = prime * result +((rank == null) ? 0 : rank.hashCode());
+		result = prime * result +((suit == null) ? 0 : suit.hashCode());
+		return result;
+		
+	}
+	/*
+	 * Override equals method to suit the project
+	 * **/
+	public boolean equals(Object obj){
+		Card otherCard = (Card) obj; 
+		if(this == obj)
+			return true;
+		
+		if(obj == null || getClass() != obj.getClass() || rank != otherCard.rank
+			|| suit != otherCard.suit){
+			return false;
+		}
+		//Except last if condition, then return true;	
+		return true;
+	}
+	
 	/**
 	 * Get the number of this card, between 2 and 14 (ACE).
 	 * 
@@ -83,10 +113,26 @@ public class Card implements Comparable<Card> {
 	public String toString() {
 		return ranks[rank.ordinal()] + suits[suit.ordinal()];		
 	}
-
+	/**
+	 * The method is used to compare two cards
+	 * compare both card by their rank and suit ordinal
+	 * @param otherCard ------ the card is compared to
+	 * @return   0------- two cards are equal
+	 * 			 1------- Value of this card is greater than the value of other card
+	 * 			-1--------Value of this card is smaller than the value of other card
+	 * ***/
 	@Override
-	public int compareTo(Card o) {
-		// TODO: you need to implement this!
-		return 0;
+	public int compareTo(Card otherCard) {
+		// value of both cards
+		int valueThisCard = this.rank.ordinal() + 100*this.suit.ordinal();
+		int valueOtherCard = otherCard.rank.ordinal() + 100*otherCard.suit.ordinal();
+		int compareNumber = valueThisCard - valueOtherCard;
+		if(compareNumber > 0){
+			return 1;
+		}else if (compareNumber < 0) {
+			return -1;
+		}else{
+			return 0;
+		}
 	}
 }
