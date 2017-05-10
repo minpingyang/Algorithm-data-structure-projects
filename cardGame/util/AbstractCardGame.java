@@ -1,5 +1,11 @@
 package swen221.cardgame.cards.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.*;
 
 import swen221.cardgame.cards.core.*;
@@ -14,8 +20,10 @@ import swen221.cardgame.cards.core.Player.Direction;
  * @author David J. Pearce
  * 
  */
-public abstract class AbstractCardGame implements CardGame {
+public abstract class AbstractCardGame implements CardGame,Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * A map of positions around the table to the players in the game.
 	 */
@@ -62,11 +70,30 @@ public abstract class AbstractCardGame implements CardGame {
 		// java.lang.Object. This creates a shallow copy of the card game. For
 		// Part 3 of the assignment, you need to reimplement this to perform a
 		// deep clone.
+		ByteArrayOutputStream memory =new  ByteArrayOutputStream();
+		ObjectOutputStream objectOutputStream = null;
+		ObjectInputStream objectInputStream = null;
+		CardGame clone = null;
 		try {
-			return (CardGame) super.clone();
-		} catch(CloneNotSupportedException e) {
-			return null; // dead code
+			//Serialisation
+			objectOutputStream = new ObjectOutputStream(memory);
+			objectOutputStream.writeObject(this);
+			objectOutputStream.flush();
+			//De-serialisation
+			objectInputStream = new ObjectInputStream(new ByteArrayInputStream(memory.toByteArray()));
+			clone = (CardGame) objectInputStream.readObject();		
+		} catch (Exception e) {
+			throw new RuntimeException();
+		}finally {
+			try {
+				objectOutputStream.close();
+				objectInputStream.close();
+			} catch (IOException e2) {
+				System.err.println("IOException");
+			}
 		}
+		return clone;
+		
 	}
 	
 	// ========================================================

@@ -1,5 +1,6 @@
 package swen221.cardgame.cards.core;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,9 @@ import java.util.List;
  * @author David J. Pearce
  * 
  */
-public class Trick {
+public class Trick implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	private Card[] cards = new Card[4];
 	private Player.Direction lead;
 	private Card.Suit trumps;
@@ -131,7 +134,12 @@ public class Trick {
 	 * these are not true, it throws an IllegalMove exception.
 	 */
 	public void play(Player p, Card c) throws IllegalMove {
-		// FIXME: we need to checks here for attempts to make illegal moves.
+		//check if the card is existing on hand
+		if (!p.getHand().contains(c)) {
+			throw new IllegalMove(
+		 "The player at "+ p.getDirection().toString()+ "doesnt have "+c.toString()
+					);
+		}
 		
 		// Finally, play the card.
 		for (int i = 0; i != 4; ++i) {
