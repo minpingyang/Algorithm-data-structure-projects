@@ -1,5 +1,6 @@
 package swen221.cardgame.cards.core;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -10,10 +11,12 @@ import java.util.*;
  * @author David J. Pearce
  * 
  */
-public class Hand implements Cloneable, Iterable<Card> {
-	private SortedSet<Card> cards = new TreeSet<Card>();
+public class Hand implements Serializable, Iterable<Card> {
 	
+	private static final long serialVersionUID = 1L;
+	private SortedSet<Card> cards = new TreeSet<Card>();
 
+	@Override
 	public Iterator<Card> iterator() {
 		return cards.iterator();
 	}
@@ -33,8 +36,11 @@ public class Hand implements Cloneable, Iterable<Card> {
 	 * @param suit
 	 * @return
 	 */
-	public Set<Card> matches(Card.Suit suit) {
-		HashSet<Card> r = new HashSet<Card>();
+	public SortedSet<Card> matches(Card.Suit suit) {
+		TreeSet<Card> r = new TreeSet<Card>();
+		if (suit == null) {
+			return r;
+		}
 		for(Card c : cards) {
 			if(c.suit() == suit) {
 				r.add(c);
@@ -43,7 +49,9 @@ public class Hand implements Cloneable, Iterable<Card> {
 		return r;
 	}
 	
-	
+	public SortedSet<Card> getCards() {
+		return this.cards;
+	}
 	/**
 	 * Add a card to the hand.
 	 */
