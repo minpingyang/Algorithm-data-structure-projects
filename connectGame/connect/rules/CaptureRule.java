@@ -73,11 +73,14 @@ public class CaptureRule implements Rule {
 	 */
 	private boolean isCaptured(Board original, Board.Token token, int x, int y) {
 		boolean r = false;
-
-		r &= isHorizontalLongCapture(original, token, x, y);
-		r &= isHorizontalShortCapture(original, token, x, y);
-		r &= isVerticalLongCapture(original, token, x, y);
-		r &= isVerticalShortCapture(original, token, x, y);
+		
+		// XXX all long captures, need to check if the other middle position is empty.
+		// OR!!! the game allows long capture to capture two piece at one time.
+		// if so, this game is not playable at all
+		r |= isHorizontalLongCapture(original, token, x, y);
+		r |= isHorizontalShortCapture(original, token, x, y);
+		r |= isVerticalLongCapture(original, token, x, y);
+		r |= isVerticalShortCapture(original, token, x, y);
 
 		return r;
 	}
@@ -131,7 +134,7 @@ public class CaptureRule implements Rule {
 	 * @return
 	 */
 	private boolean isHorizontalShortCapture(Board original, Board.Token token, int x, int y) {
-		if (x != 1 && x != 2) {
+		if (x == 1 || x == 2) {
 			Position left = new Position(x - 1, y);
 			Position right = new Position(x + 1, y);
 			Board.Token opp = getOpposite(token);

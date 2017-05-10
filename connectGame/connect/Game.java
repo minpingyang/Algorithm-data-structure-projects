@@ -1,5 +1,5 @@
 package swen221.lab6.connect;
-
+ 
 import swen221.lab6.connect.core.*;
 import swen221.lab6.connect.rules.*;
 import swen221.lab6.connect.util.Position;
@@ -39,7 +39,7 @@ public class Game {
 	private Rule[] rules = {
 			new CaptureRule(),
 			new ColumnWinRule(),
-			new ColumnWinRule(),
+			new RowWinRule(),
 			new StaleMateRule()
 	};
 
@@ -57,6 +57,7 @@ public class Game {
 	public Game(Board b) {
 		this.board = b;
 		this.status = Status.ONGOING;
+		moves = 0;
 	}
 
 	/**
@@ -113,9 +114,9 @@ public class Game {
 
 		for(Rule rule : rules) {
 			status = rule.apply(this);
-			if(status == null) {
-				break;
-			}
+//			if(status == null) {
+//				break;
+//			}
 		}
 	}
 
@@ -125,7 +126,7 @@ public class Game {
 	 * @return
 	 */
 	private boolean isWhitesTurn() {
-		return (moves%16) == 0;
+		return (moves%2) == 0;
 	}
 
 	/**
@@ -134,7 +135,7 @@ public class Game {
 	 * @return
 	 */
 	private boolean isBlacksTurn() {
-		return (moves%16) == 1;
+		return (moves%2) == 1;
 	}
 
 	/**

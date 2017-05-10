@@ -22,7 +22,7 @@ import swen221.lab6.connect.util.Position;
  *
  */
 public class GraphicalUserInterface extends JFrame {
-
+ 
 	private static final int BOX_WIDTH = 100;
 	private static final int BOX_HEIGHT = 100;
 	private static final Color BACKGROUND = new Color(200,200,200);
@@ -176,6 +176,7 @@ public class GraphicalUserInterface extends JFrame {
 		case WHITEWON:
 			JOptionPane.showMessageDialog(this,"White Wins!");
 			break;
+		default:
 		}
 	}
 }

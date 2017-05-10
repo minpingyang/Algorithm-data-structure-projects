@@ -9,7 +9,7 @@ package swen221.lab6.connect.util;
 public final class Position {
 	private final int x;
 	private final int y;
-
+ 
 	/**
 	 * Construct a position on the board
 	 *
@@ -20,7 +20,7 @@ public final class Position {
 		if(x < 0 || x >= 4) {
 			throw new IllegalArgumentException("Invalid X component: " + x);
 		}
-		if(x < 0 || x >= 4) {
+		if(y < 0 || y >= 4) {
 			throw new IllegalArgumentException("Invalid Y component: " + y);
 		}
 		this.x = x;

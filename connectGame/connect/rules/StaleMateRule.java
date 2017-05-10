@@ -19,6 +19,10 @@ public class StaleMateRule implements Rule {
 		// eight tokens played by each player. After that point, we have reached
 		// a stalemate. When this happens, we need to return the appropriate
 		// status signal. And, yes, it is possible to reach stalemate.
-		return Status.ONGOING;
+		if (g.getMovesPlayed() >= 16 && g.getStatus() != Status.STALEMATE){
+			return Status.STALEMATE;
+		} else {
+	        return g.getStatus();
+	    }
 	}
 }

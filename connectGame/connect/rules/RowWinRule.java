@@ -14,7 +14,7 @@ import swen221.lab6.connect.util.Position;
  *
  */
 public class RowWinRule implements Rule {
-
+ 
 	@Override
 	public Game.Status apply(Game g) {
 		// We want to check whether there is a row on the board which is full
@@ -27,7 +27,7 @@ public class RowWinRule implements Rule {
 				return r;
 			}
 		}
-		return Status.ONGOING;
+		return g.getStatus();
 	}
 	
 	/**
