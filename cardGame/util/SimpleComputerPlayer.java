@@ -1,5 +1,6 @@
 package swen221.cardgame.cards.util;
 
+import java.util.Collection;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -52,7 +53,9 @@ public class SimpleComputerPlayer extends AbstractComputerPlayer {
 		
 	}
 	private Card generalAI(Hand hand, Suit lead, Suit trumpSuit, Trick trick) {
-		// TODO Auto-generated method stub
+		Card highestCard =getHighest(trick.getCardsPlayed(), lead, trumpSuit);
+		SortedSet<Card> cardsMatchingLead = hand.matches(lead);
+		SortedSet<Card> cardsMatchingTrump 
 		return null;
 	}
 	private Card finishAI(Hand hand, Suit lead, Suit trumpSuit, Trick trick) {
@@ -84,7 +87,7 @@ public class SimpleComputerPlayer extends AbstractComputerPlayer {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	private Card getHighest(SortedSet<Card> cards, Suit lead, Suit trumpSuit) {
+	private Card getHighest(Collection<Card> cards, Suit lead, Suit trumpSuit) {
 		//check if is empty
 		if (cards.isEmpty()) {
 			return null;
