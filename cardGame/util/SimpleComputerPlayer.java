@@ -1,12 +1,14 @@
 package swen221.cardgame.cards.util;
 
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import swen221.cardgame.cards.core.Card;
 import swen221.cardgame.cards.core.Card.Suit;
 import swen221.cardgame.cards.core.Hand;
 import swen221.cardgame.cards.core.Player;
 import swen221.cardgame.cards.core.Trick;
+import swen221.cardgame.cards.core.TrickyCard;
 
 /**
  * Implements a simple computer player who plays the highest card available when
@@ -28,24 +30,25 @@ public class SimpleComputerPlayer extends AbstractComputerPlayer {
 	 * */
 	@Override
 	public Card getNextCard(Trick trick) {		
-    Hand hand = this.player.getHand();
-    Player.Direction leadDirection = trick.getLeadPlayer();
-    Card.Suit trumpSuit = trick.getTrumps();
-    Card card_play;
-    
-    if (leadDirection == this.player.getDirection()) {
-//    	AI is leading this trick
-     card_play = leadAI(hand,trumpSuit);
-	}else if (this.player.getDirection() == leadDirection.previous()) {
-        // then AI is at the last position to finish this trick.
-		Card.Suit lead = trick.getCardPlayed(leadDirection).suit();
-	 card_play = finishAI(hand,lead,trumpSuit,trick);
-	}else {
-		//AI is neither leading nor ending this trick
-		Card.Suit lead = trick.getCardPlayed(leadDirection).suit();
-		card_play = generalAI(hand, lead, trumpSuit, trick);
-	}
-    return card_play;
+	   
+		Hand hand = this.player.getHand();
+	    Player.Direction leadDirection = trick.getLeadPlayer();
+	    Card.Suit trumpSuit = trick.getTrumps();
+	    Card card_play;
+	    
+	    if (leadDirection == this.player.getDirection()) {
+	//    	AI is leading this trick
+	     card_play = leadAI(hand,trumpSuit);
+		}else if (this.player.getDirection() == leadDirection.previous()) {
+	        // then AI is at the last position to finish this trick.
+			Card.Suit lead = trick.getCardPlayed(leadDirection).suit();
+		 card_play = finishAI(hand,lead,trumpSuit,trick);
+		}else {
+			//AI is neither leading nor ending this trick
+			Card.Suit lead = trick.getCardPlayed(leadDirection).suit();
+			card_play = generalAI(hand, lead, trumpSuit, trick);
+		}
+	    return card_play;
 		
 	}
 	private Card generalAI(Hand hand, Suit lead, Suit trumpSuit, Trick trick) {
@@ -67,17 +70,31 @@ public class SimpleComputerPlayer extends AbstractComputerPlayer {
      *            --- the trump suit of this trick
      * @return --- the card that the computer player decided to play
      * 
-     * @see swen221.assignment4.cards.core.ComparableCard
-     *      #compareTo(ComparableCard)
+     * @see swen221.cardgame.cards.core
+     *      #compareTo(TrickyCard)
      */
 	private Card leadAI(Hand hand, Suit trumpSuit) {
 		SortedSet<Card> cards = hand.getCards();
 		Card card_play = getHighest(cards, null,trumpSuit);
-		SortedSet<Card> 
-		return null;
+		SortedSet<Card> cardsMatchingSuit = hand.matches(card_play.suit());
+		card_play = leastSelect(card_play,cardsMatchingSuit,card_play.suit());
+		return card_play;
 	}
-	private Card getHighest(SortedSet<Card> cards, Object object, Suit trumpSuit) {
+	private Card leastSelect(Card card_play, SortedSet<Card> cardsMatchingSuit, Suit suit) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	private Card getHighest(SortedSet<Card> cards, Suit lead, Suit trumpSuit) {
+		//check if is empty
+		if (cards.isEmpty()) {
+			return null;
+		}
+		SortedSet<TrickyCard> trickyCards = new TreeSet<>();
+		for (Card card : cards) {
+			trickyCards.add(new TrickyCard(card, lead, trumpSuit));
+		}
+		Card lowest =trickyCards.first().getCard();
+		return lowest;
+		
 	}	
 }
