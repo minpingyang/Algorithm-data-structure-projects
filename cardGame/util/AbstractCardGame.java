@@ -109,6 +109,16 @@ public abstract class AbstractCardGame implements CardGame,Serializable {
 	public Trick getTrick() {
 		return currentTrick;
 	}
+    /**
+     * The method is used to
+     * get the trump suit of the current trick
+     * 
+     * @return --- the trump suit of the current trick
+     */
+    public Card.Suit getTrumps() {
+        return this.trumps;
+    }
+	
 	
 	@Override
 	public boolean isHandFinished() {
