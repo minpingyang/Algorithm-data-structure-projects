@@ -55,9 +55,76 @@ public class SimpleComputerPlayer extends AbstractComputerPlayer {
 	private Card generalAI(Hand hand, Suit lead, Suit trumpSuit, Trick trick) {
 		Card highestCard =getHighest(trick.getCardsPlayed(), lead, trumpSuit);
 		SortedSet<Card> cardsMatchingLead = hand.matches(lead);
-		SortedSet<Card> cardsMatchingTrump 
+		SortedSet<Card> cardsMatchingTrump = hand.matches(trumpSuit);
+		Card card_play;
+		if (!cardsMatchingLead.isEmpty()) {
+			// get all cards that match lead and are higher than the highest
+            // card ever played
+			SortedSet<Card> avaliableCardSet = getHigherCardSet(cardsMatchingLead, highestCard, lead,
+                    trumpSuit);
+			if (avaliableCardSet.isEmpty()) {
+				card_play = getLowest(cardsMatchingLead,lead,trumpSuit);
+			}else {
+				card_play = avaliableCardSet.last();
+				card_play = leastSelect(card_play, avaliableCardSet, lead);
+			}
+		}else if (!cardsMatchingTrump.isEmpty()){
+			// get all cards that match trump and are higher than the highest
+            // card ever played
+			SortedSet<Card> avaliableCardSet = getHigherCardSet(cardsMatchingTrump, highestCard, lead,
+                    trumpSuit);
+			if (avaliableCardSet.isEmpty()) {
+				card_play = getLowest(hand.getCards(), lead, trumpSuit);
+			}else {
+				card_play = avaliableCardSet.last();
+				card_play = leastSelect(card_play, avaliableCardSet, trumpSuit);
+				
+			}
+		}else {
+			card_play = getLowest(hand.getCards(), lead, trumpSuit);
+		}
+		
+		return card_play;
+	}
+	private Card getLowest(Collection<Card> cardsMatchingLead, Suit lead, Suit trumpSuit) {
+		if (cardsMatchingLead.isEmpty()) {
+			return null;
+		}
+		SortedSet<TrickyCard> trickyCardSet =new TreeSet<>();
+		for (Card card : cardsMatchingLead) {
+			trickyCardSet.add(new TrickyCard(card, lead, trumpSuit));
+		}
+		Card lowest = trickyCardSet.first().getCard();
+		return lowest;
+	}
+	private SortedSet<Card> getHigherCardSet(SortedSet<Card> cardsMatchingLead, Card highestCard, Suit lead,
+			Suit trumpSuit) {
+		if (cardsMatchingLead.isEmpty()) {
+			return null;
+		}
+		TrickyCard wrappedTrickCard = new TrickyCard(highestCard, lead, trumpSuit);
+		SortedSet<TrickyCard> trickyCardSet = new TreeSet<>();
+		//wrap and compare
+		for (Card card : cardsMatchingLead) {
+			TrickyCard trickyCard = new TrickyCard(card, lead, trumpSuit);
+			if (trickyCard.compareTo(wrappedTrickCard) > 0) {
+				trickyCardSet.add(trickyCard);
+			}
+		}
+		//unwrap and return
+		SortedSet<Card> higherCardSet = new TreeSet<>();
+		for(TrickyCard trickyCard : trickyCardSet){
+			higherCardSet.add(trickyCard.getCard());
+		}
+		
+		return higherCardSet;
+	}
+	
+	private Card leastSelect(Card card_play, SortedSet<Card> cardsMatchingSuit, Suit suit) {
+		// TODO Auto-generated method stub
 		return null;
 	}
+	
 	private Card finishAI(Hand hand, Suit lead, Suit trumpSuit, Trick trick) {
 		// TODO Auto-generated method stub
 		return null;
@@ -83,10 +150,7 @@ public class SimpleComputerPlayer extends AbstractComputerPlayer {
 		card_play = leastSelect(card_play,cardsMatchingSuit,card_play.suit());
 		return card_play;
 	}
-	private Card leastSelect(Card card_play, SortedSet<Card> cardsMatchingSuit, Suit suit) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 	private Card getHighest(Collection<Card> cards, Suit lead, Suit trumpSuit) {
 		//check if is empty
 		if (cards.isEmpty()) {
