@@ -1,6 +1,8 @@
 package swen221.cardgame.cards.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -121,8 +123,39 @@ public class SimpleComputerPlayer extends AbstractComputerPlayer {
 	}
 	
 	private Card leastSelect(Card card_play, SortedSet<Card> cardsMatchingSuit, Suit suit) {
-		// TODO Auto-generated method stub
-		return null;
+		if (card_play.suit() != suit) {
+			throw new IllegalArgumentException("card suit should be given suit");
+		}
+		
+		for (Card card : cardsMatchingSuit) {
+			if (card.suit() != card_play.suit()) {
+				throw new IllegalArgumentException("cardsMatchingSuit contains cards which does not match given suit.");
+			}
+		}
+		
+		if (!card_play.equals(cardsMatchingSuit.last())) {
+			throw new IllegalArgumentException("card should be the highest card in ava");
+		}
+		ArrayList<Card> cardsList = new ArrayList<>(cardsMatchingSuit);
+		Collections.sort(cardsList);
+		int lastIndex = cardsList.size() - 1;
+		int ordinal = 12;
+		Card selectedCard = card_play;
+		boolean isLastIndexDecreased = false;
+		
+		while(selectedCard.rank().ordinal() == ordinal){
+			ordinal--;
+			lastIndex--;
+			isLastIndexDecreased = true;
+			if (lastIndex < 0) {
+				break;
+			}
+			selectedCard = cardsList.get(lastIndex);
+		}
+		if (isLastIndexDecreased) {
+			selectedCard = cardsList.get(lastIndex + 1);
+		}
+		return selectedCard;
 	}
 	
 	private Card finishAI(Hand hand, Suit lead, Suit trumpSuit, Trick trick) {
