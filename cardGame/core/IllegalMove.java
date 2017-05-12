@@ -9,10 +9,9 @@ package swen221.cardgame.cards.core;
  * 
  */
 public class IllegalMove extends Exception {
-
 	private static final long serialVersionUID = 1L;
 
-	public IllegalMove(String e) {
-		super(e);
-	}
+    public IllegalMove(String e) {
+        super(e);
+    }
 }

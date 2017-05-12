@@ -11,41 +11,42 @@ import java.io.Serializable;
  * 
  */
 public class Player implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Represents one of the four position on the table (North, East, South and
-	 * West).
-	 * 
-	 * @author David J. Pearce
-	 * 
-	 */
-	public enum Direction {
-		NORTH,
-		EAST,
-		SOUTH,
-		WEST;
-		
-		/**
-		 * Returns the next direction to play after this one (i.e. following a
-		 * clockwise rotation).
-		 * 
-		 * @return
-		 */
-		public Direction next() {
-			if (this.equals(NORTH)) return EAST;
+    /**
+     * Represents one of the four position on the table (North, East, South and
+     * West).
+     * 
+     * @author David J. Pearce
+     * 
+     */
+    public enum Direction {
+        NORTH, 
+        EAST, 
+        SOUTH, 
+        WEST;
+
+        /**
+         * Returns the next direction to play after this one (i.e. following a
+         * clockwise rotation).
+         * 
+         * @return --- the next direction
+         */
+        public Direction next() {
+        	if (this.equals(NORTH)) return EAST;
 			if (this.equals(EAST)) return SOUTH;
 			if (this.equals(SOUTH)) return WEST;
 			return NORTH;
-		}
-		/**
+        }
+
+        /**
          * Returns the previous direction to play before this one (i.e.
          * following a anti-clockwise rotation).
          * 
          * @return --- the previous direction
          */
-		public Direction previous() {
+        public Direction previous() {
             if (this.equals(NORTH))
                 return WEST;
             if (this.equals(EAST))
@@ -54,32 +55,39 @@ public class Player implements Serializable {
                 return EAST;
             return SOUTH;
         }
-		
-	}
+    }
 
-	public final Direction direction;
-	public final Hand hand;
-	
-	public Player(Direction direction) {
-		this.direction = direction;
-		this.hand = new Hand();
-	}
-	
-	/**
-	 * Get the position in which this player is sitting.
-	 * 
-	 * @return
-	 */
-	public Direction getDirection() {
-		return direction;
-	}
-	
-	/**
-	 * Get the current hand of this player.
-	 * 
-	 * @return
-	 */
-	public Hand getHand() {
-		return hand;
-	}
+    // the direction of where this player is seated
+    private final Direction direction;
+    // the hand of cards held by this player
+    private Hand hand;
+
+    /**
+     * Construct a player in the gien direction
+     * 
+     * @param direction
+     *            --- the direction where the player is seated
+     */
+    public Player(Direction direction) {
+        this.direction = direction;
+        this.hand = new Hand();
+    }
+
+    /**
+     * Get the position in which this player is sitting.
+     * 
+     * @return --- the position in which this player is sitting.
+     */
+    public Direction getDirection() {
+        return direction;
+    }
+
+    /**
+     * Get the current hand of this player.
+     * 
+     * @return --- the current hand of this player.
+     */
+    public Hand getHand() {
+        return hand;
+    }
 }
