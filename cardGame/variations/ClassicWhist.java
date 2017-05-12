@@ -14,6 +14,9 @@ import swen221.cardgame.cards.util.AbstractCardGame;
  */
 public class ClassicWhist extends AbstractCardGame {
 
+	
+	private static final long serialVersionUID = 1L;
+
 	public ClassicWhist() {
 
 	}

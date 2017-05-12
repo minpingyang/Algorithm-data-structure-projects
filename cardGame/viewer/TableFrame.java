@@ -21,6 +21,7 @@ import swen221.cardgame.cards.variations.*;
  * 
  * @author djp
  */
+@SuppressWarnings("serial")
 public final class TableFrame extends JFrame {	
 	private final TableCanvas canvas;	
 	private final JLabel statusBar;

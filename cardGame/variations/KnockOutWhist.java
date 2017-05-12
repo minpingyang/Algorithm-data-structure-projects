@@ -12,6 +12,8 @@ import swen221.cardgame.cards.core.Player.Direction;
 import swen221.cardgame.cards.util.AbstractCardGame;
 
 public class KnockOutWhist extends AbstractCardGame {
+	
+	private static final long serialVersionUID = 1L;
 	private int hand = 13;
 	
 	public KnockOutWhist() {

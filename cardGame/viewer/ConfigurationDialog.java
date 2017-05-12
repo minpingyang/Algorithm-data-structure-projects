@@ -13,7 +13,10 @@ import swen221.cardgame.cards.util.AbstractComputerPlayer;
 import swen221.cardgame.cards.variations.*;
 
 public class ConfigurationDialog extends JDialog {
+	
+	private static final long serialVersionUID = 1L;
 	final String[] gameKindNames = {"Classic Whist","Knock-Out Whist","Single-Hand Whist"};
+	@SuppressWarnings("rawtypes")
 	final Class[] gameKinds = {ClassicWhist.class,KnockOutWhist.class,SingleHandWhist.class};
 	
 	public ConfigurationDialog(TableFrame parent) {
@@ -55,6 +58,7 @@ public class ConfigurationDialog extends JDialog {
 		return panel;
 	}
 	
+	@SuppressWarnings("serial")
 	private JPanel createGamePanel(final TableFrame table) {		
 		final JRadioButton[] buttons = new JRadioButton[gameKinds.length];
 		ButtonGroup group = new ButtonGroup();
@@ -92,6 +96,7 @@ public class ConfigurationDialog extends JDialog {
 		return panel;
 	}
 
+	@SuppressWarnings("serial")
 	private JPanel createPlayerPanel(final TableFrame table) {
 		final JCheckBox[] checkBoxes = new JCheckBox[4];
 
@@ -122,6 +127,7 @@ public class ConfigurationDialog extends JDialog {
 	}
 
 	
+	@SuppressWarnings("serial")
 	private JPanel createStartPanel() {
 		JPanel startPanel = new JPanel();
 		JButton button = new JButton();
