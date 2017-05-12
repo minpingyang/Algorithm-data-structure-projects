@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.net.ssl.HandshakeCompletedEvent;
+
 import swen221.cardgame.cards.core.Card;
 import swen221.cardgame.cards.core.Card.Suit;
 import swen221.cardgame.cards.core.Hand;
@@ -159,8 +161,33 @@ public class SimpleComputerPlayer extends AbstractComputerPlayer {
 	}
 	
 	private Card finishAI(Hand hand, Suit lead, Suit trumpSuit, Trick trick) {
-		// TODO Auto-generated method stub
-		return null;
+		Card highestCard = getHighest(trick.getCardsPlayed(), lead, trumpSuit);
+		SortedSet<Card> cardsMatchingLead = hand.matches(lead);
+		SortedSet<Card> cardsMatchingTrump = hand.matches(trumpSuit);
+		Card card_play;
+		if (!cardsMatchingLead.isEmpty()) {
+			SortedSet<Card> playedCards = getHigherCardSet(cardsMatchingLead, highestCard, lead, trumpSuit);			
+			if (playedCards.isEmpty()) {
+				card_play = getLowest(cardsMatchingLead, lead, trumpSuit);
+			}else {
+				card_play =playedCards.first();
+			}
+			
+		}else if (!cardsMatchingTrump.isEmpty()) {
+			
+			SortedSet<Card> playedCards = getHigherCardSet(cardsMatchingTrump, highestCard, lead, trumpSuit);			
+			if (playedCards.isEmpty()) {
+				card_play = getLowest(hand.getCards(), lead, trumpSuit);
+			}else {
+				card_play = playedCards.first();
+			}
+			
+		}else {
+			card_play = getLowest(hand.getCards(), lead, trumpSuit);
+		} 
+		
+		return card_play;
+		
 	}
 	/**
      * This is the strategy used by the computer player when it is opening a
