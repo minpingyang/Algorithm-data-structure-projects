@@ -13,10 +13,7 @@ import swen221.cardgame.cards.util.AbstractCardGame;
  */
 public class SingleHandWhist extends AbstractCardGame {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -6539876464218531184L;
+	private static final long serialVersionUID = 1L;
 
     public SingleHandWhist() {
 

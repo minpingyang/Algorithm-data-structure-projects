@@ -2,6 +2,7 @@ package swen221.cardgame.cards.core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -13,11 +14,8 @@ import java.util.Set;
  */
 public class Trick implements Serializable {
 	private static final long serialVersionUID = 1L;
-    // four cards played by four player respectively
     private Card[] cards = new Card[4];
-    // the lead direction
     private Player.Direction lead;
-    // the trump suit of this trick
     private Card.Suit trumps;
 
     /**
@@ -56,9 +54,9 @@ public class Trick implements Serializable {
     /**
      * Get the list of cards played so far in the order they were played.
      * 
-     * @return --- the list of cards played so far
+     * @return
      */
-    public ArrayList<Card> getCardsPlayed() {
+    public List<Card> getCardsPlayed() {
         ArrayList<Card> cs = new ArrayList<Card>();
         for (int i = 0; i != 4; ++i) {
             if (cards[i] != null) {
@@ -74,9 +72,8 @@ public class Trick implements Serializable {
      * Get the card played by a given player, or null if that player has yet to
      * play.
      * 
-     * @param p
-     *            --- player
-     * @return --- the card played by a given player
+     * @param p --- player
+     * @return 
      */
     public Card getCardPlayed(Player.Direction p) {
         Player.Direction player = lead;
@@ -93,7 +90,7 @@ public class Trick implements Serializable {
     /**
      * Determine the next player to play in this trick.
      * 
-     * @return --- the next player to play in this trick.
+     * @return 
      */
     public Player.Direction getNextToPlay() {
         Player.Direction dir = lead;
@@ -137,45 +134,42 @@ public class Trick implements Serializable {
      * is entitled to play, and that the played card follows suit. If either of
      * these are not true, it throws an IllegalMove exception.
      * 
-     * @param p
-     *            --- the player who is to play the given card
-     * @param c
-     *            --- the card to be played
-     * @throws IllegalMove
-     *             -- if playing the card is illegal, an IllegalMove exception
+     * @param player --- the player who will play the given card
+     * @param card ------ the card will be played
+     * @throws IllegalMove  -- if playing the card is illegal, an IllegalMove exception
      *             is thrown
      */
-    public void play(Player p, Card c) throws IllegalMove {
+    public void play(Player player, Card card) throws IllegalMove {
     		//check if the card is existing on hand
-        if (!p.getHand().contains(c)) {
+        if (!player.getHand().contains(card)) {
             throw new IllegalMove(
-                    "The player at " + p.getDirection().toString() + " doesn't have " + c.toString() + " to play.");
+                    "The player at " + player.getDirection().toString() + " doesn't have " + card.toString() + " to play.");
         }
 
         // the player can only play a card when it's his turn
-        if (getNextToPlay() != p.getDirection()) {
-            throw new IllegalMove("It's not the turn for the player at " + p.getDirection().toString() + "to play.");
+        if (getNextToPlay() != player.getDirection()) {
+            throw new IllegalMove("It's not the turn for the player at " + player.getDirection().toString() + "to play.");
         }
 
         /*
-         * if the player is not the lead, and he has at least a card that he can
-         * play to follow the lead, and he did not play that card, he violates
-         * the rule.
+         * if the player is not the lead and 
+         * he has at least a card which he can play to follow the lead.
+         * Besides, he did not play that card and he violates the rule.
          */
-        if (p.getDirection() != lead) {
+        if (player.getDirection() != lead) {
             Card.Suit leadSuit = getCardPlayed(lead).suit();
-            Set<Card> cardsMatchesLead = p.getHand().matches(leadSuit);
-            if (!cardsMatchesLead.isEmpty() && !cardsMatchesLead.contains(c)) {
+            Set<Card> cardsMatchesLead = player.getHand().matches(leadSuit);
+            if (!cardsMatchesLead.isEmpty() && !cardsMatchesLead.contains(card)) {
                 throw new IllegalMove(
-                        "The player at " + p.getDirection().toString() + " doesn't follow the lead suit.");
+                        "The player at " + player.getDirection().toString() + " doesn't follow the lead suit.");
             }
         }
 
         // Finally, play the card.
         for (int i = 0; i != 4; ++i) {
             if (cards[i] == null) {
-                cards[i] = c;
-                p.getHand().remove(c);
+                cards[i] = card;
+                player.getHand().remove(card);
                 break;
             }
         }

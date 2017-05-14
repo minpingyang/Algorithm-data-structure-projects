@@ -24,19 +24,17 @@ public class Hand implements Serializable, Iterable<Card> {
      * Check with a given card is contained in this hand, or not.
      * 
      * @param card
-     *            --- the card to be checked with
-     * @return --- true if the card is contained in this hand, or false if not
+     * @return 
      */
     public boolean contains(Card card) {
         return cards.contains(card);
     }
 
     /**
-     * Return all cards in this hand which match the given suit.
-     * 
+     * 	Additional method
+     * Return all cards in this hand which has the given suit.
      * @param suit
-     *            --- the given suit to be matched
-     * @return --- a set of cards that matches the given suit
+     * @return ---SortedSet type.
      */
     public SortedSet<Card> matches(Card.Suit suit) {
         TreeSet<Card> r = new TreeSet<Card>();
@@ -49,6 +47,15 @@ public class Hand implements Serializable, Iterable<Card> {
             }
         }
         return r;
+    }
+    /**
+     * Additional method added by minping
+     * Get all the cards held in this hand
+     * 
+     * @return --- all the cards held in this hand
+     */
+    public SortedSet<Card> getCardSet() {
+        return this.cards;
     }
 
     /**
@@ -68,25 +75,19 @@ public class Hand implements Serializable, Iterable<Card> {
     /**
      * Get number of cards in this hand.
      * 
-     * @return --- the number of cards in this hand
+     * @return 
      */
     public int size() {
         return cards.size();
     }
 
-    /**
-     * Get all the cards held in this hand
-     * 
-     * @return --- all the cards held in this hand
-     */
-    public SortedSet<Card> getCards() {
-        return this.cards;
-    }
-
+   
     /**
      * Remove all cards from this hand.
      */
     public void clear() {
         cards.clear();
     }
+  
+
 }

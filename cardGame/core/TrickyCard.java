@@ -2,10 +2,11 @@ package swen221.cardgame.cards.core;
 
 
 /**
- * This class represents a card in a trick-taking card game. Its purpose is only
- * to compare between each other in a strategy making process. A card in a
- * trick-taking game has its rank and suit. It also has two flags to indicate
- * whether its suit is lead suit, and whether its suit is trump suit.
+ * This class represents a card in this card game. 
+ * The only purpose is used to compare between each other by a respective strategy 
+ * 
+ * The tricky card has rank and suit. It also has two flags to represent
+ * if the suit is either lead or trump suit
  * 
  * @author Minping
  *
@@ -19,15 +20,15 @@ public class TrickyCard implements Comparable<TrickyCard> {
 	private boolean isTrump; //default boolean value is false
 
     /**
-     * Construct a ComparableCard object with a card, the suit of lead, and the
-     * suit of trump.
+     * Construct a TrickyCard object with a card, lead and trump suit
      * 
      * @param card
      *            --- the card that is used to compare
      * @param leadSuit
-     *            --- the suit of lead. Note that in the case when the player is
-     *            opening the trick, the lead suit is unknown, null is passed
-     *            here indicating that the lead suit doesn't matter.
+     *            --- the suit of lead.
+     *            Note: when the player was opening the trick, 
+     *            if the lead suit is unknown, then null is passed.
+     *            here implying that the lead suit doesn't matter.
      * @param trumpSuit
      *            --- the suit of trump
      */
@@ -53,7 +54,10 @@ public class TrickyCard implements Comparable<TrickyCard> {
     public Card getCard() {
         return card;
     }
-
+/**
+ * Override hashCode() method, 
+ * @return ---------the integer which is relevant to their leap and trump suit
+ * */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -63,7 +67,10 @@ public class TrickyCard implements Comparable<TrickyCard> {
         result = prime * result + (isTrump ? 1231 : 1237);
         return result;
     }
-
+ /**
+  * Override equals() method, 
+  * @return ---------a boolean value which is relevant to their leap and trump suit
+* */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

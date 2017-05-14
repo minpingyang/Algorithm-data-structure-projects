@@ -3,7 +3,7 @@ package swen221.cardgame.cards.core;
 import java.io.Serializable;
 
 /**
- * Represent a card in a card game. A card has its Rank and Suit.
+ * Represent a card in a card game.
  *
  * @author David J. Pearce
  */

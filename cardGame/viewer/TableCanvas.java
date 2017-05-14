@@ -15,10 +15,7 @@ import swen221.cardgame.cards.core.*;
  * 
  */
 public class TableCanvas extends Canvas implements MouseListener {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1662269096343439773L;
+	private static final long serialVersionUID = 1L;
     private final TableFrame parent;
     private Font font;
     private static final String[] preferredFonts = { "Arial", "Times New Roman" };

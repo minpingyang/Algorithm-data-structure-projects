@@ -3,6 +3,7 @@ package swen221.cardgame.cards.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -31,7 +32,8 @@ public class SimpleComputerPlayer extends AbstractComputerPlayer {
     }
     
     /**
-	 * The method is used to get next card in passed trick 
+	 * The method is used to get next card in passed trick
+	 * The method is implemented by Minping
 	 * */
     @Override
     public Card getNextCard(Trick trick) {
@@ -41,60 +43,54 @@ public class SimpleComputerPlayer extends AbstractComputerPlayer {
         Card.Suit trumpSuit = trick.getTrumps();
 
         Card card_play;
-
+        // AI is starting this trick
         if (leadDirection == this.player.getDirection()) {
-            // then AI is leading this trick
-            card_play = leadTrick(hand, trumpSuit);
-
-        } else if (this.player.getDirection() == leadDirection.previous()) {
-            // then AI is at the last position to finish this trick.
-            // i.e. it's definite to know whether it can win or lose this trick
+            card_play = beiginningTactic(hand, trumpSuit);
+        } 
+        // AI is at the last position to finish this trick.
+        // it is known if it can win or lose.
+        else if (this.player.getDirection() == leadDirection.previous()) {
             Card.Suit leadSuit = trick.getCardPlayed(leadDirection).suit();
-            card_play = endTrick(hand, leadSuit, trumpSuit, trick);
-
-        } else {
-            // AI is neither leading nor ending this trick.
+            card_play = terminateTactic(hand, leadSuit, trumpSuit, trick);
+        } 
+        // AI is neither leading nor terminating this trick.
+        else {
             Card.Suit leadSuit = trick.getCardPlayed(leadDirection).suit();
-            card_play = generalTrick(hand, leadSuit, trumpSuit, trick);
+            card_play = generalTactic(hand, leadSuit, trumpSuit, trick);
         }
 
         return card_play;
     }
 
     /**
-     * This is the strategy used by the computer player when it is opening a
-     * trick. In this case, it doesn't have a lead to follow, i.e. it generally
-     * plays the highest <I>ComparableCard</I> in its hand.
+     * This method represents a tactic used by the PC player, while opening a
+     * trick. In this tactic, it doesn't have a lead to follow, it generally
+     * plays the highest <I>TrickyCard</I> in its hand.
      * 
-     * @param hand
-     *            --- the hand of cards that the computer player has
-     * @param trumpSuit
-     *            --- the trump suit of this trick
+     * if the AI player might hold the highest card or highest a few cards, 
+     * then he will deliberately re-select the least needed card to play.
+     * @param hand --- the hand in where the computer player has cards
+     * @param trumpSuit  --- the trump suit of this trick
      * @return --- the card that the computer player decided to play
      * 
      * @see swen221.cardgame.cards.core.TrickyCard
      *      #compareTo(TrickyCard)
      */
-    private Card leadTrick(Hand hand, Suit trumpSuit) {
-        SortedSet<Card> playableCards = hand.getCards();
-        Card cardToPlay = getHighest(playableCards, null, trumpSuit);
-        /*
-         * In the special case that the AI player might hold the highest card or
-         * highest several cards, he'll conservatively re-select the least
-         * needed card to play.
-         */
-        SortedSet<Card> cardsMatchingSelectedSuit = hand.matches(cardToPlay.suit());
-        cardToPlay = deliberatelySelect(cardToPlay, cardsMatchingSelectedSuit, cardToPlay.suit());
+    private Card beiginningTactic(Hand hand, Suit trumpSuit) {
+        SortedSet<Card> playableCardSet = hand.getCardSet();
+        Card card_Play = getHighest(playableCardSet, null, trumpSuit);
+        SortedSet<Card> cardsWithSelectedSuit = hand.matches(card_Play.suit());
+        card_Play = deliberatelySelect(card_Play, cardsWithSelectedSuit, card_Play.suit());
 
-        return cardToPlay;
+        return card_Play;
     }
 
     /**
-     * This is the strategy used by the computer player when it is closing a
-     * trick. In this case, it's definite to know whether it can win or lose
-     * this trick. In the case that it can win, it conservatively plays the
-     * least needed card to win; and in the case that it must lose, it select
-     * the lowest sorted <I>ComparableCard</I> to play
+     * This method represents a tactic used by the computer player, when it is closing a
+     * trick.  
+     * In this tactic, Surely, PC does know whether it can win or lose this trick. 
+     * if it deliberately plays the least needed card to win, then PC can win.
+     * if it selects the lowest sorted <I>TrickyCard</I> to play, then it must lose,
      * 
      * @param hand
      *            --- the hand of cards that the computer player has
@@ -106,60 +102,59 @@ public class SimpleComputerPlayer extends AbstractComputerPlayer {
      *            --- the current trick
      * @return --- the card that the computer player decided to play
      * 
-     * @see swen221.TrickyCard.cards.core.ComparableCard
+     * @see swen221.cardgame.cards.core.TrickyCard
      *      #compareTo(TrickyCard)
      */
-    private Card endTrick(Hand hand, Suit leadSuit, Suit trumpSuit, Trick trick) {
-        // the highest card ever played in this trick
-        Card highestCardPlayed = getHighest(trick.getCardsPlayed(), leadSuit, trumpSuit);
-        // a set of cards that matches lead suit
-        SortedSet<Card> cardsMatchingLead = hand.matches(leadSuit);
-        // a set of cards that matches trump suit
-        SortedSet<Card> cardsMatchingTrump = hand.matches(trumpSuit);
-        Card cardToPlay;
-
-        if (!cardsMatchingLead.isEmpty()) {
+    private Card terminateTactic(Hand hand, Suit leadSuit, Suit trumpSuit, Trick trick) {
+    	  	Card card_Play;
+    		// the highest card already played in this trick
+        Card highestCard = getHighest(trick.getCardsPlayed(), leadSuit, trumpSuit);
+        // a set of cards with same lead suit
+        SortedSet<Card> cardsWithLead = hand.matches(leadSuit);
+        // a set of cards with same trump suit
+        SortedSet<Card> cardsWithTrump = hand.matches(trumpSuit);
+      
+        if (!cardsWithLead.isEmpty()) {
             // get all cards that follow lead and are higher than the highest
-            // card ever played
-            SortedSet<Card> playableCards = getCardsHigherThan(cardsMatchingLead, highestCardPlayed, leadSuit,
+            // played card
+            SortedSet<Card> playableCardSet = getHigherCardSet(cardsWithLead, highestCard, leadSuit,
                     trumpSuit);
-            if (playableCards.isEmpty()) {
-                // if none, then cannot win, play the lowest card that can
-                // follow the lead suit
-                cardToPlay = getLowest(cardsMatchingLead, leadSuit, trumpSuit);
+            if (playableCardSet.isEmpty()) {
+                // if none, then cannot win, play the lowest card which can follow the lead suit
+                card_Play = getLowest(cardsWithLead, leadSuit, trumpSuit);
             } else {
-                // if there is card(s) that can win, play the lowest
-                cardToPlay = playableCards.first();
+                // if there is card that can win, then play the lowest card
+                card_Play = playableCardSet.first();
             }
-        } else if (!cardsMatchingTrump.isEmpty()) {
-            // get all cards that match trump and are higher than the highest
-            // card ever played
-            SortedSet<Card> playableCards = getCardsHigherThan(cardsMatchingTrump, highestCardPlayed, leadSuit,
+        } else if (!cardsWithTrump.isEmpty()) {
+            // get all cards that match trump and are higher than the highest played card 
+        	
+            SortedSet<Card> playableCards = getHigherCardSet(cardsWithTrump, highestCard, leadSuit,
                     trumpSuit);
             if (playableCards.isEmpty()) {
                 // if none, then cannot win, play the lowest in hand
-                cardToPlay = getLowest(hand.getCards(), leadSuit, trumpSuit);
+                card_Play = getLowest(hand.getCardSet(), leadSuit, trumpSuit);
             } else {
-                // if there is card(s) that can win, play the lowest
-                cardToPlay = playableCards.first();
+                // if there is card that can win, play the lowest
+                card_Play = playableCards.first();
             }
         } else {
-            // no card to follow the lead, no trump card, definitely lose.
-            // Play the lowest
-            cardToPlay = getLowest(hand.getCards(), leadSuit, trumpSuit);
+            // no card can follow the lead without trump card, definitely lose.
+            // then, play the lowest card 
+            card_Play = getLowest(hand.getCardSet(), leadSuit, trumpSuit);
         }
 
-        return cardToPlay;
+        return card_Play;
     }
 
     /**
-     * This is the strategy used by the computer player when it is neither
-     * opening nor closing a trick. In this case, the Strategy can be from
-     * offensive to defensive. Here we assume that AI is doing offensively, i.e.
-     * it bets the highest card has the most possibility to win. Similarly like
-     * in the end strategy, in the case that it must lose, it select the lowest
-     * sorted <I>ComparableCard</I> to play. But in the case it might still have
-     * chance to win, it plays the highest <I>ComparableCard</I>.
+     * This method represents a tactic used by the computer player, when it is neither
+     * opening nor closing a trick. 
+     * In this case, the tactic can be from offensive to defensive. 
+     * Here we assume that AI is doing offensively Similarly like
+     * in the terminate tactic method, 
+     * in the case that it must lose, it select the lowest sorted <I>TrickyCard</I> to play. But in the case it might still have
+     * chance to win, it plays the highest <I>TrickyCard</I>.
      * 
      * @param hand
      *            --- the hand of cards that the computer player has
@@ -171,58 +166,56 @@ public class SimpleComputerPlayer extends AbstractComputerPlayer {
      *            --- the current trick
      * @return --- the card that the computer player decided to play
      * 
-     * @see swen221.TrickyCard.cards.core.ComparableCard
+     * @see swen221.cardgame.cards.core.TrickyCard
      *      #compareTo(TrickyCard)
      */
-    private Card generalTrick(Hand hand, Suit leadSuit, Suit trumpSuit, Trick trick) {
-        // the highest card ever played in this trick
+    private Card generalTactic(Hand hand, Suit leadSuit, Suit trumpSuit, Trick trick) {
+    		Card card_Play;
+    		// the highest card already played in this trick
         Card highestCardPlayed = getHighest(trick.getCardsPlayed(), leadSuit, trumpSuit);
-        // a set of cards that matches lead suit
-        SortedSet<Card> cardsMatchingLead = hand.matches(leadSuit);
-        // a set of cards that matches trump suit
-        SortedSet<Card> cardsMatchingTrump = hand.matches(trumpSuit);
-        Card cardToPlay;
-
-        if (!cardsMatchingLead.isEmpty()) {
-            // get all cards that follow lead and are higher than the highest
-            // card ever played
-            SortedSet<Card> playableCards = getCardsHigherThan(cardsMatchingLead, highestCardPlayed, leadSuit,
+        // a set of cards with same lead suit
+        SortedSet<Card> cardsWithLead = hand.matches(leadSuit);
+        // a set of cards with same trump suit
+        SortedSet<Card> cardsWithTrump = hand.matches(trumpSuit);
+        
+        if (!cardsWithLead.isEmpty()) {
+            // get all cards that follow lead and are higher than the highest played card 
+            SortedSet<Card> playableCardSet = getHigherCardSet(cardsWithLead, highestCardPlayed, leadSuit,
                     trumpSuit);
-            if (playableCards.isEmpty()) {
-                // if none, then cannot win, play the lowest card that can
-                // follow the lead suit
-                cardToPlay = getLowest(cardsMatchingLead, leadSuit, trumpSuit);
+            if (playableCardSet.isEmpty()) {
+                // if none, then cannot win, then play the lowest card that can follow the lead suit
+                card_Play = getLowest(cardsWithLead, leadSuit, trumpSuit);
             } else {
-                // if there is card(s) that can win, play the highest
-                cardToPlay = playableCards.last();
-                // conservatively re-select the card
-                cardToPlay = deliberatelySelect(cardToPlay, playableCards, leadSuit);
+                // if there is a card that can win,then play the highest
+                card_Play = playableCardSet.last();
+                // deliberately re-select the card
+                card_Play = deliberatelySelect(card_Play, playableCardSet, leadSuit);
             }
-        } else if (!cardsMatchingTrump.isEmpty()) {
-            // get all cards that match trump and are higher than the highest
-            // card ever played
-            SortedSet<Card> playableCards = getCardsHigherThan(cardsMatchingTrump, highestCardPlayed, leadSuit,
+        } else if (!cardsWithTrump.isEmpty()) {
+            // get all cards that match trump and are higher than the highest played card
+            SortedSet<Card> playableCardSet = getHigherCardSet(cardsWithTrump, highestCardPlayed, leadSuit,
                     trumpSuit);
-            if (playableCards.isEmpty()) {
+            if (playableCardSet.isEmpty()) {
                 // if none, then cannot win, play the lowest in hand
-                cardToPlay = getLowest(hand.getCards(), leadSuit, trumpSuit);
+                card_Play = getLowest(hand.getCardSet(), leadSuit, trumpSuit);
             } else {
                 // if there is card(s) that can win, play the highest
-                cardToPlay = playableCards.last();
+                card_Play = playableCardSet.last();
                 // conservatively re-select the card
-                cardToPlay = deliberatelySelect(cardToPlay, playableCards, trumpSuit);
+                card_Play = deliberatelySelect(card_Play, playableCardSet, trumpSuit);
             }
         } else {
             // no card to follow the lead, no trump card, definitely lose.
-            // Play the lowest
-            cardToPlay = getLowest(hand.getCards(), leadSuit, trumpSuit);
+            // Then, play the lowest card
+            card_Play = getLowest(hand.getCardSet(), leadSuit, trumpSuit);
         }
-        return cardToPlay;
+        return card_Play;
     }
 
     /**
-     * This method takes a collection of Card objects in, sort them according to
-     * the <I>ComparableCard</I> sorting criteria, and returns the highest one.
+     * This method is used to take a collection of Card objects in, 
+     * sort them by the <I>TrickyCard</I> sorting criteria,
+     * then return the highest card.
      * 
      * @param cards
      *            --- a collection of cards to be choose from
@@ -230,29 +223,29 @@ public class SimpleComputerPlayer extends AbstractComputerPlayer {
      *            --- the lead suit of this trick
      * @param trumpSuit
      *            --- the trump suit of this trick
-     * @return --- the highest ranked card according to <I>ComparableCard</I>
+     * @return --- the highest ranked card according to <I>TrickyCard</I>
      *         sorting criteria
      * 
-     * @see swen221.TrickyCard.cards.core.ComparableCard
+     * @see swen221.cardgame.cards.core.TrickyCard
      *      #compareTo(TrickyCard)
      */
     private Card getHighest(Collection<Card> cards, Suit leadSuit, Suit trumpSuit) {
-        // Should never get in here. Just for robustness.
+        // Should never get in here.
         if (cards.isEmpty()) {
             return null;
         }
-
-        SortedSet<TrickyCard> comparableCards = new TreeSet<>();
+        SortedSet<TrickyCard> trickyCardSet = new TreeSet<>();
         for (Card card : cards) {
-            comparableCards.add(new TrickyCard(card, leadSuit, trumpSuit));
+            trickyCardSet.add(new TrickyCard(card, leadSuit, trumpSuit));
         }
-        Card highest = comparableCards.last().getCard();
-        return highest;
+        Card highestCard = trickyCardSet.last().getCard();
+        return highestCard;
     }
 
     /**
      * This method takes a collection of Card objects in, sort them according to
-     * the <I>ComparableCard</I> sorting criteria, and returns the lowest one.
+     * the <I>TrickyCard</I> sorting criteria, 
+     * then returns the lowest card.
      * 
      * @param cards
      *            --- a collection of cards to be choose from
@@ -260,31 +253,31 @@ public class SimpleComputerPlayer extends AbstractComputerPlayer {
      *            --- the lead suit of this trick
      * @param trumpSuit
      *            --- the trump suit of this trick
-     * @return --- the lowest ranked card according to <I>ComparableCard</I>
+     * @return --- the lowest ranked card according to <I>TrickyCard</I>
      *         sorting criteria
      * 
-     * @see swen221.TrickyCard.cards.core.ComparableCard
+     * @see swen221.cardgame.cards.core.TrickyCard
      *      #compareTo(TrickyCard)
      */
     private Card getLowest(Collection<Card> cards, Suit leadSuit, Suit trumpSuit) {
-        // Should never get in here. Just for robustness.
+        // for security
         if (cards.isEmpty()) {
             return null;
         }
 
-        SortedSet<TrickyCard> comparableCards = new TreeSet<>();
+        SortedSet<TrickyCard> trickyCardSet = new TreeSet<>();
         for (Card card : cards) {
-            comparableCards.add(new TrickyCard(card, leadSuit, trumpSuit));
+            trickyCardSet.add(new TrickyCard(card, leadSuit, trumpSuit));
         }
-        Card lowest = comparableCards.first().getCard();
-        return lowest;
+        Card lowestCard = trickyCardSet.first().getCard();
+        return lowestCard;
     }
 
     /**
      * This method takes a collection of Card objects in, sort them according to
-     * the <I>ComparableCard</I> sorting criteria, and returns a sorted set of
+     * the <I>TrickyCard</I> sorting criteria, and returns a sorted set of
      * Card objects that are higher than the given card according to the sorting
-     * criteria in <I>ComparableCard</I>.
+     * criteria in <I>TrickyCard</I>.
      * 
      * @param cards
      *            --- a collection of cards to be choose from
@@ -294,97 +287,93 @@ public class SimpleComputerPlayer extends AbstractComputerPlayer {
      *            --- the lead suit of this trick
      * @param trumpSuit
      *            --- the trump suit of this trick
-     * @return --- the lowest ranked card according to <I>ComparableCard</I>
+     * @return --- the lowest ranked card according to <I>TrickyCard/I>
      *         sorting criteria
      * 
-     * @see swen221.TrickyCard.cards.core.ComparableCard
+     * @see swen221.cardgame.cards.core.TrickyCard
      *      #compareTo(TrickyCard)
      */
-    private SortedSet<Card> getCardsHigherThan(SortedSet<Card> cards, Card toBeCompared, Suit leadSuit,
+    private SortedSet<Card> getHigherCardSet(SortedSet<Card> cards, Card toBeCompared, Suit leadSuit,
             Suit trumpSuit) {
-        // Should never get in here. Just for robustness.
+    		// for security
         if (cards.isEmpty()) {
             return null;
         }
 
-        TrickyCard toBeComparedWrapped = new TrickyCard(toBeCompared, leadSuit, trumpSuit);
-        SortedSet<TrickyCard> comparableCards = new TreeSet<>();
+        TrickyCard newCard = new TrickyCard(toBeCompared, leadSuit, trumpSuit);
+        SortedSet<TrickyCard> TrickyCardSet= new TreeSet<>();
 
         // wrap and compare
         for (Card card : cards) {
-            TrickyCard comparableCard = new TrickyCard(card, leadSuit, trumpSuit);
-            if (comparableCard.compareTo(toBeComparedWrapped) > 0) {
-                comparableCards.add(comparableCard);
+            TrickyCard trickyCard = new TrickyCard(card, leadSuit, trumpSuit);
+            if (trickyCard.compareTo(newCard ) > 0) {
+                TrickyCardSet.add(trickyCard);
             }
         }
 
         // unwrap and return
-        SortedSet<Card> cardsHigher = new TreeSet<>();
-        for (TrickyCard tc : comparableCards) {
-            cardsHigher.add(tc.getCard());
+        SortedSet<Card> higherCardSet = new TreeSet<>();
+        for (TrickyCard tc : TrickyCardSet) {
+            higherCardSet.add(tc.getCard());
         }
 
-        return cardsHigher;
+        return higherCardSet;
     }
 
     /**
-     * This method treats a special case when the player holds the highest card
-     * or highest several cards in one suit, then he should conservatively
-     * select the least needed card to play. <br>
+     * This method is used to treat a special case, when the player holds the highest card
+     * or highest several cards in one suit,
+     * then he should deliberately select the least needed card to play. <br>
      * <br>
-     * Example: he holds both Heart A, Heart K and Heart Q, then other player
+     * For instance, if player holds both Heart A, Heart K and Heart Q, then other player
      * cannot play A or K to win him if he plays Q. In this case, Q is the
      * rational choice.<br>
      * <br>
-     * Note that this helper method requires that the card in the first argument
+     * Notice: This helper method requires that the card in the first argument
      * <I>card</I>, and cards in the second argument <I>playableCards</I>, must
      * be of same suit, and this suit must be consistent with the third argument
      * <I>suit</I>. If any of these requirements is not met, an IllegalArgument
      * exception will be thrown.
      * 
-     * @param card
-     *            --- the card that need to be checked
-     * @param playableCards
-     *            --- a collection of cards that the player can re-pick if the
+     * @param card--- the card which is needed to be checked
+     * @param playableCardSetSet
+     *            --- a set of cards that the player can re-pick if the
      *            card indeed fit in this special case
-     * @param suit
-     *            --- the given suit.
+     * @param suit  --- the given suit.
      * @return --- the same card if the hand of cards does not fit into this
      *         special case, or another card if it does. The re-picked card is
      *         guaranteed to win the trick as well if the given card can win.
      */
-    private Card deliberatelySelect(Card card, SortedSet<Card> playableCards, Suit suit) {
+    private Card deliberatelySelect(Card card, SortedSet<Card> playableCardSetSet, Suit suit) {
 
-        // some sanity check. Shouldn't get into any of these
-        if (card.suit() != suit) { // shouldn't get here.
-            throw new IllegalArgumentException("card suit should be the given suit.");
+        //check for security, throw all illegal exception
+        if (card.suit() != suit) { 
+            throw new IllegalArgumentException("Suit of card should be the given suit.");
         }
 
-        for (Card c : playableCards) {
+        for (Card c : playableCardSetSet) {
             if (c.suit() != card.suit()) {
-                throw new IllegalArgumentException("playableCards contains card(s) that doesn't match given suit.");
+                throw new IllegalArgumentException("The card of playableCardSets should match given suit.");
             }
         }
 
-        if (!card.equals(playableCards.last())) { // shouldn't get here.
-            throw new IllegalArgumentException("card should be the highest card in playableCards.");
+        if (!card.equals(playableCardSetSet.last())) { 
+            throw new IllegalArgumentException("this card should be the highest card of playableCardSet.");
         }
 
-        ArrayList<Card> cardsList = new ArrayList<>(playableCards);
-        Collections.sort(cardsList); // Should be unnecessary
-
+        List<Card> cardsList = new ArrayList<>(playableCardSetSet);
+        Collections.sort(cardsList); 
+        
         int lastIndex = cardsList.size() - 1;
         int ordinal = 12;
         Card selectedCard = card;
-
-        boolean lastIndexDecreased = false;  // a boolean to record if the last index is decreased.
-
+        
+        // a boolean value used for checking if the last index is decreased.
+        boolean lastIndexDecreased = false;  
         while (selectedCard.rank().ordinal() == ordinal) {
             ordinal--;
             lastIndex--;
-
             lastIndexDecreased = true;
-
             if (lastIndex < 0) {
                 break;
             }

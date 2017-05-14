@@ -11,10 +11,7 @@ import swen221.cardgame.cards.core.Player;
 import swen221.cardgame.cards.variations.*;
 
 public class ConfigurationDialog extends JDialog {
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -4306155212156204264L;
+	private static final long serialVersionUID = 1L;
     final String[] gameKindNames = { "Classic Whist", "Knock-Out Whist", "Single-Hand Whist" };
     @SuppressWarnings("rawtypes")
     final Class[] gameKinds = { ClassicWhist.class, KnockOutWhist.class, SingleHandWhist.class };

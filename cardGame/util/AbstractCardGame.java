@@ -64,21 +64,26 @@ public abstract class AbstractCardGame implements CardGame, Serializable {
     // ========================================================
     // Methods required for Cloneable
     // ========================================================
-
+	
+    // This clone method used the default clone method found in
+	// java.lang.Object. This creates a shallow copy of the card game. For
+	// Part 3 of the assignment, you need to reimplement this to perform a
+	// deep clone.
     @Override
     public CardGame clone() {
-        ByteArrayOutputStream memoryBuffer = new ByteArrayOutputStream();
+    	// make modified
+        ByteArrayOutputStream memory = new ByteArrayOutputStream();
         ObjectOutputStream objectOutput = null;
         ObjectInputStream objectInput = null;
-        CardGame clone = null;
+        CardGame copyCardGame = null;
         try {
             // Serialisation
-            objectOutput = new ObjectOutputStream(memoryBuffer);
+            objectOutput = new ObjectOutputStream(memory);
             objectOutput.writeObject(this);
             objectOutput.flush();
             // De-serialisation
-            objectInput = new ObjectInputStream(new ByteArrayInputStream(memoryBuffer.toByteArray()));
-            clone = (CardGame) objectInput.readObject();
+            objectInput = new ObjectInputStream(new ByteArrayInputStream(memory.toByteArray()));
+            copyCardGame = (CardGame) objectInput.readObject();
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
@@ -86,10 +91,10 @@ public abstract class AbstractCardGame implements CardGame, Serializable {
                 objectOutput.close();
                 objectInput.close();
             } catch (IOException e1) {
-                System.err.println("IOException");
+                System.err.println("IO Exception occurs");
             }
         }
-        return clone;
+        return copyCardGame;
     }
 
     // ========================================================
@@ -107,8 +112,7 @@ public abstract class AbstractCardGame implements CardGame, Serializable {
     }
 
     /**
-     * The method is used to
-     * get the trump suit of the current trick
+     * The method is used to get the trump suit of the current trick
      * 
      * @return --- the trump suit of the current trick
      */
@@ -187,10 +191,7 @@ public abstract class AbstractCardGame implements CardGame, Serializable {
         trumps = nextTrumps(currentTrick.getTrumps());
     }
 
-    /**
-     * Update the overall score by adding one point for the player who won this
-     * trick.
-     */
+    
     public void scoreHand() {
         int maxScore = 0;
         // first, calculate winning score
@@ -209,18 +210,14 @@ public abstract class AbstractCardGame implements CardGame, Serializable {
     // Helper methods
     // ========================================================
 
-    /**
-     * Reset the score of this trick to 0 for all players
-     */
+    
     protected void resetTricksWon() {
         for (Player.Direction d : Player.Direction.values()) {
             tricks.put(d, 0);
         }
     }
 
-    /**
-     * Reset the overall score to 0 for all players
-     */
+    
     protected void resetOverallScores() {
         for (Player.Direction d : Player.Direction.values()) {
             scores.put(d, 0);
@@ -230,7 +227,7 @@ public abstract class AbstractCardGame implements CardGame, Serializable {
     /**
      * Create a complete deck of 52 cards.
      * 
-     * @return --- a list of a complete deck of 52 cards.
+     * @return
      */
     public static List<Card> createDeck() {
         ArrayList<Card> deck = new ArrayList<Card>();
@@ -247,8 +244,7 @@ public abstract class AbstractCardGame implements CardGame, Serializable {
      * Diamonds, Spades, No Trumps.
      * 
      * @param s
-     *            --- current trump suit
-     * @return --- the suit that is going to be trump suit in the next trick
+     * @return 
      */
     protected static Card.Suit nextTrumps(Card.Suit s) {
         if (s == null) {

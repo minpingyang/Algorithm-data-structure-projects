@@ -13,7 +13,15 @@ import java.io.Serializable;
 public class Player implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	/**
+     * Construct a player in the given direction
+     * 
+     * @param direction --- the direction where the player is seated
+     */
+    public Player(Direction direction) {
+        this.direction = direction;
+        this.hand = new Hand();
+    }
     /**
      * Represents one of the four position on the table (North, East, South and
      * West).
@@ -31,7 +39,7 @@ public class Player implements Serializable {
          * Returns the next direction to play after this one (i.e. following a
          * clockwise rotation).
          * 
-         * @return --- the next direction
+         * @return 
          */
         public Direction next() {
         	if (this.equals(NORTH)) return EAST;
@@ -41,6 +49,7 @@ public class Player implements Serializable {
         }
 
         /**
+         * Additonal method
          * Returns the previous direction to play before this one (i.e.
          * following a anti-clockwise rotation).
          * 
@@ -57,21 +66,10 @@ public class Player implements Serializable {
         }
     }
 
-    // the direction of where this player is seated
     private final Direction direction;
-    // the hand of cards held by this player
     private Hand hand;
 
-    /**
-     * Construct a player in the gien direction
-     * 
-     * @param direction
-     *            --- the direction where the player is seated
-     */
-    public Player(Direction direction) {
-        this.direction = direction;
-        this.hand = new Hand();
-    }
+    
 
     /**
      * Get the position in which this player is sitting.
@@ -85,7 +83,7 @@ public class Player implements Serializable {
     /**
      * Get the current hand of this player.
      * 
-     * @return --- the current hand of this player.
+     * @return 
      */
     public Hand getHand() {
         return hand;

@@ -13,12 +13,10 @@ import swen221.cardgame.cards.util.AbstractCardGame;
  */
 public class ClassicWhist extends AbstractCardGame {
     
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2614835887406603684L;
 
-    public ClassicWhist() {
+	private static final long serialVersionUID = 1L;
+
+	public ClassicWhist() {
         
     }
 
