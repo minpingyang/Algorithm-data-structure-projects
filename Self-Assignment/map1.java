@@ -8,6 +8,10 @@ public class Exercise{
   public static  String findMostPopulated(HashMap<String,Integer> that){
     int maxPop = 0;
     String city = "";
+    
+    if(that.isEmpty()){
+        return "";
+    }
     for(int p:that.values()){
     	if(maxPop < p){
     		maxPop = p;
@@ -19,7 +23,7 @@ public class Exercise{
     		city = s;
     	}
     }
-    assert true;
+    
     return city;
 
   }
