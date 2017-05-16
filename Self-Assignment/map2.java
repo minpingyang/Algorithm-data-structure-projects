@@ -18,7 +18,7 @@ public class Exercise{
       String secondCity = "";
     
       if(that.isEmpty()){
-        temp.add(lastCity);
+
         return temp;
       }
 

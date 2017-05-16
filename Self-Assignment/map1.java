@@ -10,7 +10,7 @@ public class Exercise{
     String city = "";
     
     if(that.isEmpty()){
-        return "";
+        throw new java.util.NoSuchElementException();
     }
     for(int p:that.values()){
     	if(maxPop < p){
@@ -49,7 +49,7 @@ public class Exercise{
 
 			    try{
 			    	findMostPopulated(new HashMap<String,Integer>());
-			    	System.out.println(" ERRO!!!!! ");
+			    	// System.out.println(" ERRO!!!!! ");
 			    	assert false;
 			    }
 			    catch (java.util.NoSuchElementException e){
