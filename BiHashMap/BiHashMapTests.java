@@ -160,8 +160,8 @@ public class BiHashMapTests {
 	/**
 	 * <p>
 	 * This method checks that the implementation of a given method in the
-	 * BiHashMap class actually has declared generic parameters. Furthermore, it
-	 * compares them against the corresponding signature given in Map to check
+	 * BiHashMap class actually has declared generic parameters. 
+	 * Furthermore, it compares them against the corresponding signature given in Map to check
 	 * they are roughly the same.
 	 * </p>
 	 * 

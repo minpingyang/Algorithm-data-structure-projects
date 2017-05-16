@@ -2,9 +2,9 @@ package swen221.lab7;
 import java.util.*;
 //fixed by adding generic type of key-pair value
 public class BiHashMap<K, V> implements Map<K, V> {
-	private HashMap<K, V> keyToValues = new HashMap<K, V>();
+	private HashMap<K, V> keyToValues = new HashMap<>();
 	// a value is possibly mapping to one more key, so mapping to a Set of keys
-	private HashMap<V, HashSet<K>> valueToKeys = new HashMap<V, HashSet<K>>();
+	private HashMap<V, HashSet<K>> valueToKeys = new HashMap<>();
 
 
 	@Override
@@ -64,30 +64,38 @@ public class BiHashMap<K, V> implements Map<K, V> {
 
 	/**
 	 * Copies all of the mappings from the specified map to this map (optional
-	 * operation). The effect of this call is equivalent to that of calling
+	 * operation). 
+	 * The effect of this call is equivalent to that of calling
+	 * 
 	 * put(k, v) on this map once for each mapping from key k to value v in the
-	 * specified map. The behavior of this operation is unspecified if the
+	 * specified map. 
+	 * The behavior of this operation is unspecified if the
 	 * specified map is modified while the operation is in progress.
 	 */
 	@Override	
-	public void putAll(Map m) {
-		// need to do something here!
+	public void putAll(Map<? extends K, ? extends V> m) {
+		for (K key : m.keySet()) {
+			V value = m.get(key); 
+			put(key, value);
+		}
 	}
 	
 	/**
-	 * Removes the mapping for this key from this map if present. Returns the
-	 * previous value associated with key, or null if there was no mapping for
-	 * key. (A null return can also indicate that the map previously associated
+	 * Removes the mapping for this key from this map if present. 
+	 * Returns the previous value associated with key, 
+	 * or null if there was no mapping for key. 
+	 * 
+	 * (A null return can also indicate that the map previously associated
 	 * null with key).
 	 */
 	@Override
-	public Object remove(Object key) {
+	public V remove(Object key) {
 		// first, update the value associated with this key
-		Object value = keyToValues.remove(key);
+		V value = keyToValues.remove(key);
 
 		if (value != null) {
 			// now, update the set of keys associated with this value
-			ArrayList keys = (ArrayList) valueToKeys.get(value);
+			HashSet<K> keys = valueToKeys.get(value);
 			// Note, keys should not be null!
 			keys.remove(key);
 		}
@@ -108,26 +116,29 @@ public class BiHashMap<K, V> implements Map<K, V> {
 	 * @return
 	 */
 	@Override	
-	public Object get(Object key) {
+	public V get(Object key) {
 		return keyToValues.get(key);
 	}
 
 	/**
 	 * Get the set of keys associated with a particular value
 	 */	
-	public List getKeys(Object value) {
-		return (List) valueToKeys.get(value);
+	public HashSet<K> getKeys(Object value) {
+		return  valueToKeys.get(value);
 	}
 
 	@Override
 	public void clear() {
+		valueToKeys.clear();
 		keyToValues.clear();			
 	}	
 	
 	/**
-	 * Returns a collection view of the mappings contained in this map. Each
-	 * element in the returned collection is a Map.Entry. The collection is
-	 * backed by the map, so changes to the map are reflected in the collection,
+	 * Returns a collection view of the mappings contained in this map. 
+	 * 
+	 * Each element in the returned collection is a Map.Entry. 
+	 * The collection is backed by the map, 
+	 * so changes to the map are reflected in the collection,
 	 * and vice-versa. The collection supports element removal, which removes
 	 * the corresponding mapping from the map, via the Iterator.remove,
 	 * Collection.remove, removeAll, retainAll, and clear operations. It does
@@ -136,8 +147,8 @@ public class BiHashMap<K, V> implements Map<K, V> {
 	 * @return
 	 */
 	@Override
-	public Set entrySet() {
-		return null;
+	public Set<Entry<K, V>> entrySet() {
+		return keyToValues.entrySet();
 	}
 
     /**
@@ -151,7 +162,7 @@ public class BiHashMap<K, V> implements Map<K, V> {
 	 * It does not support the add or addAll operations.
 	 */
 	@Override
-	public Set keySet() { return keyToValues.entrySet(); }
+	public Set<K> keySet() { return keyToValues.keySet(); }
 
 	/**
 	 * Returns a collection view of the values contained in this map. The
@@ -167,7 +178,8 @@ public class BiHashMap<K, V> implements Map<K, V> {
 	 * @return
 	 */
 	@Override
-	public Collection values() {
+	//fixed 
+	public Collection<V> values() {
 		return keyToValues.values();
 	}
 
@@ -210,13 +222,13 @@ public class BiHashMap<K, V> implements Map<K, V> {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		BiHashMap map = new BiHashMap();
+		BiHashMap<String, String> map = new BiHashMap<>();
 
 		map.put("Dave", "ENGR202");
 		map.put("Alex", "COMP205");
 		map.put("James", "ENGR202");
 
-		for (String x : (List<String>) map.getKeys("ENGR202")) {
+		for (String x : map.getKeys("ENGR202")) {
 			System.out.println("GOT: " + x);
 		}
 	}
