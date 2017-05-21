@@ -1,0 +1,9 @@
+if (lt(9,4)) { move;
+turnL;move;
+
+turnR; move;
+turnR;move;turnR;move;turnR;move;
+turnL;move;turnL;move;turnL;
+
+wait; }
+
