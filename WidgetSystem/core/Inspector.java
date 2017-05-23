@@ -74,13 +74,19 @@ public class Inspector {
 		// To get the value of a given attribute in the widget, you need to use
 		// its corresponding "getter" method. For example, for an attribute
 		// "color" the getter would be "getColor".
-		String getterName = "get" + capitalise(name);
-		// What you need to do is find the appropriate getter method and invoke
-		// it. This doesn't accept any parameters. Furthermore, you should just
+		
+		// What you need to do is find the appropriate getter method and 
+		//invoke it. This doesn't accept any parameters. Furthermore, you should just
 		// through an IllegalArgumentException for all the various error cases
 		// which arise when doing this (SecurityException,
 		// NoSuchMethodException, etc).
-		return null;
+		try {
+            String getterName = "get" + capitalise(name);
+            return widget.getClass().getMethod(getterName).invoke(widget);
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException e) {
+            throw new IllegalArgumentException();
+        }
 	}
 
 	/**
