@@ -100,14 +100,25 @@ public class Inspector {
 	 *            The value of the attribute to be updated
 	 */
 	public void setAttribute(Widget widget, String name, Object value) {
-		// To set the value of a given attribute in the widget, you need to use
-		// its corresponding "setter" method. For example, for an attribute
+		// To set the value of a given attribute in the widget, 
+		//you need to use its corresponding "setter" method. 
+		//For example, for an attribute
 		// "color" the getter would be "SetColor".
-		String setterName = "set" + capitalise(name);
+		
 		// As before, you need to first find the setter method. This is harder
 		// than before because you need to know the type of the attribute being
 		// set. To work this out, you need to get the "type" of the corresponding
 		// field using Class.getDeclaredField().
+		try {
+			String setterName = "set" + capitalise(name);
+			Class<? extends Widget> widgetClass = widget.getClass();
+			Field field = widgetClass.getDeclaredField(name);
+			Method method = widgetClass.getMethod(setterName, field.getType());
+			method.invoke(widget, value);			
+		} catch (NoSuchFieldException | SecurityException | IllegalAccessException | IllegalArgumentException
+                | NoSuchMethodException | InvocationTargetException e) {
+            throw new IllegalArgumentException();
+        }
 	}
 
 	/**
