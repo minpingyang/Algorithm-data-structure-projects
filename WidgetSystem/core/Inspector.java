@@ -46,10 +46,15 @@ public class Inspector {
 	 * @return
 	 */
 	public Widget newWidget(String name, Rectangle dimensions) {
-		Class<?> widgetClass = findWidget(name);
-		// HINT: You should look in the widget class (using reflection) for a
-		// constructor which accepts a Rectangle object as a parameter. Then you
-		// can just invoke this method passing in the dimensions parameter.
+		try{
+			return (Widget)findWidget(name).getConstructor(Rectangle.class).newInstance(dimensions);
+		}catch(NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException e){
+			e.printStackTrace();
+			
+		}
+		// HINT: You should look in the widget class (using reflection) 
+		//for a constructor which accepts a Rectangle object as a parameter. 
+		//Then you can just invoke this method passing in the dimensions parameter.
 		return null;
 	}
 
