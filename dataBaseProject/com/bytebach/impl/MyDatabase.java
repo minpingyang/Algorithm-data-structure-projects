@@ -74,6 +74,19 @@ public class MyDatabase implements Database {
         tableToRefRow.put(name, new HashSet<>());
         tables.add(new MyTable(name, fields, this));
     }
+    /**
+     * This method check whether the given field matches the given value.
+     * 
+     * @param field
+     *            --- the given field determined in schema
+     * @param value
+     *            --- the given value to be checked
+     * @return --- true if they match, or false if not.
+     */
+	public static boolean checkTypeMatch(Field field, Value value) {
+		// TODO Auto-generated method stub
+		return false;
+	}
     
     
     
