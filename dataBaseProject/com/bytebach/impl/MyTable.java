@@ -91,27 +91,54 @@ public class MyTable implements Table {
                 return row;
             }
         }
-
-        // no luck
         throw new InvalidOperation("Found no match");
     }
-
-	@Override
-	public List<Value> row(Value... keys) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+    
 	@Override
 	public void delete(Value... keys) {
-		// TODO Auto-generated method stub
+		 // if the number of given keys doesn't match, error
+        if (keys.length != keyColumns.size()) {
+            throw new InvalidOperation("The number of given keys doesn't match current table.");
+        }
+
+        // if the types of given keys don't match, error again
+        for (int i = 0; i < keyColumns.size(); i++) {
+            if (!MyDatabase.checkTypeMatch(fields.get(keyColumns.get(i)), keys[i])) {
+                throw new InvalidOperation("One of given keys has a wrong type.");
+            }
+        }
+
+        // go through every row, try to find a match
+        int index = 0;
+        boolean found = true;
+        for (int j = 0; j < rows.size(); j++) {
+            List<Value> row = rows.get(j);
+            found = true;
+            for (int i = 0; i < keyColumns.size(); i++) {
+                if (!row.get(keyColumns.get(i)).equals(keys[i])) {
+                    found = false;
+                    break;
+                }
+            }
+
+            if (found) {
+                index = j;
+                break;
+            }
+        }
+
+        if (found) {
+            rows.remove(index);
+            return;
+        }
+
+        throw new InvalidOperation("Found no match");
 		
 	}
 
 
 	public List<Integer> getKeyColumns() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.keyColumns;
 	}
 
 
@@ -124,5 +151,10 @@ public class MyTable implements Table {
     public MyDatabase getDatabase() {
         return this.dataBasePointer;
     }
+
+	@Override
+	public List<List<Value>> rows() {
+		return this.rows;
+	}
 
 }

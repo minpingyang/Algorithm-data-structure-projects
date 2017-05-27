@@ -84,8 +84,49 @@ public class MyDatabase implements Database {
      * @return --- true if they match, or false if not.
      */
 	public static boolean checkTypeMatch(Field field, Value value) {
+		 // special case, if any of these two arguments is null, they are not match (even both null).
+        if (field == null || value == null) {
+            return false;
+        }
+
+        Type type = field.type();
+
+        if (value instanceof BooleanValue && type == Type.BOOLEAN) {
+            return true;
+        } else if (value instanceof IntegerValue && type == Type.INTEGER) {
+            return true;
+        } else if (value instanceof ReferenceValue && type == Type.REFERENCE) {
+            return true;
+        } else if (value instanceof StringValue) {
+            /*
+             * Here we assume if this field is set to TEXTAREA, then it doens't matter whether or
+             * not the value contains new line character. But if the type is set to TEXT, then it
+             * cannot contain new line character.
+             */
+            String str = ((StringValue) value).value();
+            if (str.contains("\n") && type == Type.TEXT) {
+                return false;
+            }
+            return true;
+        }
+
+        return false;
+	}
+	 /**
+     * This method updates two maps that records all reference values. More specifically, it check
+     * the validity of the given reference value, and add the row it belongs to into two maps
+     * properly if it is a valid reference.
+     * 
+     * @param table
+     *            --- the table that this reference value is added into
+     * @param reference
+     *            --- the given reference value
+     * @param referencingRow
+     *            --- the row that the reference value belongs to
+     */
+	public static void updateReference(MyTable table, ReferenceValue element, MyRow myRow) {
 		// TODO Auto-generated method stub
-		return false;
+		
 	}
     
     

@@ -39,7 +39,7 @@ public class MyRow implements List<Value> {
      * 
      * @return --- a pointer to the table it belongs to.
      */
-    public MyTable getTable() {
+    public MyTable table() {
         return table;
     }
 
@@ -62,7 +62,7 @@ public class MyRow implements List<Value> {
         if (!MyDatabase.checkTypeMatch(field, element)) {
             throw new InvalidOperation("Cannot set a value with incorrect type.");
         }
-        // if it's a reference, need to check its validity, and to update two maps in MyDatabase.
+        // if it's a reference, need to check its validity, and to update two HashMaps in MyDatabase.
         if (element instanceof ReferenceValue) {
             MyDatabase.updateReference(table, (ReferenceValue) element, this);
         }
