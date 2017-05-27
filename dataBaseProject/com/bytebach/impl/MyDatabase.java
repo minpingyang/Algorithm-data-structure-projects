@@ -3,6 +3,7 @@ package com.bytebach.impl;
 import java.util.*;
 
 import com.bytebach.model.*;
+import com.bytebach.model.Field.Type;
 
 
 /**
@@ -15,63 +16,67 @@ import com.bytebach.model.*;
 * @author minping
 *
 */
+
+    
 public class MyDatabase implements Database {
 
-	@Override
-	public Collection<? extends Table> tables() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    private Set<MyTable> tables;
 
-	@Override
-	public Table table(String name) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    /*
+     * Two maps to keep track of al6l reference values. The map, tableToRefRow, uses table name
+     * (String) as keys and each key has a set of Rows that are referencing to this table. The other
+     * map, rowToRefRow, uses referenced row as key and each key has a set of Rows that are
+     * referencing to this row.
+     */
+    private static Map<String, Set<MyRow>> tableToRefRow = new HashMap<>();
+    private static Map<List<Value>, Set<MyRow>> rowToRefRow = new HashMap<>();
 
-	@Override
-	public void createTable(String name, List<Field> fields) {
-		// TODO Auto-generated method stub
-		
-	}
+    /**
+     * Constructor
+     */
+    public MyDatabase() {
+        tables = new HashSet<>();
+    }
+    
+  	// One of the key challenges in this assignment is to provide you're
+  	// own implementations of the List interface which can intercept the various
+  	// operations (e.g. add, set, remove, etc) and check whether they violate
+  	// the constraints and/or update the database appropriately (e.g. for the
+  	// cascading delete).
+  	//
+  	// HINT: to get started, don't bother providing your own implementations of
+  	// List as discussed above! 
+    //Instead, implement MyDatabase and MyTabe using conventional Collections.
+    //When you have that working, and the web system
+  	// is doing something sensible, then consider how you're going to get those
+  	// unit test to past. 
+    @Override
+    public Collection<? extends Table> tables() {
+        return tables;
+    }
+    @Override
+    public Table table(String name) {
+        for (MyTable table : tables) {
+            if (table.name().equals(name)) {
+                return table;
+            }
+        }
+        return null;
+    }
+    @Override
+    public void createTable(String name, List<Field> fields) {
+        // if the name is already used
+        if (table(name) != null) {
+            throw new InvalidOperation("Table \"" + name + "\" already exists, Try another name.");
+        }
 
-	@Override
-	public void deleteTable(String name) {
-		// TODO Auto-generated method stub
-		
-	}
-	// This is where you'll probably want to start. You'll need to provide an
-	// implementation of Table as well.
-	//
-	// One of the key challenges in this assignment is to provide you're
-	// own implementations of the List interface which can intercept the various
-	// operations (e.g. add, set, remove, etc) and check whether they violate
-	// the constraints and/or update the database appropriately (e.g. for the
-	// cascading delete).
-	//
-	// HINT: to get started, don't bother providing your own implementations of
-	// List as discussed above! Instead, implement MyDatabase and MyTabe using
-	// conventional Collections. When you have that working, and the web system
-	// is doing something sensible, then consider how you're going to get those
-	// unit test to past. 
-
-	public static boolean checkTypeMatch(Field field, Value element) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public static void updateReference(MyTable table, ReferenceValue element, MyRow myRow) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public static void checkSafeToAddRow(MyRowList myRowList, List<Value> element) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public static void updateReference(MyTable table, MyRow myRow) {
-		// TODO Auto-generated method stub
-		
-	}
+        // initialise the map for later use.
+        tableToRefRow.put(name, new HashSet<>());
+        tables.add(new MyTable(name, fields, this));
+    }
+    
+    
+    
+    
+    
 }

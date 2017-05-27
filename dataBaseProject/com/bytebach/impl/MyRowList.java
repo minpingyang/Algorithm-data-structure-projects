@@ -34,119 +34,37 @@ public class MyRowList implements List<List<Value>>{
         this.Listrow = new ArrayList<>();
         this.table = table;
 	}
-	@Override
-	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public boolean contains(Object o) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public Iterator<List<Value>> iterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Object[] toArray() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public <T> T[] toArray(T[] a) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public boolean add(List<Value> e) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public boolean remove(Object o) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public boolean addAll(Collection<? extends List<Value>> c) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public boolean addAll(int index, Collection<? extends List<Value>> c) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public boolean removeAll(Collection<?> c) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public boolean retainAll(Collection<?> c) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public void clear() {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public List<Value> get(int index) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public List<Value> set(int index, List<Value> element) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void add(int index, List<Value> element) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public List<Value> remove(int index) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public int indexOf(Object o) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public int lastIndexOf(Object o) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public ListIterator<List<Value>> listIterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public ListIterator<List<Value>> listIterator(int index) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public List<List<Value>> subList(int fromIndex, int toIndex) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    /**
+     * A getter method to get the pointer to the table it belongs to.
+     * 
+     * @return --- the pointer to the table it belongs to.
+     */
+    public MyTable getTable() {
+        return this.table;
+    }
+    
+    @Override
+    public boolean add(List<Value> element) {
+        MyRow myRow = new MyRow(table, element);
+        // check whether it's safe to add
+        MyDatabase.checkSafeToAddRow(this, element);
+        // if there is a reference value, need to update two maps in MyDatabase.
+        MyDatabase.updateReference(table, myRow);
+        return Listrow.add(myRow);
+    }
+    @Override
+    public void add(int i, List<Value> element) {
+        MyRow addedRow = new MyRow(table, element);
+        // check whether it's safe to add
+        MyDatabase.checkSafeToAddRow(this, element);
+        // if there is a reference value, need to update two maps in MyDatabase.
+        MyDatabase.updateReference(table, addedRow);
+        Listrow.add(i, addedRow);
+    }
+   
+    
+    
+    
+    
+    
 }
