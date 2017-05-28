@@ -10,18 +10,19 @@ import com.bytebach.model.Field;
 import com.bytebach.model.InvalidOperation;
 
 /**
- * This is a wrapper class for a list of fields, i.e. the schema. The meaning of wrapping it instead
- * of using a List of fields directly is that so we can check the validity of the given fields, and
- * prevent from modifying the schema.
+ * This is a wrapper class for a list of fields. 
+ * The meaning of wrapping it instead of using a List of fields directly is 
+ * that so we can check the validity of the given fields, and prevent from changing the schema.
  * 
- * @author minping
+ * @author Minping
  *
  */
-public class MyFieldList implements List<Field>{
-	
-	private ArrayList<Field> fields;
-	
-	public MyFieldList(List<Field> fields, MyTable table) {
+public class MyFieldList implements List<Field> {
+
+    private ArrayList<Field> fields;
+
+    public MyFieldList(List<Field> fields, MyTable table) {
+
         // null check
         if (fields == null) {
             throw new InvalidOperation("The given fields cannot be null.");
@@ -29,7 +30,8 @@ public class MyFieldList implements List<Field>{
         if (table == null) {
             throw new InvalidOperation("The given table cannot be null.");
         }
-        // check if there are same titles in the given fields
+
+        // check if there are same titles 
         for (int i = 0; i < fields.size() - 1; i++) {
             String title = fields.get(i).title();
             String nextTitle = fields.get(i + 1).title();
@@ -37,75 +39,22 @@ public class MyFieldList implements List<Field>{
                 throw new InvalidOperation("Cannot have same titles in schema.");
             }
         }
-        // check if at least 1 key field is found
-        boolean hasKey = false;
+
+        // check if there is a key field 
+        boolean doesKeyField = false;
         for (int i = 0; i < fields.size(); i++) {
             if (fields.get(i).isKey()) {
-                hasKey = true;
+                doesKeyField = true;
                 break;
             }
         }
-        if (!hasKey) {
+        if (!doesKeyField) {
             throw new InvalidOperation("At least one key field is needed.");
         }
 
         this.fields = new ArrayList<>(fields);
-	}
-	
-    /*
-     *These methods should not be implemented in this project
-     */
-
-    @Override
-    public boolean add(Field e) {
-        throw new InvalidOperation("Cannot modify the schema.");
     }
 
-    @Override
-    public void add(int index, Field element) {
-        throw new InvalidOperation("Cannot modify the schema.");
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends Field> c) {
-        throw new InvalidOperation("Cannot modify the schema.");
-    }
-
-    @Override
-    public boolean addAll(int index, Collection<? extends Field> c) {
-        throw new InvalidOperation("Cannot modify the schema.");
-    }
-
-    @Override
-    public Field remove(int index) {
-        throw new InvalidOperation("Cannot modify the schema.");
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        throw new InvalidOperation("Cannot modify the schema.");
-    }
-
-    @Override
-    public boolean removeAll(Collection<?> c) {
-        throw new InvalidOperation("Cannot modify the schema.");
-    }
-
-    @Override
-    public void clear() {
-        throw new InvalidOperation("Cannot modify the schema.");
-    }
-
-    @Override
-    public Field set(int index, Field element) {
-        throw new InvalidOperation("Cannot modify the schema.");
-    }
-
-    @Override
-    public boolean retainAll(Collection<?> c) {
-        throw new InvalidOperation("Cannot modify the schema.");
-    }
-	
     @Override
     public int size() {
         return fields.size();
@@ -170,7 +119,56 @@ public class MyFieldList implements List<Field>{
     public List<Field> subList(int fromIndex, int toIndex) {
         return fields.subList(fromIndex, toIndex);
     }
-	
-	
+
+
+    @Override
+    public boolean add(Field e) {
+        throw new InvalidOperation("Cannot modify the schema.");
+    }
+
+    @Override
+    public void add(int index, Field element) {
+        throw new InvalidOperation("Cannot modify the schema.");
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends Field> c) {
+        throw new InvalidOperation("Cannot modify the schema.");
+    }
+
+    @Override
+    public boolean addAll(int index, Collection<? extends Field> c) {
+        throw new InvalidOperation("Cannot modify the schema.");
+    }
+
+    @Override
+    public Field remove(int index) {
+        throw new InvalidOperation("Cannot modify the schema.");
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        throw new InvalidOperation("Cannot modify the schema.");
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        throw new InvalidOperation("Cannot modify the schema.");
+    }
+
+    @Override
+    public void clear() {
+        throw new InvalidOperation("Cannot modify the schema.");
+    }
+
+    @Override
+    public Field set(int index, Field element) {
+        throw new InvalidOperation("Cannot modify the schema.");
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        throw new InvalidOperation("Cannot modify the schema.");
+    }
 
 }

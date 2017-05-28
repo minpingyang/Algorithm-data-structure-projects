@@ -10,22 +10,31 @@ import com.bytebach.model.Table;
 import com.bytebach.model.Value;
 
 /**
- * This is an implementation class for a Table in a database.
+ * This is an implementation class for a <I>Table</I> interface.
  * 
- * @author minping
+ * @author Minping
  *
  */
 public class MyTable implements Table {
-	private final String name;
+
+    private final String name;
     private final MyFieldList fields;
     private MyDatabase dataBasePointer;
     private MyRowList rows;
+    private List<Integer> keyCols;
 
-    // a helper field to record the indices of key fields
-    private List<Integer> keyColumns;
-    
+    /**
+     * constructor 
+     * 
+     * @param name
+     *            --- the name of the table
+     * @param fields
+     *            --- the schema
+     * @param dataBase
+     *            --- the pointer pointing to the database 
+     */
     public MyTable(String name, List<Field> fields, MyDatabase dataBase) {
-    	// null check
+        // null check
         if (fields == null) {
             throw new InvalidOperation("The given fields cannot be null.");
         }
@@ -40,38 +49,27 @@ public class MyTable implements Table {
         this.fields = new MyFieldList(fields, this);
         dataBasePointer = dataBase;
         rows = new MyRowList(this);
-
-        // let this table knows its key field(s).
-        keyColumns = new ArrayList<>();
+        // let this table knows its key fields
+        keyCols = new ArrayList<>();
         for (int i = 0; i < fields.size(); i++) {
             if (fields.get(i).isKey()) {
-                keyColumns.add(new Integer(i));
+                keyCols.add(new Integer(i));
             }
         }
-        
-	}
-     
-    @Override
-    public String name() {
-        return name;
     }
 
-    @Override
-    public List<Field> fields() {
-        return fields;
-    }
-
+   
     @Override
     public List<Value> row(Value... keys) {
 
         // if the number of given keys doesn't match, error
-        if (keys.length != keyColumns.size()) {
+        if (keys.length != keyCols.size()) {
             throw new InvalidOperation("The number of given keys doesn't match current table.");
         }
 
         // if the types of given keys don't match, error again
-        for (int i = 0; i < keyColumns.size(); i++) {
-            if (!MyDatabase.checkTypeMatch(fields.get(keyColumns.get(i)), keys[i])) {
+        for (int i = 0; i < keyCols.size(); i++) {
+            if (!MyDatabase.isSameType(fields.get(keyCols.get(i)), keys[i])) {
                 throw new InvalidOperation("One of given keys has a wrong type.");
             }
         }
@@ -80,8 +78,8 @@ public class MyTable implements Table {
         for (int j = 0; j < rows.size(); j++) {
             List<Value> row = rows.get(j);
             boolean found = true;
-            for (int i = 0; i < keyColumns.size(); i++) {
-                if (!row.get(keyColumns.get(i)).equals(keys[i])) {
+            for (int i = 0; i < keyCols.size(); i++) {
+                if (!row.get(keyCols.get(i)).equals(keys[i])) {
                     found = false;
                     break;
                 }
@@ -93,17 +91,18 @@ public class MyTable implements Table {
         }
         throw new InvalidOperation("Found no match");
     }
-    
-	@Override
-	public void delete(Value... keys) {
-		 // if the number of given keys doesn't match, error
-        if (keys.length != keyColumns.size()) {
+
+    @Override
+    public void delete(Value... keys) {
+
+        // if the number of given keys doesn't match
+        if (keys.length != keyCols.size()) {
             throw new InvalidOperation("The number of given keys doesn't match current table.");
         }
 
-        // if the types of given keys don't match, error again
-        for (int i = 0; i < keyColumns.size(); i++) {
-            if (!MyDatabase.checkTypeMatch(fields.get(keyColumns.get(i)), keys[i])) {
+        // if the types of given keys don't match
+        for (int i = 0; i < keyCols.size(); i++) {
+            if (!MyDatabase.isSameType(fields.get(keyCols.get(i)), keys[i])) {
                 throw new InvalidOperation("One of given keys has a wrong type.");
             }
         }
@@ -114,13 +113,12 @@ public class MyTable implements Table {
         for (int j = 0; j < rows.size(); j++) {
             List<Value> row = rows.get(j);
             found = true;
-            for (int i = 0; i < keyColumns.size(); i++) {
-                if (!row.get(keyColumns.get(i)).equals(keys[i])) {
+            for (int i = 0; i < keyCols.size(); i++) {
+                if (!row.get(keyCols.get(i)).equals(keys[i])) {
                     found = false;
                     break;
                 }
             }
-
             if (found) {
                 index = j;
                 break;
@@ -131,19 +129,19 @@ public class MyTable implements Table {
             rows.remove(index);
             return;
         }
-
         throw new InvalidOperation("Found no match");
-		
-	}
+    }
 
+    /**
+     * A getter method to return the indices of key fields
+     * 
+     * @return --- a list of integer that indicates the indices of key fields.
+     */
+    public List<Integer> getKeyColumns() {
+        return this.keyCols;
+    }
 
-	public List<Integer> getKeyColumns() {
-		return this.keyColumns;
-	}
-
-
-	
-	 /**
+    /**
      * A getter method to return the pointer to the database that it belongs to
      * 
      * @return --- the pointer to the database that it belongs to
@@ -151,10 +149,19 @@ public class MyTable implements Table {
     public MyDatabase getDatabase() {
         return this.dataBasePointer;
     }
+    @Override
+    public String name() {
+        return name;
+    }
 
-	@Override
-	public List<List<Value>> rows() {
-		return this.rows;
-	}
+    @Override
+    public List<Field> fields() {
+        return fields;
+    }
+
+    @Override
+    public List<List<Value>> rows() {
+        return rows;
+    }
 
 }

@@ -10,31 +10,41 @@ import com.bytebach.model.Field;
 import com.bytebach.model.InvalidOperation;
 import com.bytebach.model.ReferenceValue;
 import com.bytebach.model.Value;
+
 /**
  * This is a wrapper class for a list of values, which is essentially a row in a table. In addition,
  * it wraps in a parent pointer to the table it belongs to.
  * 
- * @author minping
+ * @author Minping
  *
  */
 public class MyRow implements List<Value> {
-	 private ArrayList<Value> listValues;
-	 private MyTable table;
-	 
-	public MyRow(MyTable table, List<Value> listValues) {
-		// null check
-        if (listValues == null) {
+
+    private List<Value> list;
+    private MyTable table;
+
+    /**
+     * Constructor
+     * 
+     * @param table
+     *            --- a pointer to the table it belongs to.
+     * @param list
+     *            --- a list of values to make this row
+     */
+    public MyRow(MyTable table, List<Value> list) {
+        // null check
+        if (list == null) {
             throw new InvalidOperation("Cannot construct a row from null.");
         }
         if (table == null) {
             throw new InvalidOperation("The given table cannot be null.");
         }
 
-        this.listValues = new ArrayList<>(listValues);
+        this.list = new ArrayList<>(list);
         this.table = table;
-	}
-	
-	/**
+    }
+
+    /**
      * A getter method to get the pointer to the table it belongs to.
      * 
      * @return --- a pointer to the table it belongs to.
@@ -50,7 +60,7 @@ public class MyRow implements List<Value> {
             throw new InvalidOperation("Cannot set a null.");
         }
         // boundary check
-        if (index >= listValues.size() || index < 0) {
+        if (index >= list.size() || index < 0) {
             throw new InvalidOperation("Index out of boundary.");
         }
         // Cannot set a key field
@@ -59,86 +69,84 @@ public class MyRow implements List<Value> {
         }
         // element must correspond to the type determined in schema
         Field field = table.fields().get(index);
-        if (!MyDatabase.checkTypeMatch(field, element)) {
+        if (!MyDatabase.isSameType(field, element)) {
             throw new InvalidOperation("Cannot set a value with incorrect type.");
         }
-        // if it's a reference, need to check its validity, and to update two HashMaps in MyDatabase.
+        // if it's a reference, need to check its validity, and to update two maps in MyDatabase.
         if (element instanceof ReferenceValue) {
-            MyDatabase.updateReference(table, (ReferenceValue) element, this);
+            MyDatabase.setReference(table, (ReferenceValue) element, this);
         }
 
-        return listValues.set(index, element);
+        return list.set(index, element);
     }
-	
+
+
     @Override
     public int size() {
-        return listValues.size();
+        return list.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return listValues.isEmpty();
+        return list.isEmpty();
     }
 
     @Override
     public boolean contains(Object o) {
-        return listValues.contains(o);
+        return list.contains(o);
     }
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        return listValues.containsAll(c);
+        return list.containsAll(c);
     }
 
     @Override
     public Value get(int index) {
-        return listValues.get(index);
+        return list.get(index);
     }
 
     @Override
     public int indexOf(Object o) {
-        return listValues.indexOf(o);
+        return list.indexOf(o);
     }
 
     @Override
     public int lastIndexOf(Object o) {
-        return listValues.lastIndexOf(o);
+        return list.lastIndexOf(o);
     }
 
     @Override
     public Object[] toArray() {
-        return listValues.toArray();
+        return list.toArray();
     }
 
     @Override
     public <T> T[] toArray(T[] a) {
-        return listValues.toArray(a);
+        return list.toArray(a);
     }
 
     @Override
     public Iterator<Value> iterator() {
-        return listValues.iterator();
+        return list.iterator();
     }
 
     @Override
     public ListIterator<Value> listIterator() {
-        return listValues.listIterator();
+        return list.listIterator();
     }
 
     @Override
     public ListIterator<Value> listIterator(int index) {
-        return listValues.listIterator(index);
+        return list.listIterator(index);
     }
 
     @Override
     public List<Value> subList(int fromIndex, int toIndex) {
-        return listValues.subList(fromIndex, toIndex);
+        return list.subList(fromIndex, toIndex);
     }
 
-    /*
-     *These methods should not be implemented in this project
-     */
-
+  
     @Override
     public boolean add(Value e) {
         throw new InvalidOperation("Unsupported Operation");
