@@ -5,40 +5,69 @@
  * search method to perform the search itself.
  */
 public class KMP {
-
+	String pattern;
+	String text;
+	static boolean kmpVersion = false;
 	public KMP(String pattern, String text) {
-		// TODO maybe fill this in.
+		this.pattern =pattern;
+		this.text = text;
 	}
 
-	/**
-	 * Perform KMP substring search on the given text with the given pattern.
-	 * 
-	 * This should return the starting index of the first substring match if it
-	 * exists, or -1 if it doesn't.
-	 */
+//	
+//	/**
+//	 * Perform KMP substring search on the given text with the given pattern.
+//	 * 
+//	 * This should return the starting index of the first substring match if it
+//	 * exists, or -1 if it doesn't.
+//	 */
 	public static int search(String pattern, String text) {
-		if (pattern.length() == 0 || text.length() == 0) {
+		//if empty or invalid case
+		if (pattern.length() == 0 || text.length() == 0|| pattern.length() > text.length()) {
             return -1;
         }
-
-        int patLength = pattern.length();
-        int textLength = text.length();
+		char[] p =pattern.toCharArray();
+		char[] t =text.toCharArray();
+		//else: store both length to vars
+        int pLen = pattern.length();
+        int tLen = text.length(); 
+        //initial both index
+        int pIndex = 0;
+        int tIndex = 0;
+        boolean found=false;
+        //brute force search version
+        if(!kmpVersion){
+        	for(int k = 0; k <= tLen - pLen; k++){
+    			found = true;
+    			//go through the text each time
+    			for(int i = 0; i <= pLen -1; i++){
+    				if(p[i] != t[k+i]){
+    					found = false;
+    					break;
+    				} 
+    			}
+    			if(found){
+    				return k;
+    			}
+    		}
+        	return -1;
+        }
+        //compute match table(a array)
         int[] matchTable = matchTable(pattern);
-        int patternIndex = 0;
-        int textIndex = 0;
-
-        while (textIndex + patternIndex < textLength) {
-            if (pattern.charAt(patternIndex) == text.charAt(textIndex + patternIndex)) {
-                patternIndex++;
-                if (patternIndex == patLength) {
-                    return textIndex;
+		// KMP Search version
+        while (tIndex + pIndex < tLen) {
+            if (pattern.charAt(pIndex) == text.charAt(tIndex + pIndex)) {
+                pIndex++;
+                if (pIndex == pLen) {
+                    return tIndex;
                 }
-            } else if (matchTable[patternIndex] == -1) {
-                patternIndex = 0;
-                textIndex = textIndex + patternIndex + 1;
-            } else {
-                textIndex = textIndex + patternIndex - matchTable[patternIndex];
-                patternIndex = matchTable[patternIndex];
+                
+            } else if (matchTable[pIndex] == -1) {
+                pIndex = 0;
+                tIndex = tIndex + pIndex + 1;
+            } 
+            else {
+                tIndex = tIndex + pIndex - matchTable[pIndex];
+                pIndex = matchTable[pIndex];
             }
         }
 

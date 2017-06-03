@@ -27,7 +27,6 @@ public class HuffmanCoding {
 		// Traverse tree to assign codes:
         // if node has code c, assign c0 to left child, c1 to right child
         HashMap<Character, String> codings = new HashMap<>();
-
         Stack<HuffmanNode> stack = new Stack<>();
 
         stack.push(huffmanTree.getRoot());
@@ -36,8 +35,8 @@ public class HuffmanCoding {
             HuffmanNode poppedNode = stack.pop();
             HuffmanNode left = poppedNode.getLeftNode();
             HuffmanNode right = poppedNode.getRightNode();
-
-            if (left != null) { // if left != null, then right cannot be null
+            if (left != null) { 
+            	// if left != null, then right cannot be null
                 left.setCoding(poppedNode.getCoding() + '0');
                 stack.push(left);
                 right.setCoding(poppedNode.getCoding() + '1');

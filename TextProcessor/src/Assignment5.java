@@ -185,8 +185,9 @@ public class Assignment5 {
 			public void actionPerformed(ActionEvent e) {
 				String pattern = searchField.getText();
 				String text = textEditor.getText();
+				long startTimer = System.nanoTime();
 				int index = new KMP(pattern, text).search(pattern, text);
-
+				
 				if (index == -1) {
 					JOptionPane.showMessageDialog(frame, "Pattern not found.");
 				} else {
@@ -194,6 +195,8 @@ public class Assignment5 {
 					textEditor.setSelectionStart(index);
 					textEditor.setSelectionEnd(index + pattern.length());
 					textEditor.setSelectionColor(Color.YELLOW);
+					long finish = System.nanoTime();
+					System.out.println("Time:"+( (double)(finish-startTimer) )/1000000000.0);
 				}
 			}
 		});
