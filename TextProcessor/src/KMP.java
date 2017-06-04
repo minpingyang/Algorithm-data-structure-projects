@@ -7,7 +7,7 @@
 public class KMP {
 	String pattern;
 	String text;
-	static boolean kmpVersion = false;
+	static boolean kmpVersion = true;//version control
 	public KMP(String pattern, String text) {
 		this.pattern =pattern;
 		this.text = text;

@@ -1,3 +1,6 @@
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -13,89 +16,128 @@ public class HuffmanCoding {
 	
 	private HuffmanTree huffmanTree;
     private HashMap<Character, Integer> frequencyMap;
-    private HashMap<Character, String> huffmanCodes;
+    private HashMap<Character, String> encodeMap;
 	/**
-	 * This would be a good place to compute and store the tree.
+	 * constructor
 	 */
 	public HuffmanCoding(String text) {
-		this.frequencyMap = computeFrequency(text.toCharArray());
-		this.huffmanTree = buildHuffmanTree(frequencyMap);
-		this.huffmanCodes = translateTree(huffmanTree);
+		initialise(text);
 	}
 	
-	private HashMap<Character, String> translateTree(HuffmanTree huffmanTree2) {
+	/**initialise*/
+	private void initialise(String text) {
+		this.frequencyMap = analyseFrequency(text.toCharArray());
+		this.huffmanTree = convertIntoTree(frequencyMap);
+		this.encodeMap = encodeTree(huffmanTree);
+	}
+	/*
+	 * print out the tree
+	 * */
+	@SuppressWarnings("null")
+	public void writeFile(HuffmanNode rootNode)
+	{
+	    FileOutputStream outputStream = null;
+	    PrintWriter printWriter = null;
+
+	    try
+	    {
+
+	        outputStream = new FileOutputStream("BinaryTree.txt");
+	        printWriter = new PrintWriter(outputStream); 
+
+	        write(rootNode, printWriter);
+
+	        printWriter.flush();
+
+	  }catch(IOException e)
+	  {
+	     System.out.println("An error occured");
+	    	  printWriter.close();
+	     
+	  }
+
+	}
+
+	 public void write(HuffmanNode mainNode, PrintWriter w)
+	 {
+	     if(mainNode != null){
+	      write(mainNode.getLeftNode(), w);
+	      w.print(mainNode);
+	      write(mainNode.getRightNode(), w); 
+	    }
+	 }
+	private HashMap<Character, String> encodeTree(HuffmanTree huffmanTree) {
 		// Traverse tree to assign codes:
         // if node has code c, assign c0 to left child, c1 to right child
-        HashMap<Character, String> codings = new HashMap<>();
-        Stack<HuffmanNode> stack = new Stack<>();
+        HashMap<Character, String> encodingMap = new HashMap<>();
+        Stack<HuffmanNode> huffNodeStack = new Stack<>();
+        huffNodeStack.push(huffmanTree.getRoot());
 
-        stack.push(huffmanTree.getRoot());
-
-        while (!stack.isEmpty()) {
-            HuffmanNode poppedNode = stack.pop();
-            HuffmanNode left = poppedNode.getLeftNode();
-            HuffmanNode right = poppedNode.getRightNode();
+        while (!huffNodeStack.isEmpty()) {
+            HuffmanNode node = huffNodeStack.pop();
+            HuffmanNode left = node.getLeftNode();
+            HuffmanNode right = node.getRightNode();
             if (left != null) { 
             	// if left != null, then right cannot be null
-                left.setCoding(poppedNode.getCoding() + '0');
-                stack.push(left);
-                right.setCoding(poppedNode.getCoding() + '1');
-                stack.push(right);
+                left.setCoding(node.getCoding() + '0');
+                huffNodeStack.push(left);
+                right.setCoding(node.getCoding() + '1');
+                huffNodeStack.push(right);
             } else {
-                codings.put(poppedNode.getCha(), poppedNode.getCoding());
+                encodingMap.put(node.getCharacter(), node.getCoding());
             }
         }
-
-        return codings;
+        return encodingMap;
 	}
 	/**
      * Build the binary coding tree used in huffman coding algorithm.
      * 
-     * @param frequencyMap
-     * @return
+     * @param 	---------- frequencyMap
+     * @return  ---------- Huffman binary Tree
      */
-	private HuffmanTree buildHuffmanTree(HashMap<Character, Integer> frequencyMap2) {
+	private HuffmanTree convertIntoTree(HashMap<Character, Integer> frequencyMap2) {
+		//create a priority queue of message/node
 		PriorityQueue<HuffmanNode> queue = new PriorityQueue<>();
-        // add all leaves into the priority queue
+        // add all huffNode into the priority queue as leaves
         for (char c : frequencyMap.keySet()) {
-            HuffmanNode hNode = new HuffmanNode(c);
-            hNode.setFrequence(frequencyMap.get(c));
-            queue.offer(hNode);
+            HuffmanNode huffNode = new HuffmanNode(c);
+            huffNode.setFrequence(frequencyMap.get(c));
+            queue.offer(huffNode);
         }
-        // Iterate through all leaves, poll them out and build towards the root.
+        // Iterate through all nodes.
         int size = queue.size();
         for (int i = 1; i < size; i++) {
-            HuffmanNode hNode1 = queue.poll();
-            HuffmanNode hNode2 = queue.poll();
+            HuffmanNode huffNode1 = queue.poll();
+            HuffmanNode huffNode2 = queue.poll();
             HuffmanNode parentNode = new HuffmanNode('\0');
-            parentNode.setFrequence(hNode1.getFrequence() + hNode2.getFrequence());
-            parentNode.setLeftNode(hNode1);
-            parentNode.setRightNode(hNode2);
-            hNode1.setParent(parentNode);
-            hNode2.setParent(parentNode);
+            parentNode.setFrequence(huffNode1.getFrequence() + huffNode2.getFrequence());
+            parentNode.setLeftNode(huffNode1);
+            parentNode.setRightNode(huffNode2);
+            huffNode1.setParent(parentNode);
+            huffNode2.setParent(parentNode);
             queue.offer(parentNode);
         }
-        // the only node left in the queue is the root
-        return new HuffmanTree(queue.poll());
+        // finally, return the root of the tree
+        HuffmanNode root =queue.poll();
+        writeFile(root);
+        return new HuffmanTree(root);
 	}
 	/**
-     * Compute the frequency of all characters in the given text.
+     * analyse the frequency of all characters in the given text.
      * 
-     * @param charArray
-     *            --- an array of char containing all text
-     * @return --- a HashMap in which the key is every character appeared in the given text, and the
-     *         value is a frequency(an integer number)
+     * @param arrayText  --- an array of char from text
+     * @return --- a HashMap <charcter , it's frequency number>
      */
-	private HashMap<Character, Integer> computeFrequency(char[] charArray) {
-		HashMap<Character, Integer> frequency = new HashMap<Character, Integer>();
-		for (char c : charArray) {
-            if (frequency.containsKey(c)) {
-                frequency.put(c, frequency.get(c) + 1);
+	private HashMap<Character, Integer> analyseFrequency(char[] arrayText) {
+		HashMap<Character, Integer> frequencyMap = new HashMap<Character, Integer>();
+		for (char c : arrayText) {
+            if (frequencyMap.containsKey(c)) {
+                frequencyMap.put(c, frequencyMap.get(c) + 1);
             } else {
-                frequency.put(c, 1);
+                frequencyMap.put(c, 1);
             }
         }
-        return frequency;
+        return frequencyMap;
 	}
 
 	/**
@@ -104,12 +146,12 @@ public class HuffmanCoding {
 	 * only 1 and 0.
 	 */
 	public String encode(String text) {
-		 char[] charArray = text.toCharArray();
-	        StringBuilder encoded = new StringBuilder();
-	        for (char c : charArray) {
-	            encoded.append(huffmanCodes.get(c));
+		 char[] arrayText = text.toCharArray();
+	        StringBuilder encoding = new StringBuilder();
+	        for (char c : arrayText) {
+	            encoding.append(encodeMap.get(c));
 	        }
-	       return encoded.toString();
+	       return encoding.toString();
 	}
 
 	/**
@@ -118,30 +160,29 @@ public class HuffmanCoding {
 	 */
 	public String decode(String encoded) {
 		StringBuilder decoded = new StringBuilder();
-        char[] charArray = encoded.toCharArray();
+        char[] arrayText = encoded.toCharArray();
 
         // traverse the huffman tree according to the encoded binary string
         int index = 0;
         HuffmanNode root = huffmanTree.getRoot();
         HuffmanNode nodePointer = root;
-        while (index < charArray.length) {
-            char charPointer = charArray[index];
+        while (index < arrayText.length) {
+            char charPointer = arrayText[index];
             if (charPointer == '0') {
                 nodePointer = nodePointer.getLeftNode();
                 if (nodePointer.getLeftNode() == null) {
-                    decoded.append(nodePointer.getCha());
+                    decoded.append(nodePointer.getCharacter());
                     nodePointer = root;
                 }
             } else if (charPointer == '1') {
                 nodePointer = nodePointer.getRightNode();
                 if (nodePointer.getLeftNode() == null) {
-                    decoded.append(nodePointer.getCha());
+                    decoded.append(nodePointer.getCharacter());
                     nodePointer = root;
                 }
             }
             index++;
         }
-
         return decoded.toString();
 	}
 
@@ -156,7 +197,7 @@ public class HuffmanCoding {
         // each char
         StringBuilder sb = new StringBuilder("\nThe encoding of each char:\n");
 
-        for (Map.Entry<Character, String> entry : huffmanCodes.entrySet()) {
+        for (Map.Entry<Character, String> entry : encodeMap.entrySet()) {
             sb.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
         }
 
@@ -176,16 +217,15 @@ public class HuffmanCoding {
     }
 	@SuppressWarnings("unused")
     private class HuffmanNode implements Comparable<HuffmanNode> {
-
-        private final char cha;
-        private String coding = "";
-        private int frequency = 0;
         private HuffmanNode parent;
         private HuffmanNode leftNode;
         private HuffmanNode rightNode;
-
-        public HuffmanNode(char cha) {
-            this.cha = cha;
+        private final char c;
+        private String coding = "";
+        private int frequency = 0;
+        
+        public HuffmanNode(char c) {
+            this.c = c;
         }
 
         @Override
@@ -201,8 +241,8 @@ public class HuffmanCoding {
             this.frequency = frequence;
         }
 
-        public char getCha() {
-            return cha;
+        public char getCharacter() {
+            return c;
         }
 
         public String getCoding() {
@@ -236,7 +276,7 @@ public class HuffmanCoding {
 
         @Override
         public String toString() {
-            return "char: " + this.cha + ", coding: " + this.coding + ".";
+            return "char: " + this.c + ", coding: " + this.coding + ".";
         }
 
     }

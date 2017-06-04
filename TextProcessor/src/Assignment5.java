@@ -195,6 +195,7 @@ public class Assignment5 {
 					textEditor.setSelectionStart(index);
 					textEditor.setSelectionEnd(index + pattern.length());
 					textEditor.setSelectionColor(Color.YELLOW);
+					
 					long finish = System.nanoTime();
 					System.out.println("Time:"+( (double)(finish-startTimer) )/1000000000.0);
 				}
