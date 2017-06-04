@@ -67,24 +67,23 @@ public class HuffmanCoding {
 	    }
 	 }
 	private HashMap<Character, String> encodeTree(HuffmanTree huffmanTree) {
-		// Traverse tree to assign codes:
-        // if node has code c, assign c0 to left child, c1 to right child
+		//declare a hashMap used for recording and return later
         HashMap<Character, String> encodingMap = new HashMap<>();
         Stack<HuffmanNode> huffNodeStack = new Stack<>();
         huffNodeStack.push(huffmanTree.getRoot());
-
+        //add all leaves to the map
         while (!huffNodeStack.isEmpty()) {
             HuffmanNode node = huffNodeStack.pop();
-            HuffmanNode left = node.getLeftNode();
+            HuffmanNode left = node.getLeftNode();  
             HuffmanNode right = node.getRightNode();
             if (left != null) { 
-            	// if left != null, then right cannot be null
-                left.setCoding(node.getCoding() + '0');
+            	// if left is not null, then right mustnt be null
+                left.setCode(node.getCode() + '0');
                 huffNodeStack.push(left);
-                right.setCoding(node.getCoding() + '1');
+                right.setCode(node.getCode() + '1');
                 huffNodeStack.push(right);
             } else {
-                encodingMap.put(node.getCharacter(), node.getCoding());
+                encodingMap.put(node.getCharacter(), node.getCode());
             }
         }
         return encodingMap;
@@ -109,12 +108,14 @@ public class HuffmanCoding {
         for (int i = 1; i < size; i++) {
             HuffmanNode huffNode1 = queue.poll();
             HuffmanNode huffNode2 = queue.poll();
+            //create a template parent
             HuffmanNode parentNode = new HuffmanNode('\0');
             parentNode.setFrequence(huffNode1.getFrequence() + huffNode2.getFrequence());
             parentNode.setLeftNode(huffNode1);
             parentNode.setRightNode(huffNode2);
             huffNode1.setParent(parentNode);
             huffNode2.setParent(parentNode);
+            //insert the meanningful parent finally
             queue.offer(parentNode);
         }
         // finally, return the root of the tree
@@ -159,31 +160,31 @@ public class HuffmanCoding {
 	 * and return the decoded text as a text string.
 	 */
 	public String decode(String encoded) {
-		StringBuilder decoded = new StringBuilder();
+		StringBuilder decodedString = new StringBuilder();
         char[] arrayText = encoded.toCharArray();
 
-        // traverse the huffman tree according to the encoded binary string
-        int index = 0;
+        // traverse the huffman tree
+        int i = 0;
         HuffmanNode root = huffmanTree.getRoot();
-        HuffmanNode nodePointer = root;
-        while (index < arrayText.length) {
-            char charPointer = arrayText[index];
-            if (charPointer == '0') {
-                nodePointer = nodePointer.getLeftNode();
-                if (nodePointer.getLeftNode() == null) {
-                    decoded.append(nodePointer.getCharacter());
-                    nodePointer = root;
+        HuffmanNode nodePtr = root;
+        while (i < arrayText.length) {
+            char charPtr = arrayText[i];
+            if (charPtr == '0') {
+                nodePtr = nodePtr.getLeftNode();
+                if (nodePtr.getLeftNode() == null) {
+                    decodedString.append(nodePtr.getCharacter());
+                    nodePtr = root;
                 }
-            } else if (charPointer == '1') {
-                nodePointer = nodePointer.getRightNode();
-                if (nodePointer.getLeftNode() == null) {
-                    decoded.append(nodePointer.getCharacter());
-                    nodePointer = root;
+            } else if (charPtr == '1') {
+                nodePtr = nodePtr.getRightNode();
+                if (nodePtr.getLeftNode() == null) {
+                    decodedString.append(nodePtr.getCharacter());
+                    nodePtr = root;
                 }
             }
-            index++;
+            i++;
         }
-        return decoded.toString();
+        return decodedString.toString();
 	}
 
 	/**
@@ -221,17 +222,26 @@ public class HuffmanCoding {
         private HuffmanNode leftNode;
         private HuffmanNode rightNode;
         private final char c;
-        private String coding = "";
+        private String code = "";
         private int frequency = 0;
         
         public HuffmanNode(char c) {
             this.c = c;
         }
-
+        
         @Override
         public int compareTo(HuffmanNode other) {
             return this.frequency - other.frequency;
         }
+        public String getCode() {
+            return this.code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+
+        }
+
 
         public int getFrequence() {
             return frequency;
@@ -245,15 +255,7 @@ public class HuffmanCoding {
             return c;
         }
 
-        public String getCoding() {
-            return this.coding;
-        }
-
-        public void setCoding(String coding) {
-            this.coding = coding;
-
-        }
-
+       
         public void setParent(HuffmanNode parent) {
             this.parent = parent;
         }
@@ -276,7 +278,7 @@ public class HuffmanCoding {
 
         @Override
         public String toString() {
-            return "char: " + this.c + ", coding: " + this.coding + ".";
+            return "char: " + this.c + ", coding: " + this.code + ".";
         }
 
     }
