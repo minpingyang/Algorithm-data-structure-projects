@@ -28,7 +28,6 @@ public class ColourGroup implements Iterable<Street> {
 		this.colour = colour;
 		this.houseCost = houseCost;
 	}
-
 	/**
 	 * Get colour name for this colour group (e.g. "Blue")
 	 * 
@@ -60,7 +59,8 @@ public class ColourGroup implements Iterable<Street> {
 				return false;
 			}
 		}
-		return player == null;
+		//fixed.
+		return true;
 	}
 	
 	/**

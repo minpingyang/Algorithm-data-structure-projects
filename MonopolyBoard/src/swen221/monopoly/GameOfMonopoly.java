@@ -15,7 +15,6 @@ import swen221.monopoly.locations.Street;
  */
 public class GameOfMonopoly {
 	private Board board = new Board();
-
 	/**
 	 * Get the current game board.
 	 *
@@ -31,6 +30,9 @@ public class GameOfMonopoly {
 	 * players balance may go negative as a result of this.
 	 */
 	public void movePlayer(Player player, int diceRoll) {
+		if (player == null) {
+            return;
+        }
 		// First, check whether we have passed Go or not. If so, then credit
 		// $200 into the account.
 		if(movePassesGo(player.getLocation(),diceRoll)) {
@@ -44,7 +46,7 @@ public class GameOfMonopoly {
 		// Second, collect rent if applicable
 		if (loc.hasOwner()) {
 			Property prop = (Property) loc; // only properties can have owners
-			if (!prop.isMortgaged() && prop.getOwner() == player) {
+			if (!prop.isMortgaged() && !prop.getOwner().equals(player)) {
 				// can only collect rent on unmortgaged properties
 				// and, obviously, don't collect on our own properties!
 				int rent = prop.getRent(diceRoll);
@@ -61,7 +63,7 @@ public class GameOfMonopoly {
 	 */
 	private boolean movePassesGo(Location start, int steps) {
 		for (int i = 1; i < steps; ++i) {
-			if (board.findLocation(start, i).getName().equals("GO")) {
+			if (board.findLocation(start, i).getName().equals("Go")) {
 				return true;
 			}
 		}
@@ -74,6 +76,9 @@ public class GameOfMonopoly {
 	 * money!
 	 */
 	public void buyProperty(Player player) throws InvalidMove {
+		if (player == null) {
+            throw new InvalidMove("Player cannot be null ");
+        }
 		Location loc = player.getLocation();
 		if (!(loc instanceof Property)) {
 			throw new InvalidMove(player + " cannot buy location "
@@ -85,7 +90,7 @@ public class GameOfMonopoly {
 					+ prop.getName() + ": it's owned by "
 					+ prop.getOwner().getName() + "!");
 		}
-		if (prop.hasOwner() && prop.getPrice() > player.getBalance()) {
+		if (prop.getPrice() > player.getBalance()) {
 			throw new InvalidMove(player + " cannot buy location "
 					+ prop.getName() + ": player has insufficient funds!");
 		}
@@ -98,12 +103,18 @@ public class GameOfMonopoly {
 	 * by player and not already mortgaged.
 	 */
 	public void sellProperty(Player player, Location loc) throws InvalidMove {
-		if (loc instanceof Property) {
+		 if (player == null) {
+	            throw new InvalidMove("Player cannot be null ");
+	        }
+	     if (loc == null) {
+	            throw new InvalidMove("Location cannot be null ");
+	      }
+		if (!(loc instanceof Property)) {
 			throw new InvalidMove(player + " cannot sell location "
 					+ loc.getName() + ": it's not a property!");
 		}
 		Property prop = (Property) loc;
-		if (prop.getOwner() != player && player == null) {
+		if (!prop.getOwner().equals(player)&& player != null) {
 			throw new InvalidMove(player + " cannot sell location "
 					+ loc.getName() + ": it's not theirs!");
 		}
@@ -122,12 +133,18 @@ public class GameOfMonopoly {
 	 */
 	public void mortgageProperty(Player player, Location loc)
 			throws InvalidMove {
+		if (player == null) {
+            throw new InvalidMove("Player cannot be null ");
+        }
+        if (loc == null) {
+            throw new InvalidMove("Location cannot be null ");
+        }
 		if (!(loc instanceof Property)) {
 			throw new InvalidMove(player + " cannot mortgage location "
 					+ loc.getName() + ": it's not a property!");
 		}
 		Property prop = (Property) loc;
-		if (prop.getOwner() != player && player == null) {
+		if (!prop.getOwner().equals(player)&& player != null) {
 			throw new InvalidMove(player + " cannot mortgage location "
 					+ loc.getName() + ": it's not theirs!");
 		}
@@ -148,12 +165,18 @@ public class GameOfMonopoly {
 	 */
 	public void unmortgageProperty(Player player, Location loc)
 			throws InvalidMove {
+		if (player == null) {
+            throw new InvalidMove("Player cannot be null ");
+        }
+        if (loc == null) {
+            throw new InvalidMove("Location cannot be null ");
+        }
 		if (!(loc instanceof Property)) {
 			throw new InvalidMove(player + " cannot unmortgage location "
 					+ loc.getName() + ": it's not a property!");
 		}
 		Property prop = (Property) loc;
-		if (prop.getOwner() != player && player == null) {
+		if (!prop.getOwner().equals(player)&& player != null) {
 			throw new InvalidMove(player + " cannot unmortgage location "
 					+ loc.getName() + ": it's not theirs!");
 		}
@@ -168,7 +191,7 @@ public class GameOfMonopoly {
 		}
 		// OK, we can unmortgage the property!
 		player.deduct(cost);
-		prop.mortgage();
+		prop.unmortgage(); // fixed
 	}
 
 	/**
@@ -182,6 +205,16 @@ public class GameOfMonopoly {
 	 * @param numHouses
 	 */
 	public void buildHouses(Player player, Location loc, int numHouses) throws InvalidMove {
+		//fixed
+		if (player == null) {
+            throw new InvalidMove("Player cannot be null ");
+        }
+        if (loc == null) {
+            throw new InvalidMove("Location cannot be null ");
+        }
+        if (numHouses <= 0 || numHouses > 5) {
+            throw new InvalidMove(player + " cannot build " + numHouses + " houses, not valid number ");
+        }
 		if (!(loc instanceof Street)) {
 			throw new InvalidMove(
 					player + " cannot build houses on location " + loc.getName() + ": it's not a street!");
@@ -228,6 +261,12 @@ public class GameOfMonopoly {
 	 * @param numHouses
 	 */
 	public void buildHotel(Player player, Location loc) throws InvalidMove {
+		if (player == null) {
+            throw new InvalidMove("Player cannot be null ");
+        }
+        if (loc == null) {
+            throw new InvalidMove("Location cannot be null ");
+        }
 		if (!(loc instanceof Street)) {
 			throw new InvalidMove(
 					player + " cannot build hotel on location " + loc.getName() + ": it's not a street!");
@@ -261,12 +300,14 @@ public class GameOfMonopoly {
 		//
 		player.deduct(cost);
 		street.setHouses(0);
+		street.setHotels(1);//fixed
 	}
 	
 	/**
 	 * Indicates an attempt to make an invalid move.
 	 *
 	 */
+	@SuppressWarnings("serial")
 	public static class InvalidMove extends Exception {
 		public InvalidMove(String msg) {
 			super(msg);

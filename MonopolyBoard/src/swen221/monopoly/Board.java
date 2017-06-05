@@ -20,7 +20,6 @@ import swen221.monopoly.locations.Utility;
  */
 public class Board {
 	private ArrayList<Location> places = new ArrayList<Location>();
-
 	/**
 	 * Construct a new board.
 	 */

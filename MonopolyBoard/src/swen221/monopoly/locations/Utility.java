@@ -19,7 +19,6 @@ public class Utility extends Property {
 	public Utility(String name, int price) {
 		super(name, price);
 	}
-
 	/**
 	 * Calcuate rent for this Utility. Should only be called if hasOwner() ==
 	 * true.

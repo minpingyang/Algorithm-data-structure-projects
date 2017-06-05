@@ -106,7 +106,7 @@ public class Player implements Iterable<Property> {
 		if(p.hasOwner()) {
 			throw new IllegalArgumentException("cannot buy property!");
 		}
-
+		
 		cash -= p.getPrice();
 		portfolio.add(p);
 		p.setOwner(this);
@@ -121,7 +121,6 @@ public class Player implements Iterable<Property> {
 		if(p.getOwner() != this) {
 			throw new IllegalArgumentException("cannot sell property!");
 		}
-
 		cash += p.getPrice();
 		portfolio.remove(p);
 		p.setOwner(null);
@@ -133,4 +132,50 @@ public class Player implements Iterable<Property> {
 	public Iterator<Property> iterator() {
 		return portfolio.iterator();
 	}
+	@Override
+	 public int hashCode() {
+        final int prime = 11;
+        int amount = 1;
+        amount = prime * amount + cash;
+        amount = prime * amount + ((location == null) ? 0 : location.hashCode());
+        amount = prime * amount + ((name == null) ? 0 : name.hashCode());
+        amount = prime * amount + ((portfolio == null) ? 0 : portfolio.hashCode());
+        amount = prime * amount + ((token == null) ? 0 : token.hashCode());
+        return amount;
+    }
+	@Override
+    public boolean equals(Object object) {
+        if (this == object)
+            return true;
+        if (object == null)
+            return false;
+        if (getClass() != object.getClass())
+            return false;
+        Player other = (Player) object;
+        if (cash != other.cash)
+            return false;
+        if (location == null) {
+            if (other.location != null)
+                return false;
+        } else if (!location.equals(other.location))
+            return false;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        if (portfolio == null) {
+            if (other.portfolio != null)
+                return false;
+        } else if (!portfolio.equals(other.portfolio))
+            return false;
+        if (token != other.token)
+            return false;
+        return true;
+    }
+
+	public List<Property> getPortfolio() {
+        return portfolio;
+    };
+
 }

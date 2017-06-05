@@ -10,7 +10,7 @@ import swen221.monopoly.locations.Street;
 public class MonopolyTests {
 	// this is where you must write your tests; do not alter the package, or the
     // name of this file.  An example test is provided for you.
-	
+
 	@Test
 	public void testValidBuyProperty_1() {
 		// Construct a "mini-game" of Monopoly and with a single player. The
@@ -19,7 +19,12 @@ public class MonopolyTests {
 		// property and vice-versa.
 		GameOfMonopoly game = new GameOfMonopoly();
 		try {
-			Player player = setupMockPlayer(game,"Park Lane",1500);
+			Board board = game.getBoard();
+            String locationName = "Park Lane";
+            int balance = 1500;
+            Location location = board.findLocation(locationName);
+            Player player = new Player("Dave", Player.Token.ScottishTerrier, balance, location);      
+			//Player player = setupMockPlayer(game,"Park Lane",1500);
 			game.buyProperty(player);
 			assertEquals(1150,player.getBalance());
 			assertEquals("Park Lane",player.iterator().next().getName());
@@ -33,6 +38,7 @@ public class MonopolyTests {
 	/**
 	 * Setup a mock game of monopoly with a player located at a given location.
 	 */
+	@SuppressWarnings("unused")
 	private Player setupMockPlayer(GameOfMonopoly game, String locationName, int balance)
 			throws GameOfMonopoly.InvalidMove {
 		Board board = game.getBoard();

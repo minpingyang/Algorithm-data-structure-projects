@@ -36,7 +36,6 @@ public class Street extends Property {
 	public void setColourGroup(ColourGroup group) {
 		colourGroup = group;
 	}
-
 	/**
 	 * Get colour group to which this street belongs. Will return null if
 	 * setColourGroup not already called.
@@ -49,7 +48,7 @@ public class Street extends Property {
 	public int getRent(int lastDiceRoll) {
 		int amount = rent;
 		if (colourGroup.allPropertiesOwnedBy(getOwner())) {
-			amount = amount * 2;
+			amount = rent * 2;
 		} 
 		return amount  + (25 * numHouses) + (200 * numHotels);
 	}

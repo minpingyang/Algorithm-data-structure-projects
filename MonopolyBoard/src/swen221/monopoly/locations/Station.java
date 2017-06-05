@@ -19,7 +19,6 @@ public class Station extends Property {
 	public Station(String name, int price) {
 		super(name, price);
 	}
-
 	/**
 	 * Calculate rent for this station. This calculation requires determining
 	 * how many other stations the given landlord owns. Hence, this should only

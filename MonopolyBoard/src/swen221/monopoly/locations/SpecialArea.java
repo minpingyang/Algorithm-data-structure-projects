@@ -20,7 +20,6 @@ public class SpecialArea extends Location {
 	public SpecialArea(String n) {
 		super(n);
 	}
-
 	/**
 	 * Special areas cannot be bought and sold, hence it's always the case that
 	 * they have no owner.

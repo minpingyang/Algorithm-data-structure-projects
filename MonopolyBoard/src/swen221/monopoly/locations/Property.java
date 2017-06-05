@@ -14,7 +14,6 @@ public abstract class Property extends Location {
 	private int price; // in $
 	private boolean mortgaged;
 	private Player owner;
-
 	/**
 	 * Construct a new property with a given name and purchase price.
 	 * 

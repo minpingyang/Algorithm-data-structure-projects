@@ -13,7 +13,6 @@ import swen221.monopoly.locations.Street;
  * @author David J. Pearce
  */
 public class TextClient {
-
 	/**
 	 * Get string from System.in
 	 */
