@@ -187,7 +187,7 @@ public class Assignment5 {
 				String text = textEditor.getText();
 				long startTimer = System.nanoTime();
 				int index = new KMP(pattern, text).search(pattern, text);
-				
+//				int index = BoyerMoore.search(pattern,text);
 				if (index == -1) {
 					JOptionPane.showMessageDialog(frame, "Pattern not found.");
 				} else {

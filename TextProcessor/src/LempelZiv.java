@@ -30,6 +30,7 @@ public class LempelZiv {
                     lookAhead++;
 
                 } else {
+                	//safely initialise  windowsize
                     int windowSize = cursor > slidingWindown_size ? slidingWindown_size : cursor;
                     int offset = windowSize - preMatch;
                     Character nextChar;//object character
@@ -39,7 +40,7 @@ public class LempelZiv {
                         nextChar = null;
                     }
                     stringBuilder.append(new Tuple(offset, lookAhead, nextChar).toString());
-                    cursor += lookAhead + 1;
+                    cursor += lookAhead + 1; // move forward with the text
                     break;
                 }
             }while(true);
@@ -63,7 +64,7 @@ public class LempelZiv {
 	        }
 
 	        public Tuple(String text) {
-	            String[] tokens = text.split("\\|");
+	            String[] tokens = text.split("\\,");
 	            this.offset = Integer.valueOf(tokens[0]);
 	            this.length = Integer.valueOf(tokens[1]);
 	            // in case it's the end of text
@@ -75,23 +76,24 @@ public class LempelZiv {
 	        @Override
 	        public String toString() {
 	            if (nextChar == null) {
-	                return offset + "|" + length + "|]";
+	                return offset + "," + length + ",]";
 	            }
-	            return offset + "|" + length + "|" + nextChar + "]";
+	            return offset + "," + length + "," + nextChar + "]";
 	        }
 	    }
 	
 	private int stringMatch(String input, int cursor, int lookAhead) {
         // ensure start index >= 0
+		//searchStart was changing dynamically
         int searchStart = cursor - slidingWindown_size < 0 ? 0 : cursor - slidingWindown_size;
-        String searchWindow = input.substring(searchStart, cursor);
+        String searchBuffer = input.substring(searchStart, cursor);
         // out of bounds 
         if (cursor + lookAhead + 1 > input.length()) {
             return -1;//no match string
         }
 
-        String target = input.substring(cursor, cursor + lookAhead + 1);
-		return KMP.search(target, searchWindow);
+        String lookAheadBuffer = input.substring(cursor, cursor + lookAhead + 1);
+		return KMP.search(lookAheadBuffer, searchBuffer);
     }
 	/**
 	 * Take compressed input as a text string, decompress it, and return it as a

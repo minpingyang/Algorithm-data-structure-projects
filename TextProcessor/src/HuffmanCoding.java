@@ -160,31 +160,31 @@ public class HuffmanCoding {
 	 * and return the decoded text as a text string.
 	 */
 	public String decode(String encoded) {
-		StringBuilder decodedString = new StringBuilder();
+		StringBuilder decoded = new StringBuilder();
         char[] arrayText = encoded.toCharArray();
 
-        // traverse the huffman tree
-        int i = 0;
+        // traverse the huffman tree according to the encoded binary string
+        int index = 0;
         HuffmanNode root = huffmanTree.getRoot();
-        HuffmanNode nodePtr = root;
-        while (i < arrayText.length) {
-            char charPtr = arrayText[i];
-            if (charPtr == '0') {
-                nodePtr = nodePtr.getLeftNode();
-                if (nodePtr.getLeftNode() == null) {
-                    decodedString.append(nodePtr.getCharacter());
-                    nodePtr = root;
+        HuffmanNode nodePointer = root;
+        while (index < arrayText.length) {
+            char charPointer = arrayText[index];
+            if (charPointer == '0') {
+                nodePointer = nodePointer.getLeftNode();
+                if (nodePointer.getLeftNode() == null) {
+                    decoded.append(nodePointer.getCharacter());
+                    nodePointer = root;
                 }
-            } else if (charPtr == '1') {
-                nodePtr = nodePtr.getRightNode();
-                if (nodePtr.getLeftNode() == null) {
-                    decodedString.append(nodePtr.getCharacter());
-                    nodePtr = root;
+            } else if (charPointer == '1') {
+                nodePointer = nodePointer.getRightNode();
+                if (nodePointer.getLeftNode() == null) {
+                    decoded.append(nodePointer.getCharacter());
+                    nodePointer = root;
                 }
             }
-            i++;
+            index++;
         }
-        return decodedString.toString();
+        return decoded.toString();
 	}
 
 	/**

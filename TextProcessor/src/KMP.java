@@ -7,7 +7,10 @@
 public class KMP {
 	String pattern;
 	String text;
-	static boolean kmpVersion = true;//version control
+	static int version = 2;//version control
+	/*for boyerMoore search*/
+	private static int range = 300;
+	private static int searchingWindow[] = new int[range];
 	public KMP(String pattern, String text) {
 		this.pattern =pattern;
 		this.text = text;
@@ -35,7 +38,7 @@ public class KMP {
         int tIndex = 0;
         boolean found=false;
         //brute force search version
-        if(!kmpVersion){
+        if(version == 0){
         	for(int k = 0; k <= tLen - pLen; k++){
     			found = true;
     			//go through the text each time
@@ -51,26 +54,76 @@ public class KMP {
     		}
         	return -1;
         }
-        //compute match table(a array)
-        int[] matchTable = matchTable(pattern);
-		// KMP Search version
-        while (tIndex + pIndex < tLen) {
-            if (pattern.charAt(pIndex) == text.charAt(tIndex + pIndex)) {
-                pIndex++;
-                if (pIndex == pLen) {
-                    return tIndex;
+        //KMP versison
+        else if(version == 1){
+        	//compute match table(a array)
+            int[] matchTable = matchTable(pattern);
+    		// KMP Search version
+            while (tIndex + pIndex < tLen) {
+                if (pattern.charAt(pIndex) == text.charAt(tIndex + pIndex)) {
+                    pIndex++;
+                    if (pIndex == pLen) {
+                        return tIndex;
+                    }
+                    
+                } else if (matchTable[pIndex] == -1) {
+                    pIndex = 0;
+                    tIndex = tIndex + pIndex + 1;
+                } 
+                else {
+                    tIndex = tIndex + pIndex - matchTable[pIndex];
+                    pIndex = matchTable[pIndex];
                 }
-                
-            } else if (matchTable[pIndex] == -1) {
-                pIndex = 0;
-                tIndex = tIndex + pIndex + 1;
-            } 
-            else {
-                tIndex = tIndex + pIndex - matchTable[pIndex];
-                pIndex = matchTable[pIndex];
             }
         }
-
+        //boyermoore search version
+        else if(version == 2){
+        	range = 2*pattern.length();
+    		//validate, null or empty string is not allowed
+    		if (text == null || text.length() == 0 || pattern == null || pattern.length() == 0 || text.length() < pattern.length())
+    			return -1;
+    		// build last occurrence index
+    		initialPatternIndex(pattern);
+    		
+    		// searching from last character of the pattern
+    		int start_ptr = pattern.length() - 1;
+    		int end_ptr = text.length();
+    		while (start_ptr < end_ptr) {
+    			
+    		int	position = start_ptr;
+    			
+    			for (int i = pattern.length() - 1; i >= 0; i--) {
+    				
+    				// if not match the last character
+    				if (pattern.charAt(i) != text.charAt(position)) {
+    					
+    					// if the character of text exist in one of char of patter
+    					if (getIndex(text.charAt(position)) != -1) {
+    						
+    						if (i - getIndex(text.charAt(position)) > 0)
+    							// move match parts
+    							start_ptr += (i - getIndex(text.charAt(position)));
+    						else
+    							// case 2
+    							start_ptr += 1;
+    						
+    					} else {	
+    						// move whole the pattern to right side of the chara of text
+    						start_ptr += i + 1;
+    					}
+    					
+    					break;
+    				}
+    				if (i == 0) {
+    					// found pattern
+    					return position;
+    				}
+    				
+    				position--;
+    			}
+    		}
+        }
+       
         return -1;
 	}
 	 /**
@@ -108,12 +161,22 @@ public class KMP {
                 pos++;
             }
         }
-        
-        for (int i = 0; i < matchTable.length; i++) {
-            System.out.println("" + i + " : " + matchTable[i]);
-        }
 
         return matchTable;
     }
+    
+    private static void initialPatternIndex(String pattern) {	
+		int length = pattern.length();
+		//mark that does not find    -1
+		for (int i = 0; i < range; i++)
+			searchingWindow[i] = -1;
+		//char -> index
+		for (int i = 0; i < length; i++)
+			searchingWindow[pattern.charAt(i)] = i;
+	}
 	
+	private static int getIndex(char c) {
+		
+		return searchingWindow[c];
+	}
 }
