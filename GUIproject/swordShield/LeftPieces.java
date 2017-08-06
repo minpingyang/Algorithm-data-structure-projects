@@ -9,7 +9,8 @@ public class LeftPieces extends JPanel {
 	Piece[][] leftPieces;
 	private int rows = 6;
 	private int cols = 4;
-	private int top = 3*Piece.SIZE_PIECE;
+	private int top = 10;
+	private int left = 12;
 	
 	public LeftPieces() {
 		leftPieces = new Piece[rows][cols];
@@ -23,9 +24,10 @@ public class LeftPieces extends JPanel {
 	
 	@Override
 	public void paint(Graphics g){
+		int outline = 13;
 		for(int row = 0; row<6;row++){
 			for(int col=0;col<4;col++){
-				leftPieces[row][col].drawPiece(g,col*Piece.SIZE_PIECE,top+row*Piece.SIZE_PIECE);
+				leftPieces[row][col].drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top+ row*(Piece.SIZE_PIECE+outline));
 			}
 		}
 	}
@@ -37,6 +39,6 @@ public class LeftPieces extends JPanel {
 	public Dimension getPreferredSize(){
 		//width -> (5)*50
 		//height-> (10+10)*50
-		return new Dimension(4*(Piece.SIZE_PIECE),6*(Piece.SIZE_PIECE));
+		return new Dimension(5*(Piece.SIZE_PIECE),11*(Piece.SIZE_PIECE));
 	}
 }

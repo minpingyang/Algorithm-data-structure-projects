@@ -8,7 +8,7 @@ import java.awt.Graphics;
 
 
 public class Piece{
-	public static final int SIZE_PIECE = 40;//may be used by other classes
+	public static final int SIZE_PIECE = 70;//may be used by other classes
 	private Type type;
 	
 	public enum Type {
