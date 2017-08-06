@@ -2,9 +2,11 @@ package swen222.swordShield;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -32,8 +34,9 @@ public class GUI extends JFrame{
 		leftPieces = new LeftPieces();
 		rightPieces = new RightPieces();
 		setLayout(new BorderLayout()); // use border layout
-		add(board,BorderLayout.CENTER);
+		
 		add(leftPieces,BorderLayout.WEST);
+		add(board,BorderLayout.CENTER);
 		add(rightPieces,BorderLayout.EAST);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack(); //pack components tightly together

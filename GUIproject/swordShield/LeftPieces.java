@@ -37,6 +37,6 @@ public class LeftPieces extends JPanel {
 	public Dimension getPreferredSize(){
 		//width -> (5)*50
 		//height-> (10+10)*50
-		return new Dimension(5*(Piece.SIZE_PIECE),11*(Piece.SIZE_PIECE));
+		return new Dimension(4*(Piece.SIZE_PIECE),6*(Piece.SIZE_PIECE));
 	}
 }

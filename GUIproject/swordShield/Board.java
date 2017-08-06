@@ -9,7 +9,7 @@ public class Board extends JPanel {
 	Piece[][] board;
 	private int rows = 10;
 	private int cols = 10;
-	private int left = 5*Piece.SIZE_PIECE;
+	private int left = 0*Piece.SIZE_PIECE;
 	
 	public Board() {
 		board = new Piece[rows][cols];
@@ -50,6 +50,6 @@ public class Board extends JPanel {
 	public Dimension getPreferredSize(){
 		//width -> (5)*50
 		//height-> (10+10)*50
-		return new Dimension(15*(Piece.SIZE_PIECE),15*(Piece.SIZE_PIECE));
+		return new Dimension(10*(Piece.SIZE_PIECE),11*(Piece.SIZE_PIECE));
 	}
 }
