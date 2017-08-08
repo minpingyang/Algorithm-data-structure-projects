@@ -15,14 +15,17 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 
 public class GUI extends JFrame{
-//	 private GameCanvas  canvas;
+
 	 private JPanel board;
 	 private JPanel leftPieces;
 	 private JPanel rightPieces;
 	 private JTextArea textOutputArea;
 	 private JTextField textInputArea;
-	  private static final int TEXT_OUTPUT_ROWS = 5;
-	    private static final int TEXT_INPUT_COLS = 35;
+	 private static final int TEXT_OUTPUT_ROWS = 5;
+	 private static final int TEXT_INPUT_COLS = 35;
+	 private Player greenPlayer,yellowPlayer;
+	
+	    
 	/**
 	 * The following fields cache various icons so we don't need to load them
 	 * everytime.
@@ -31,10 +34,13 @@ public class GUI extends JFrame{
 	    
 	public GUI(){
 		super("Sword and Shield");
-//		canvas = new GameCanvas(); // create canvas
+
+		greenPlayer=new Player(Piece.Type.GreenPiece);
+		yellowPlayer=new Player(Piece.Type.YellowPiece);
+		
 		board = new Board();
-		leftPieces = new LeftPieces();
-		rightPieces = new RightPieces();
+		leftPieces = new LeftPieces(greenPlayer);
+		rightPieces = new RightPieces(yellowPlayer);
 		setLayout(new BorderLayout()); // use border layout
 		
 		add(leftPieces,BorderLayout.WEST);
@@ -44,6 +50,7 @@ public class GUI extends JFrame{
 		pack(); //pack components tightly together
 		setResizable(false); //prevent us from being resizeable
 		setVisible(true);  // make sure we are visible
+		
 		textOutputArea = new JTextArea(TEXT_OUTPUT_ROWS, 0);
 		textInputArea = new JTextField(TEXT_INPUT_COLS);
         textInputArea.setMaximumSize(new Dimension(0, 25));

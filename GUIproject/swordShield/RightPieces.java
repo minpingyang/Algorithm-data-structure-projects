@@ -2,33 +2,39 @@ package swen222.swordShield;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.List;
 
 import javax.swing.JPanel;
 
+import swen222.swordShield.Piece.Type;
+
 public class RightPieces extends JPanel{
-	Piece[][] RightPieces;
+
 	private int rows = 6;
 	private int cols = 4;
-
 	private int top = 10;
 	private int left = 13;
+	private Player yellowPlayer;
 	
-	public RightPieces() {
-		RightPieces = new Piece[rows][cols];
+	public RightPieces(Player player) {
+		yellowPlayer = player;
+
 		//initialise all pieces
 		for(int row =0;row<rows;row++){
 			for(int col = 0;col<cols;col++){
-				RightPieces[row][col] = new Piece(Piece.Type.YellowPiece);
+				yellowPlayer.addDiffPiece(Piece.Type.YellowPiece);
 			}
 		}
 	}
 	
 	@Override
 	public void paint(Graphics g){
+		List<Piece> temp = yellowPlayer.getPieces();
+		int i=0;
 		int outline = 10;
 		for(int row = 0; row<6;row++){
 			for(int col=0;col<4;col++){
-				RightPieces[row][col].drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top+row*(Piece.SIZE_PIECE+outline));
+				temp.get(i++).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top+row*(Piece.SIZE_PIECE+outline),row,col);
 			}
 		}
 	}

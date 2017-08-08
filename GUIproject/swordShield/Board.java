@@ -36,7 +36,7 @@ public class Board extends JPanel {
 	public void paint(Graphics g){
 		for(int row = 0; row<10;row++){
 			for(int col=0;col<10;col++){
-				board[row][col].drawPiece(g,left+col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE);
+				board[row][col].drawPiece(g,left+col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE,row,col);
 			}
 		}
 	}
