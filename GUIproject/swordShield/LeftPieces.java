@@ -38,7 +38,7 @@ public class LeftPieces extends JPanel {
 		int outline = 13;
 		for(int row = 0; row<6;row++){
 			for(int col=0;col<4;col++){
-				System.out.printf("\n left: %c ,",temp.get(i).getName());
+				//System.out.printf("\n left: %c ,",temp.get(i).getName());
 				temp.get(i++).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top+ row*(Piece.SIZE_PIECE+outline),row,col);
 				
 			}

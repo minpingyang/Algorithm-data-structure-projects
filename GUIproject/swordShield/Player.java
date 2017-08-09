@@ -9,6 +9,7 @@ import swen222.swordShield.Piece.Type;
 public class Player {
 	private Piece.Type cardType;
 	private List<Piece> pieces;
+	
 	public Player(Piece.Type cardType) {
 		this.cardType = cardType;
 		pieces = new ArrayList<Piece>();

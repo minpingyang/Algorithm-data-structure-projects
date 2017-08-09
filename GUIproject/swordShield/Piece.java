@@ -8,8 +8,6 @@ import java.util.jar.Attributes.Name;
 
 
 
-
-
 public class Piece{
 	public static final int SIZE_PIECE = 70;//may be used by other classes
 	private Type type;
