@@ -1,6 +1,8 @@
 package swen222.swordShield;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.List;
 
@@ -15,8 +17,10 @@ public class LeftPieces extends JPanel {
 	private int top = 10;
 	private int left = 12;
 	private Player greenPlayer;
-	
-	
+	private int widthDis = 4*(Piece.SIZE_PIECE)+40;
+	private int heightDis = 3*Piece.SIZE_PIECE-10;
+	private int topDis = 80+6*Piece.SIZE_PIECE;
+	private String info;
 	public LeftPieces(Player player) {
 		greenPlayer=player;
 		
@@ -27,9 +31,11 @@ public class LeftPieces extends JPanel {
 				
 			}
 		}
-		
+		info = "Welcome";
 	}
-	
+	public void setInfo(String info){
+		this.info = info;
+	}
 	@Override
 	public void paint(Graphics g){
 		List<Piece> temp = greenPlayer.getPieces();
@@ -43,6 +49,11 @@ public class LeftPieces extends JPanel {
 				
 			}
 		}
+		g.setColor(Color.cyan);
+		g.fillRect(left, topDis, widthDis, heightDis);
+		g.setColor(Color.red);
+		g.setFont(new Font("TimesRoman", Font.PLAIN, 40)); 
+		g.drawString(info, left, topDis+30);
 	}
 	protected void paintComponent(Graphics g){
 		super.paintComponent(g);

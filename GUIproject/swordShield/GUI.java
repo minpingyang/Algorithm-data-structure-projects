@@ -28,6 +28,7 @@ public class GUI extends JFrame{
 	 private JPanel rightPieces;
 	 private boolean isGreenTurn;
 	 private Player greenPlayer,yellowPlayer;
+	 private String info;
 	
 	    
 	/**
@@ -43,6 +44,7 @@ public class GUI extends JFrame{
 		greenPlayer=new Player(Piece.Type.GreenPiece);
 		yellowPlayer=new Player(Piece.Type.YellowPiece);
 		board = new Board();
+	
 		leftPieces = new LeftPieces(greenPlayer);
 		rightPieces = new RightPieces(yellowPlayer);
 		setLayout(new BorderLayout()); // use border layout
@@ -56,6 +58,9 @@ public class GUI extends JFrame{
 		setVisible(true);  // make sure we are visible
 		
 
+	}
+	public void switchTurn(){
+		isGreenTurn=!isGreenTurn;
 	}
 	public boolean isValidCommand(String command){
 		
@@ -104,6 +109,7 @@ public class GUI extends JFrame{
 				boolean isValid = gui.isValidCommand(input);
 				if(isValid){
 					System.out.println("success");
+					
 //					gui.excute(input);
 //					gui.repaint();
 				}else{
