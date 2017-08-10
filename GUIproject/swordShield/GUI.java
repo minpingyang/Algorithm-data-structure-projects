@@ -85,13 +85,8 @@ public class GUI extends JFrame{
 		return firstChecker||fourthChecker1;		
 		
 	}
-	public void move(String dir,char pieceName){
-//		if(isGreenTurn){
-//				List<Piece> gPieces= greenPlayer.getPieces();
-//				
-//		}else{
-//			
-//		}
+	public boolean move(String dir,char pieceName){
+		return board.movePiece(pieceName, dir);
 	}
 	
 	
@@ -139,7 +134,10 @@ public class GUI extends JFrame{
 				char pieceName=line[1].charAt(0);
 				String degree = line[2];
 				create(degree,pieceName);
-				
+			}else if(line[0].equals("move")){
+				char pieceName=line[1].charAt(0);
+				String dir = line[2];
+				move(dir,pieceName);
 			}
 			
 		}

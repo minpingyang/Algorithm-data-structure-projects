@@ -122,7 +122,7 @@ public class Piece{
 		if(this.type==Type.GreenPiece){
 			g.setColor(Color.red);
 		}else if(this.type==Type.YellowPiece){
-			g.setColor(Color.ORANGE);
+			g.setColor(new Color(178, 0, 255));
 		}
 		char top = this.equipment[0][1];
 		char left = this.equipment[1][0];

@@ -47,6 +47,68 @@ public class Board extends JPanel {
 		}
 		
 	}
+	//return true-->allow move 
+	public boolean moveHelper(int row,int col){
+		boolean outborder= row>9||col>9||row<0||col<0;//true ->out of border
+		boolean inForbiddenArea= (row<2&&col<2)||(row>7&&col>7);// true->in forbidden
+		return !(outborder||inForbiddenArea);
+	}
+	//return a boolean indicates if move the piece successfully
+	public boolean movePiece(char pieceName,String dir){
+		Piece temp =null;
+		int pCol=0,pRow=0;
+		boolean exist = false;
+		for(int row=0;row<rows;row++){
+			for(int col=0;col<cols;col++){
+				if((row<2&&col<2)||(row>7&&col>7))
+					continue;
+				if(pieceName==piecesBoard[row][col].getName()){
+					exist=true;
+					temp=piecesBoard[row][col];
+					pCol= col;
+					pRow=row;
+				}
+			}
+		}
+		if(!exist){
+			return exist;
+		}
+		if(dir.equals("up")){
+			if(!(moveHelper(pRow-1, pCol))){
+				return false;
+			}else{
+				piecesBoard[pRow][pCol]=new Piece(Piece.Type.NonePiece); // REMOVE 
+				pRow = pRow-1;
+				piecesBoard[pRow][pCol] =temp; //add 
+			}
+		}else if(dir.equals("down")){
+			if(!(moveHelper(pRow+1, pCol))){
+				return false;
+			}else{
+				piecesBoard[pRow][pCol]=new Piece(Piece.Type.NonePiece); // REMOVE 
+				pRow = pRow+1;
+				piecesBoard[pRow][pCol] =temp; //add 
+			}
+		}else if(dir.equals("left")){
+			if(!(moveHelper(pRow, pCol-1))){
+				return false;
+			}else{
+				piecesBoard[pRow][pCol]=new Piece(Piece.Type.NonePiece); // REMOVE 
+				pCol = pCol-1;
+				piecesBoard[pRow][pCol] =temp; //add 
+			}
+		}else if(dir.equals("right")){
+			if(!(moveHelper(pRow, pCol+1))){
+				return false;
+			}else{
+				piecesBoard[pRow][pCol]=new Piece(Piece.Type.NonePiece); // REMOVE 
+				pCol = pCol+1;
+				piecesBoard[pRow][pCol] =temp; //add 
+			}
+		}
+		
+		return true;
+	}
 	@Override
 	public void paint(Graphics g){
 		g.setColor(Color.PINK);
