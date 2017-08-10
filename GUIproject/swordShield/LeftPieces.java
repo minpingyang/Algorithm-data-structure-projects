@@ -36,8 +36,11 @@ public class LeftPieces extends JPanel {
 	public void setInfo(String info){
 		this.info = info;
 	}
+	
 	@Override
 	public void paint(Graphics g){
+		g.setColor(Color.PINK);
+		g.fillRect(0, 0, getWidth(), getHeight());
 		List<Piece> temp = greenPlayer.getPieces();
 		//System.out.println("size: "+temp.size());
 		int i =0;

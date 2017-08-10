@@ -1,5 +1,6 @@
 package swen222.swordShield;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.List;
@@ -26,9 +27,12 @@ public class RightPieces extends JPanel{
 			}
 		}
 	}
+
 	
 	@Override
 	public void paint(Graphics g){
+		g.setColor(Color.PINK);
+		g.fillRect(0, 0, getWidth(), getHeight());
 		List<Piece> temp = yellowPlayer.getPieces();
 		int i=0;
 		int outline = 10;

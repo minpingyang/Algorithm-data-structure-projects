@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes.Name;
 
+import javax.swing.border.EmptyBorder;
+
 import swen222.swordShield.Piece.Type;
 
 public class Player {
@@ -33,7 +35,7 @@ public class Player {
 		Piece unsurePiece = new Piece(type) ; //
 		char[] equipmentList = new char[4];
 		char[][] temp = new char[3][3];
-	    
+		 boolean empty=false;
 		do{
 			int randomWeap=(int)(3*Math.random()); //0 1 2 
 			for(int i=0;i<4;i++){
@@ -50,15 +52,18 @@ public class Player {
 		  temp[1][0]= equipmentList[1];
 		  temp[1][2]= equipmentList[2];
 		  temp[2][1]= equipmentList[3];
+		   empty = equipmentList[0]==' '&&equipmentList[1]==' '&&equipmentList[2]==' '&&equipmentList[3]==' ';
 		  unsurePiece.setEquipment(temp);
-		}while(isDuplicate(unsurePiece));
+		}while(isDuplicate(unsurePiece)||empty);
 		if(type==Piece.Type.GreenPiece){
 			temp[1][1]=(char)('a'+pieces.size());
-		}else if(type==Piece.Type.GreenPiece){
+		}else if(type==Piece.Type.YellowPiece){
 			temp[1][1]=(char)('A'+pieces.size());
 		}
 		unsurePiece.setEquipment(temp);
 		unsurePiece.setName(temp[1][1]);
+		
+
 		pieces.add(unsurePiece);
 	}
 }

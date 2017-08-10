@@ -2,9 +2,12 @@ package swen222.swordShield;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.jar.Attributes.Name;
+
+import javax.xml.transform.Templates;
 
 
 
@@ -13,7 +16,7 @@ public class Piece{
 	private Type type;
 	private char [][] equipment;
 	private char name;//first row represents:  second row represents
-
+	private char topWeapon,rightWeapon,botWeapon,leftWeapon;
 	private int rowBoard; // TODO!!! the coordinator of the piece in the board
 	private int colBoard;
 	private int rowGreen,colGreen;
@@ -28,20 +31,50 @@ public class Piece{
 		RightFace,
 		OutBoard,
 		LeftCreation,
-		RightCreation
+		RightCreation,
+		EmptyPiece,
+		NonePiece
+		
 	};
+	public Type getType(){
+		return this.type;
+	}
 	public char[][] getEquipment(){
 		return equipment;
 	}
-	public char[][] setEquipment(char[][] temp){
-		return equipment=temp;
+	public void setFourWeapon(char top,char right, char bot,char left){
+	 topWeapon = top;
+	 rightWeapon=right;
+	 botWeapon= bot;
+	 leftWeapon = left;
+	 equipment[0][1]=topWeapon;
+	 equipment[1][2]=rightWeapon; 
+	 equipment[2][1]=botWeapon;
+	 equipment[1][0]=leftWeapon;
+	}
+	//1->0 2->90 3->180 4->270
+	public void rotate(String degree){
+		if(degree.equals("1")){
+			return;
+		}else if(degree.equals("2")){
+			setFourWeapon(leftWeapon, topWeapon, rightWeapon, botWeapon);
+		}else if(degree.equals("3")){
+			setFourWeapon(botWeapon, leftWeapon, topWeapon, rightWeapon);
+		}else if(degree.equals("4")){
+			setFourWeapon(rightWeapon, botWeapon, leftWeapon, topWeapon);
+		}
+		
+	}
+	public void setEquipment(char[][] temp){
+		 equipment=temp;
+		 setFourWeapon(temp[0][1], temp[1][2], temp[2][1], temp[1][0]);
 	}
 	
 	public Piece(Type type) {
 		
 		this.type =type;
 		equipment= new char[3][3];
-
+		name=' ';
 	}
 	public char getName(){return name;}
 	public void setName(char s){name=s;}
@@ -159,6 +192,9 @@ public class Piece{
 			g.setColor(Color.yellow);
 			g.fillOval(x, y,SIZE_PIECE, SIZE_PIECE);
 			drawWeapon(g, x, y);
+		}else if (this.type == Type.EmptyPiece) {
+			g.setColor(Color.pink);
+			g.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
 		}
 		
 	}
