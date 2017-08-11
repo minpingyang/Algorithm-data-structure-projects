@@ -13,7 +13,7 @@ public class Board extends JPanel {
 	private int rows = 10;
 	private int cols = 10;
 	Piece[][]piecesBoard;
-	
+	private int pCol=0,pRow=0;
 	public Board() {
 		board = new Piece[rows][cols];
 		piecesBoard = new Piece[rows][cols];
@@ -39,6 +39,12 @@ public class Board extends JPanel {
 	public Piece[][] getBoard(){
 		return board;
 	}
+	public Piece[][] getPieceBoard(){
+		return piecesBoard;
+	}
+	public void setPieceBoard(Piece[][] temp){
+		piecesBoard= temp;
+	}
 	public void createPiece(Piece temp){
 		if(temp.getType()==Piece.Type.GreenPiece){
 			piecesBoard[2][2]=temp;
@@ -47,6 +53,39 @@ public class Board extends JPanel {
 		}
 		
 	}
+	
+	public boolean rotatePiece(char pieceName,String degree){
+		Piece temp =findPieceOnBoard(pieceName);
+		System.out.println("222222222222");
+		if(temp==null||temp.getHasRotate()||temp.getHasMove()){
+			
+			return false;
+		}
+		System.out.println("111111111");
+		temp.printWeapon();
+		temp.rotate(degree);
+		temp.printWeapon();
+		temp.setHasRotate(true);
+		piecesBoard[pRow][pCol]= temp;
+		return true;
+	}
+	
+	public Piece findPieceOnBoard(char pieceName){
+		Piece temp =null;
+		for(int row=0;row<rows;row++){
+			for(int col=0;col<cols;col++){
+				if((row<2&&col<2)||(row>7&&col>7))
+					continue;
+				if(pieceName==piecesBoard[row][col].getName()){
+					temp=piecesBoard[row][col];
+					pCol= col;
+					pRow=row;
+				}
+			}
+		}
+		return temp;
+	}
+
 	//return true-->allow move 
 	public boolean moveHelper(int row,int col){
 		boolean outborder= row>9||col>9||row<0||col<0;//true ->out of border
@@ -55,28 +94,15 @@ public class Board extends JPanel {
 	}
 	//return a boolean indicates if move the piece successfully
 	public boolean movePiece(char pieceName,String dir){
-		Piece temp =null;
-		int pCol=0,pRow=0;
-		boolean exist = false;
-		for(int row=0;row<rows;row++){
-			for(int col=0;col<cols;col++){
-				if((row<2&&col<2)||(row>7&&col>7))
-					continue;
-				if(pieceName==piecesBoard[row][col].getName()){
-					exist=true;
-					temp=piecesBoard[row][col];
-					pCol= col;
-					pRow=row;
-				}
-			}
-		}
-		if(!exist){
-			return exist;
+		Piece temp =findPieceOnBoard(pieceName);
+		if(temp==null||temp.getHasMove()||temp.getHasRotate()){
+			return false;
 		}
 		if(dir.equals("up")){
 			if(!(moveHelper(pRow-1, pCol))){
 				return false;
 			}else{
+				temp.setHashMove(true);
 				piecesBoard[pRow][pCol]=new Piece(Piece.Type.NonePiece); // REMOVE 
 				pRow = pRow-1;
 				piecesBoard[pRow][pCol] =temp; //add 
@@ -85,6 +111,7 @@ public class Board extends JPanel {
 			if(!(moveHelper(pRow+1, pCol))){
 				return false;
 			}else{
+				temp.setHashMove(true);
 				piecesBoard[pRow][pCol]=new Piece(Piece.Type.NonePiece); // REMOVE 
 				pRow = pRow+1;
 				piecesBoard[pRow][pCol] =temp; //add 
@@ -93,6 +120,7 @@ public class Board extends JPanel {
 			if(!(moveHelper(pRow, pCol-1))){
 				return false;
 			}else{
+				temp.setHashMove(true);
 				piecesBoard[pRow][pCol]=new Piece(Piece.Type.NonePiece); // REMOVE 
 				pCol = pCol-1;
 				piecesBoard[pRow][pCol] =temp; //add 
@@ -101,6 +129,7 @@ public class Board extends JPanel {
 			if(!(moveHelper(pRow, pCol+1))){
 				return false;
 			}else{
+				temp.setHashMove(true);
 				piecesBoard[pRow][pCol]=new Piece(Piece.Type.NonePiece); // REMOVE 
 				pCol = pCol+1;
 				piecesBoard[pRow][pCol] =temp; //add 

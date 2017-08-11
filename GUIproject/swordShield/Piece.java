@@ -17,10 +17,7 @@ public class Piece{
 	private char [][] equipment;
 	private char name;//first row represents:  second row represents
 	private char topWeapon,rightWeapon,botWeapon,leftWeapon;
-	private int rowBoard; // TODO!!! the coordinator of the piece in the board
-	private int colBoard;
-	private int rowGreen,colGreen;
-	private int rowYellow,colYellow;
+	private boolean hasRotate, hasMove;
 	private int weaponWidth= SIZE_PIECE/8;
 	public enum Type {
 		GreenPiece,
@@ -36,11 +33,28 @@ public class Piece{
 		NonePiece
 		
 	};
+	public boolean getHasRotate(){
+		return hasRotate;
+	}
+	public boolean getHasMove(){
+		return hasMove;
+	}
+	public void setHasRotate(boolean b){
+		hasRotate=b;
+	}
+	public void setHashMove(boolean b){
+		hasMove = b;
+	}
+	
+	
 	public Type getType(){
 		return this.type;
 	}
 	public char[][] getEquipment(){
 		return equipment;
+	}
+	public void printWeapon(){
+		System.out.println("top: "+topWeapon+"  right:  "+rightWeapon+"  bot"+botWeapon+"   "+leftWeapon);
 	}
 	public void setFourWeapon(char top,char right, char bot,char left){
 	 topWeapon = top;
@@ -176,8 +190,7 @@ public class Piece{
 			
 			
 		}else if(this.type == Type.GreenPiece){
-			rowGreen = row;
-			colGreen = col;
+		
 			g.setColor(Color.BLACK);
 			g.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
 			g.setColor(Color.GREEN);
@@ -185,8 +198,7 @@ public class Piece{
 			drawWeapon(g, x, y);
 			
 		}else if (this.type == Type.YellowPiece){
-			rowYellow = row;
-			colYellow = col;
+		
 			g.setColor(Color.BLACK);
 			g.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
 			g.setColor(Color.yellow);

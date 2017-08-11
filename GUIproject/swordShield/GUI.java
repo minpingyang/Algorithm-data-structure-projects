@@ -30,7 +30,7 @@ public class GUI extends JFrame{
 	 private boolean isGreenTurn;
 	 private Player greenPlayer,yellowPlayer;
 	 private String info = "Welcome";
-	 
+	 private boolean doesMove,doesRotate;
 	    
 	/**
 	 * The following fields cache various icons so we don't need to load them
@@ -62,6 +62,17 @@ public class GUI extends JFrame{
 	}
 	public void switchTurn(){
 		isGreenTurn=!isGreenTurn;
+		Piece[][] temp = board.getPieceBoard();
+		for(int row=0;row<10;row++){
+			for(int col=0;col<10;col++){
+				if(temp[row][col].getType()!=Piece.Type.NonePiece){
+					temp[row][col].setHashMove(false);
+					temp[row][col].setHasRotate(false);
+					board.setPieceBoard(temp);
+				}
+			}
+		}
+		
 	}
 	
 	public boolean isValidCommand(String command){
@@ -88,7 +99,9 @@ public class GUI extends JFrame{
 	public boolean move(String dir,char pieceName){
 		return board.movePiece(pieceName, dir);
 	}
-	
+	public boolean rotate(String degree,char pieceName){
+		return board.rotatePiece(pieceName, degree);
+	}
 	
 	public void create(String degree,char pieceName){
 		
@@ -120,6 +133,7 @@ public class GUI extends JFrame{
 			}
 		}
 	}
+	
 	//if valid command
 	public void excute(String command){
 		String[] line = command.split(" ");
@@ -137,7 +151,12 @@ public class GUI extends JFrame{
 			}else if(line[0].equals("move")){
 				char pieceName=line[1].charAt(0);
 				String dir = line[2];
-				move(dir,pieceName);
+				doesMove=move(dir,pieceName);
+			}else if(line[0].equals("rotate")){
+				//System.out.println("11111");
+				char pieceName=line[1].charAt(0);
+				String degree = line[2];
+				doesRotate=rotate(degree, pieceName);
 			}
 			
 		}
