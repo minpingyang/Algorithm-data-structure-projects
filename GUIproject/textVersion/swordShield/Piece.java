@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class Piece{
 	public static final int SIZE_PIECE = 70;//may be used by other classes
 	private Type type;
-	private char [][] equipment;
+	public char [][] equipment;
 	private char name;//first row represents:  second row represents
 	private char topWeapon,rightWeapon,botWeapon,leftWeapon;
 	private boolean hasRotate, hasMove;

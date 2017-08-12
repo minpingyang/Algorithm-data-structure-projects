@@ -22,7 +22,7 @@ public class Board {
 		return hasCreate;
 	}
 	public Board() {
-		board = new Piece[rows][cols];
+	
 		piecesBoard = new Piece[rows][cols];
 		// initialise all pieces,fill all gray and while rectangle
 		for (int row = 0; row < rows; row++) {
@@ -97,29 +97,29 @@ public class Board {
 			xCol=selfCoord.get(1);
 			if(xCol>0){
 				Piece leftPiece= piecesBoard[xRow][xCol-1];
-				System.out.println("0000leftpiece: "+leftPiece.getName());
+				//System.out.println("0000leftpiece: "+leftPiece.getName());
 				boolean b1 =(leftPiece.getType()==Type.GreenPiece||leftPiece.getType()==Type.YellowPiece)&&(leftPiece.getRightWeapon()=='|'||actPiece.getLeftWeapon()=='|');
 				if(b1){	
-					System.out.println("1111leftpiece: "+leftPiece.getName());
+					//System.out.println("1111leftpiece: "+leftPiece.getName());
 					piecesBoard[xRow][xCol].addNeighbourPiece("left", leftPiece);
 				}	
 			} 
 			if(xCol<9){
 				Piece rightPiece=piecesBoard[xRow][xCol+1];
-				System.out.println("000rightPiece: "+rightPiece.getName()+"leftwep:"+rightPiece.getLeftWeapon()+"  "+actPiece+"rightwP"+actPiece.getRightWeapon());
+				//System.out.println("000rightPiece: "+rightPiece.getName()+"leftwep:"+rightPiece.getLeftWeapon()+"  "+actPiece+"rightwP"+actPiece.getRightWeapon());
 				
 				boolean b2 = (rightPiece.getType()==Type.GreenPiece||rightPiece.getType()==Type.YellowPiece)&&(rightPiece.getLeftWeapon()=='|'||actPiece.getRightWeapon()=='|');
 				if(b2){
-					System.out.println("1111rightPiece: "+rightPiece.getName());
+					//System.out.println("1111rightPiece: "+rightPiece.getName());
 					piecesBoard[xRow][xCol].addNeighbourPiece("right", rightPiece);
 				}
 			}
 			if(xRow<9){
 				Piece botPiece=piecesBoard[xRow+1][xCol];
-				System.out.println("00000botPiece: "+botPiece.getName()+" topWP "+botPiece.getTopWeapon()+" "+actPiece+" botmWp "+actPiece.getBottomWeapon());
+				//System.out.println("00000botPiece: "+botPiece.getName()+" topWP "+botPiece.getTopWeapon()+" "+actPiece+" botmWp "+actPiece.getBottomWeapon());
 				boolean b3 = (botPiece.getType()==Type.GreenPiece||botPiece.getType()==Type.YellowPiece)&&(botPiece.getTopWeapon()=='|'||actPiece.getBottomWeapon()=='|');
 				if(b3){
-					System.out.println("1111botPiece: "+botPiece.getName());
+					//System.out.println("1111botPiece: "+botPiece.getName());
 					piecesBoard[xRow][xCol].addNeighbourPiece("bottom", botPiece);
 				}
 			}
@@ -128,7 +128,7 @@ public class Board {
 				
 				boolean b4= (topPiece.getType()==Type.GreenPiece||topPiece.getType()==Type.YellowPiece)&&(topPiece.getBottomWeapon()=='|'||actPiece.getTopWeapon()=='|');
 				if(b4){
-					System.out.println("1111topPiece: "+topPiece.getName());
+					//System.out.println("1111topPiece: "+topPiece.getName());
 					piecesBoard[xRow][xCol].addNeighbourPiece("top", topPiece);
 				}
 			}

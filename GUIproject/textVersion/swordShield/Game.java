@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Stack;
 
 import javax.swing.plaf.basic.BasicTreeUI.TreeCancelEditingAction;
 
@@ -14,8 +15,10 @@ public class Game {
 	public static boolean isGreenTurn;
 	private Player greenPlayer,yellowPlayer;
 	private String info = "Welcome";
+	private Stack<Board> undoStack;
 
 	public Game() {
+		undoStack=new Stack<Board>();
 		isGreenTurn=true;
 		greenPlayer=new Player(Piece.Type.GreenPiece);
 		yellowPlayer=new Player(Piece.Type.YellowPiece);
@@ -30,6 +33,7 @@ public class Game {
 	}
 	public void switchTurn(){
 		isGreenTurn=!isGreenTurn;
+		undoStack.clear();
 		board.setHasCreate(false);
 		Piece[][] temp = board.getPieceBoard();
 		for(int row=0;row<10;row++){
@@ -104,18 +108,36 @@ public class Game {
 		}
 		return doesCreate;
 	}
-	
+	public void undo(){
+	 board=undoStack.pop();
+	}
+	public Board deepCloneBoard(Board board){
+		 Board temp =new Board();
+		 temp.setHasCreate(board.getHasCreate());
+		 for(int row=0;row<10;row++){
+			 for(int col=0;col<10;col++){
+				 temp.piecesBoard[row][col]=board.piecesBoard[row][col];
+				 
+			 }
+		 }
+		 return temp;
+		 //undoStack.add(temp);
+		
+	}
 	//if valid command
 	public boolean excute(String command) throws InterruptedException{
 		boolean doActionSuccess=false;
 		boolean doesAct=false;
-		
+		Board temp = deepCloneBoard(board);
 		String[] line = command.split(" ");
 		if(line.length==1){
 			info=line[0];
 			if(info.equals("pass")){
 			switchTurn();
 			doActionSuccess=true;
+			}else if(info.equals("undo")){
+				undo();
+				doActionSuccess=true;
 			}
 		}else if(line.length==3){
 			info= line[0]+"  "+line[1]+"  "+line[2];
@@ -124,19 +146,20 @@ public class Game {
 				String degree = line[2];
 				doActionSuccess=create(degree,pieceName);
 				doesAct=doActionSuccess;
-				
+				undoStack.add(temp);
 			}else if(line[0].equals("move")){
 				char pieceName=line[1].charAt(0);
 				String dir = line[2];
 				doActionSuccess=move(dir,pieceName);
 				doesAct=doActionSuccess;
-				
+				undoStack.add(temp);
 			}else if(line[0].equals("rotate")){
 				//System.out.println("11111");
 				char pieceName=line[1].charAt(0);
 				String degree = line[2];
 				doActionSuccess=rotate(degree, pieceName);
 				doesAct=doActionSuccess;
+				undoStack.add(temp);
 			}
 			
 		}
@@ -146,6 +169,7 @@ public class Game {
 				System.out.println("REACTION EXCUTED!!");
 			}
 		}
+		 System.out.println("stack size"+undoStack.size());
 		//leftPieces.setInfo(info);
 		return doActionSuccess;
 	}
@@ -157,6 +181,7 @@ public class Game {
 		
 		Game game = new Game();
 		game.printOutBoard();
+		
 		try {
 			bReader=new BufferedReader(new InputStreamReader(System.in));
 			while(true){
