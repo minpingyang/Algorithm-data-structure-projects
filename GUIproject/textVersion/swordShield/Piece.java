@@ -148,7 +148,12 @@ public class Piece{
 	public void drawWeaponToPiece(int inRow){
 	
 		for(int col=0;col<3;col++){
-			System.out.printf("%-2c",this.equipment[inRow][col]);
+			if(inRow==1&&equipment[inRow][col]=='|'){
+				System.out.printf("%-2c",'-');
+			}else{
+				System.out.printf("%-2c",this.equipment[inRow][col]);
+			}
+			
 		}
 		
 	}
