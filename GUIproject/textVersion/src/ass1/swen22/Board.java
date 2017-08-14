@@ -495,5 +495,22 @@ public class Board {
 			}
 		}
 	}
+	
+	//1-left win.  2- right win 0--non one win
+	public int doesWin() {
+		Piece leftBot= this.piecesBoard[2][1];
+		Piece leftRight=this.piecesBoard[1][2];
+		Piece rightTop= this.piecesBoard[7][8];
+		Piece rightLeft=this.piecesBoard[8][7];
+		boolean checkLeft = leftBot.getTopWeapon()=='|'||leftRight.getLeftWeapon()=='|';
+		boolean checkRight = rightLeft.getRightWeapon()=='|'||rightTop.getBottomWeapon()=='|';
+		if(checkLeft){
+			return 1;
+		}else if(checkRight){
+			return 2;
+		}
+		
+		return 0;
+	}
 
 }

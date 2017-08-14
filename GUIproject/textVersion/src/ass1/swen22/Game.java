@@ -306,9 +306,21 @@ public class Game {
 				System.out.println("REACTION EXCUTED!!");
 			}
 		}
+		
 		// System.out.println("stack size"+undoStack.size());
 		// leftPieces.setInfo(info);
 		return doActionSuccess;
+	}
+	public int doesWin(){
+		int result =board.doesWin();
+		if(result==1){
+			System.out.println("Left Player Loose!");
+		}else if(result==2){
+			System.out.println("Right Player Loose!");
+		}
+			
+		
+		return result;
 	}
 	/**
 	 * This method is used to print out the board
@@ -343,7 +355,7 @@ public class Game {
 				boolean isValid = game.isValidCommand(input);
 				if (isValid) {
 					boolean doesExcute = game.excute(input);
-
+					
 					System.out.print("Command does follow the formate");
 					if (!doesExcute) {
 						System.out.println(", but doesnt follow the rule of game");
@@ -353,6 +365,11 @@ public class Game {
 						game.printOutBoard();
 
 						System.out.println();
+					}
+					int isGameStop= game.doesWin();
+					if(isGameStop!=0){
+						System.out.println("Game Over");
+						break;
 					}
 
 				} else if (!isValid) {
