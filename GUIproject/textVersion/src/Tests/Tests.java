@@ -92,7 +92,7 @@ public class Tests {
 		game.create("1", 'a');
 		// boolean b1=game.rotate("2", 'a');
 		boolean b1 = game.excute("rotate a 2");
-		boolean b2 = board.rotatePiece('a', "2");
+		boolean b2 = board.rotatePiece('a', "2",true);
 		Piece rotateP = board.findPieceOnBoard('a');
 		assertEquals(true, b1);
 		assertEquals(true, rotateP.getHasRotate()); // not allow rotate twice in

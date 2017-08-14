@@ -261,17 +261,26 @@ public class Game {
 			if (line[0].equals("create")) {
 				char pieceName = line[1].charAt(0);
 				String degree = line[2];
-				doActionSuccess = create(degree, pieceName);
+				boolean doesCreate = create(degree, pieceName);
+				doActionSuccess = doesCreate;
 				doesAct = doActionSuccess; //
-				undoStack.add(temp);
-				isRotate=false;
+				if(doesCreate){ //only if create successfully
+					undoStack.add(temp);
+					isRotate=false;
+				}
+				
 			} else if (line[0].equals("move")) {
 				char pieceName = line[1].charAt(0);
 				String dir = line[2];
-				doActionSuccess = move(dir, pieceName);
+				
+				boolean doesMove = move(dir, pieceName);
+				doActionSuccess = doesMove;
 				doesAct = doActionSuccess;
-				undoStack.add(temp);
-				isRotate=false;
+				if(doesMove){
+					undoStack.add(temp);
+					isRotate=false;
+				}
+				
 			} else if (line[0].equals("rotate")) {
 				// System.out.println("11111");
 				char pieceName = line[1].charAt(0);
@@ -279,11 +288,12 @@ public class Game {
 				boolean doesRotate=rotate(degree, pieceName,true);
 				doActionSuccess = doesRotate;
 				doesAct = doActionSuccess;
-				degreeStack.add(degree);
-				nameStack.add(pieceName);
-				undoStack.add(temp);
+				
 				if(doesRotate){
 					isRotate=true;
+					degreeStack.add(degree);
+					nameStack.add(pieceName);
+					undoStack.add(temp);
 				}
 				
 			}
