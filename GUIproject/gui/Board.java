@@ -12,6 +12,8 @@ public class Board extends JPanel {
 	Piece[][] board;
 	private int rows = 10;
 	private int cols = 10;
+	private int left =0;
+	private int top =0;
 	Piece[][]piecesBoard;
 	private int pCol=0,pRow=0;
 	public Board() {
@@ -144,12 +146,12 @@ public class Board extends JPanel {
 		g.fillRect(0, 0, getWidth(), getHeight());
 		for(int row = 0; row<10;row++){
 			for(int col=0;col<10;col++){
-				board[row][col].drawPiece(g,col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE,row,col);
+				board[row][col].drawPiece(g,left+col*Piece.SIZE_PIECE,top+row*Piece.SIZE_PIECE,row,col);
 			}
 		}
 		for(int row = 0; row<10;row++){
 			for(int col=0;col<10;col++){
-				piecesBoard[row][col].drawPiece(g,col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE,row,col);
+				piecesBoard[row][col].drawPiece(g,left+col*Piece.SIZE_PIECE,top+row*Piece.SIZE_PIECE,row,col);
 			}
 		}
 	}
