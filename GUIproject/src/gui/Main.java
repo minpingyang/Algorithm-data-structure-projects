@@ -4,6 +4,13 @@ import javax.swing.SwingUtilities;
 
 public class Main {
 	public static void main(String[] s){
-		SwingUtilities.invokeLater(new View());
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				new View();
+				
+			}
+		});
 	}
 }

@@ -5,13 +5,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import javax.swing.event.DocumentListener;
+import javax.swing.JOptionPane;
 
-import model.Board;
 import model.LeftCreation;
 import model.Piece;
 import model.Player;
@@ -25,27 +22,27 @@ public class Controller implements MouseListener {
 	private List<Point> rightPoint;
 	private List<Piece> rightPieces;
 	private int selectIndex;
-	
+	private View view;
 	private Frame gui;
 	private int hasClicked = 0;
-	Piece previousSe = null;
+	private Piece previousSe = null;
+	private char creatPiName;
+	private String creatDegree;
 
 	public Controller(LeftCreation leftCreation, RightCreation rightCreation, Player greenPlayer, Player yellowPlayer,
-			Frame gui) {
+			Frame gui, View view) {
 
 		leftPoint = leftCreation.getPiecesPoint();
 		leftPieces = greenPlayer.getPieces();
 		rightPoint = rightCreation.getPiecesPoint();
 		rightPieces = yellowPlayer.getPieces();
 		this.gui = gui;
+		this.view = view;
 	}
 
-	public void chooseOrientation() {
-
-	}
+	
 
 	public boolean checkTwoPoint(Point clickP, Point pointP) {
-		System.out.println("22222");
 
 		double rightMost = pointP.getX() + Piece.SIZE_PIECE;
 		double leftMost = pointP.getX();
@@ -63,9 +60,7 @@ public class Controller implements MouseListener {
 			if (!checkTwoPoint(clickP, piecePoint)) {
 				continue;
 			} else {
-				System.out.println("33333");
 				selectIndex = piecePoints.indexOf(piecePoint);
-				System.out.println("**clicked***********");
 				return true;
 			}
 		}
@@ -77,10 +72,35 @@ public class Controller implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 
 	}
-
+	public void chooseOrientation() {
+		
+		String[] options = new String[] {"0", "90", "180", "270"};
+	    int response = JOptionPane.showOptionDialog(null, "choose the degree", "Orientation Chooser",
+	        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+	        null, options, options[0]);
+	    switch (response) {
+		case 0:
+			creatDegree="1";
+			break;
+		case 1:
+			creatDegree="2";
+			break;
+		case 2:
+			creatDegree="3";
+			break;
+		case 3:
+			creatDegree="4";
+			break;	
+		default:
+			break;
+		}
+	    String command = "create "+creatPiName+" "+creatDegree;
+	    view.inputCommand(command);
+	
+	}
 	
 	public void selectHelper(List<Point> points, List<Piece> pieces,Point p){
-		System.out.println("1111");
+	
 		boolean clickOn = doesClickOne(p, points);
 	
 		if (!clickOn) {
@@ -88,9 +108,10 @@ public class Controller implements MouseListener {
 			return;
 		}
 		selectPiece=pieces.get(selectIndex);
-
+		creatPiName=selectPiece.getName();
 		// s->0->hig s->1->hig
 		selectPiece.setIsHighLight(true);
+		
 		hasClicked++;// has->1 ->2->1
 		if ((hasClicked == 2 || hasClicked == 1) && previousSe != null) {
 			// 0->hidd
@@ -101,16 +122,15 @@ public class Controller implements MouseListener {
 		if (hasClicked == 1) {//
 			// pre->0
 			previousSe = selectPiece; // 0 : 0
-			System.out.println("click2: " + hasClicked);
 			gui.repaint();
 		}
 		if (hasClicked == 2) {
 			// pr->1
 			previousSe = selectPiece;
 			hasClicked = 0;
-			System.out.println("click3: " + hasClicked);
 			gui.repaint();
 		}
+		chooseOrientation();
 	}
 	
 	@Override
