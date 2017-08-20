@@ -1,7 +1,9 @@
 package gui;
 
+import javax.swing.SwingUtilities;
+
 public class Main {
 	public static void main(String[] s){
-		new View();
+		SwingUtilities.invokeLater(new View());
 	}
 }

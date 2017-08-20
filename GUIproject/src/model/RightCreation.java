@@ -3,7 +3,9 @@ package model;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.List;
+import java.awt.Point;
 
 import javax.swing.JPanel;
 
@@ -16,10 +18,18 @@ public class RightCreation extends JPanel{
 	private int top = 10;
 	private int left = 13;
 	private Player yellowPlayer;
-	
+	private List<Piece> pieces;
+	private List<Point> piecesPoint;
+	public List<Piece> getPieces(){
+		return pieces;
+	}
+	public List<Point> getPiecesPoint(){
+		return piecesPoint;
+	}
 	public RightCreation(Player player) {
 		yellowPlayer = player;
-
+		pieces = new ArrayList<Piece>();
+		piecesPoint=new ArrayList<Point>();
 		//initialise all pieces
 		for(int row =0;row<rows;row++){
 			for(int col = 0;col<cols;col++){
@@ -33,12 +43,13 @@ public class RightCreation extends JPanel{
 	public void paint(Graphics g){
 		g.setColor(Color.PINK);
 		g.fillRect(0, 0, getWidth(), getHeight());
-		List<Piece> temp = yellowPlayer.getPieces();
+		 pieces = yellowPlayer.getPieces();
 		int i=0;
 		int outline = 10;
 		for(int row = 0; row<6;row++){
 			for(int col=0;col<4;col++){
-				temp.get(i++).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top+row*(Piece.SIZE_PIECE+outline),row,col);
+				pieces.get(i++).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top+row*(Piece.SIZE_PIECE+outline),row,col);
+				piecesPoint.add(new Point(left+col*(Piece.SIZE_PIECE+outline), top+ row*(Piece.SIZE_PIECE+outline)));
 			}
 		}
 	}

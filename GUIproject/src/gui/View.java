@@ -31,7 +31,7 @@ import model.RightCreation;
 
 
 
-public class View extends JComponent implements Observer{
+public class View extends JComponent implements Observer, Runnable{
 	private JButton startGame;
 	private JButton exitGame;
 	private JButton info;
@@ -55,7 +55,9 @@ public class View extends JComponent implements Observer{
 		board = new Board();
 		leftCreation = new LeftCreation(greenPlayer);
 		rightCreation = new RightCreation(yellowPlayer);
-		addMouseListener(new Controller(leftCreation,rightCreation));
+		leftCreation.addMouseListener(new Controller(leftCreation,rightCreation,greenPlayer,yellowPlayer,frame));
+		rightCreation.addMouseListener(new Controller(leftCreation,rightCreation,greenPlayer,yellowPlayer,frame));
+		//addMouseListener(new Controller(leftCreation,rightCreation,greenPlayer,yellowPlayer));
 		leftCemetery=new LeftCemetery(greenPlayer);
 		rightCemetery=new RightCemetery(yellowPlayer);
 		menu.setLayout(new FlowLayout());
@@ -78,18 +80,23 @@ public class View extends JComponent implements Observer{
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		frame.add(jtb,BorderLayout.NORTH);
-		frame.setVisible(true);
 	
+		frame.setVisible(true);
+		
+		//frame.addMouseListener(new Controller(leftCreation,rightCreation,greenPlayer,yellowPlayer));
 		final JSplitPane hSplitRigt = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		final JSplitPane wholeBoard = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		final JSplitPane vSplitLeft =new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		final JSplitPane vSplitRight=new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-
+		JLabel leJLabel =new JLabel("11");
+		JLabel rightLable = new JLabel("22");
 		vSplitLeft.setTopComponent(leftCreation);
-		vSplitLeft.setBottomComponent(leftCemetery);
+//		vSplitLeft.setBottomComponent(leftCemetery);
+		vSplitLeft.setBottomComponent(leJLabel);
 		vSplitLeft.setResizeWeight(0.6);
 		vSplitRight.setTopComponent(rightCreation);
-		vSplitRight.setBottomComponent(rightCemetery);
+//		vSplitRight.setBottomComponent(rightCemetery);
+		vSplitRight.setBottomComponent(rightLable);
 		vSplitRight.setResizeWeight(0.4);
 		vSplitLeft.setContinuousLayout(true);
 		vSplitLeft.setOneTouchExpandable(true);
@@ -101,9 +108,6 @@ public class View extends JComponent implements Observer{
 		hSplitRigt.setDividerLocation(1);
 		hSplitRigt.setContinuousLayout(true);
 		hSplitRigt.setOneTouchExpandable(true);
-
-		
-		
 		
 		wholeBoard.setLeftComponent(vSplitLeft);
 		wholeBoard.setRightComponent(hSplitRigt);
@@ -151,5 +155,10 @@ public class View extends JComponent implements Observer{
 	public void update(Observable o, Object arg) {repaint();}
 	public Dimension getPreferredSize(){
 		return new Dimension(600,600);
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 }

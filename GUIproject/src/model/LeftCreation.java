@@ -3,7 +3,7 @@ package model;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
+
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -48,6 +48,7 @@ public class LeftCreation extends JPanel {
 
 	}
 	
+	
 	@Override
 	public void paint(Graphics g){
 		g.setColor(Color.PINK);
@@ -64,7 +65,7 @@ public class LeftCreation extends JPanel {
 				piecesPoint.add(new Point(left+col*(Piece.SIZE_PIECE+outline), top+ row*(Piece.SIZE_PIECE+outline)));
 			}
 		}
-
+	
 	}
 	protected void paintComponent(Graphics g){
 		super.paintComponent(g);

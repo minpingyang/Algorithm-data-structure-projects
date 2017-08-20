@@ -19,6 +19,18 @@ public class Piece{
 	private char topWeapon,rightWeapon,botWeapon,leftWeapon;
 	private boolean hasRotate, hasMove;
 	private int weaponWidth= SIZE_PIECE/8;
+	private int selectWidth =weaponWidth/2;
+	private int panelX, panelY;
+	private boolean isHighLight=false;
+	public void setIsHighLight(boolean b){
+		isHighLight=b;
+	}
+	public int getPanelX(){
+		return panelX;
+	}
+	public int getPanelY(){
+		return panelY;
+	}
 	public enum Type {
 		GreenPiece,
 		YellowPiece,
@@ -148,12 +160,16 @@ public class Piece{
 		drawWeaponHelper(g, right, x, y, false, SIZE_PIECE);
 		
 	}
-	
+	public void highLightSelect(Graphics g){
+		g.setColor(new Color(255, 255, 255));
+		g.fillRect(panelX-selectWidth, panelY-selectWidth, SIZE_PIECE+selectWidth*2, SIZE_PIECE+selectWidth*2);
+	}
 	public void drawPiece(Graphics g,int x,int y,int row,int col){
 	    
 		if(this.type == Type.RightCreation){
 			g.setColor(Color.ORANGE);
 	    	g.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
+	    
 		}else if(this.type == Type.LeftCreation){
 	    	g.setColor(Color.GREEN);
 	    	g.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
@@ -188,22 +204,28 @@ public class Piece{
 			g.setColor(Color.WHITE);
 			g.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
 			
-			
 		}else if(this.type == Type.GreenPiece){
-		
+			if(isHighLight){
+				highLightSelect(g);
+			}
 			g.setColor(Color.BLACK);
 			g.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
 			g.setColor(Color.GREEN);
 			g.fillOval(x, y,SIZE_PIECE, SIZE_PIECE);
 			drawWeapon(g, x, y);
-			
+			panelX=x;
+			panelY=y;
 		}else if (this.type == Type.YellowPiece){
-		
+			if(isHighLight){
+				highLightSelect(g);
+			}
 			g.setColor(Color.BLACK);
 			g.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
 			g.setColor(Color.yellow);
 			g.fillOval(x, y,SIZE_PIECE, SIZE_PIECE);
 			drawWeapon(g, x, y);
+			panelX=x;
+			panelY=y;
 		}else if (this.type == Type.EmptyPiece) {
 			g.setColor(Color.pink);
 			g.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
