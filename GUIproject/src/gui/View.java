@@ -29,15 +29,22 @@ public class View extends JComponent implements Observer {
 	private boolean doesMove;
 	private boolean doesRotate;
 	private JFrame frame;
+	private DegreePanLeft degreePanLeft;
 
-	private DegreePanel degreePanel;
-	private CardLayout cardLayout;
+    private DegreePanRight degreePanRight;
+	private CardLayout cardLayout1;
+    private CardLayout cardLayout2;
 	private JPanel panelConLeft;
+	private JPanel panelConRight;
 	private boolean isRotate;
 	private Stack<Board> undoStack;
 	private Stack<Character> nameStack;
 	private Stack<String> degreeStack;
 	private boolean hasReaction;
+	public JPanel getPanelConRight(){
+	    return panelConRight;
+    }
+
 	public View() {
 		undoStack = new Stack<Board>();
 		isGreenTurn = true;
@@ -46,23 +53,42 @@ public class View extends JComponent implements Observer {
 		
 		this.setFocusable(true);
 		frame = new JFrame("Sword and Shield");
+
 		panelConLeft = new JPanel();
-		cardLayout = new CardLayout();
-		panelConLeft.setLayout(cardLayout);
-		degreePanel = new DegreePanel();
+		cardLayout1 = new CardLayout();
+		panelConLeft.setLayout(cardLayout1);
+        degreePanLeft = new DegreePanLeft();
+
+
+        panelConRight=new JPanel();
+        cardLayout2=new CardLayout();
+		panelConRight.setLayout(cardLayout2);
+        degreePanRight=new DegreePanRight();
 
 		JPanel menu = new JPanel();
 		greenPlayer = new Player(Piece.Type.GreenPiece);
 		yellowPlayer = new Player(Piece.Type.YellowPiece);
 		board = new Board();
 		leftCreation = new LeftCreation(greenPlayer);
-		panelConLeft.add(leftCreation, "1");
-		panelConLeft.add(degreePanel, "2");
-		cardLayout.show(panelConLeft, "1");
-		rightCreation = new RightCreation(yellowPlayer);
-		degreePanel.addMouseListener(new Controller(this));
+        rightCreation = new RightCreation(yellowPlayer);
+
+        panelConLeft.add(leftCreation, "1");
+		panelConLeft.add(degreePanLeft, "2");
+		cardLayout1.show(panelConLeft, "1");
+
+		panelConRight.add(rightCreation,"3");
+		panelConRight.add(degreePanRight,"4");
+		cardLayout2.show(panelConRight,"3");
+
+
+
+
+
+		degreePanRight.addMouseListener(new Controller(this));
+		degreePanLeft.addMouseListener(new Controller(this));
 		leftCreation.addMouseListener(new Controller(this));
 		rightCreation.addMouseListener(new Controller(this));
+
 
 		// addMouseListener(new
 		// Controller(leftCreation,rightCreation,greenPlayer,yellowPlayer));
@@ -104,7 +130,7 @@ public class View extends JComponent implements Observer {
 		// vSplitLeft.setBottomComponent(leftCemetery);
 		vSplitLeft.setBottomComponent(leJLabel);
 		vSplitLeft.setResizeWeight(0.6);
-		vSplitRight.setTopComponent(rightCreation);
+		vSplitRight.setTopComponent(panelConRight);
 		// vSplitRight.setBottomComponent(rightCemetery);
 		vSplitRight.setBottomComponent(rightLable);
 		vSplitRight.setResizeWeight(0.4);
@@ -549,65 +575,50 @@ public class View extends JComponent implements Observer {
 		this.rightCreation = rightCreation;
 	}
 
-	/**
-	 * @return the greenPlayer
-	 */
+
 	public Player getGreenPlayer() {
 		return greenPlayer;
 	}
 
-	/**
-	 * @param greenPlayer
-	 *            the greenPlayer to set
-	 */
+
 	public void setGreenPlayer(Player greenPlayer) {
 		this.greenPlayer = greenPlayer;
 	}
 
-	/**
-	 * @return the yellowPlayer
-	 */
+
 	public Player getYellowPlayer() {
 		return yellowPlayer;
 	}
 
-	/**
-	 * @param yellowPlayer
-	 *            the yellowPlayer to set
-	 */
+
 	public void setYellowPlayer(Player yellowPlayer) {
 		this.yellowPlayer = yellowPlayer;
 	}
 
-	/**
-	 * @return the frame
-	 */
+
 	public JFrame getJFrame() {
 		return frame;
 	}
 
-	/**
-	 * @param frame
-	 *            the frame to set
-	 */
+
 	public void setJFrame(JFrame frame) {
 		this.frame = frame;
 	}
 
-	public DegreePanel getDegreePanel() {
-		return degreePanel;
+	public DegreePanLeft getDegreePanLeft() {
+		return degreePanLeft;
 	}
 
-	public void setDegreePanel(DegreePanel degreePanel) {
-		this.degreePanel = degreePanel;
+	public void setDegreePanLeft(DegreePanLeft degreePanLeft) {
+		this.degreePanLeft = degreePanLeft;
 	}
 
-	public CardLayout getCardLayout() {
-		return cardLayout;
+	public CardLayout getCardLayout1() {
+		return cardLayout1;
 	}
 
-	public void setCardLayout(CardLayout cardLayout) {
-		this.cardLayout = cardLayout;
+	public void setCardLayout1(CardLayout cardLayout1) {
+		this.cardLayout1 = cardLayout1;
 	}
 
 	public JPanel getPanelConLeft() {
@@ -617,4 +628,10 @@ public class View extends JComponent implements Observer {
 	public void setPanelConLeft(JPanel panelConLeft) {
 		this.panelConLeft = panelConLeft;
 	}
+    public CardLayout getCardLayout2() {
+        return cardLayout2;
+    }
+    public DegreePanRight getDegreePanRight() {
+        return degreePanRight;
+    }
 }

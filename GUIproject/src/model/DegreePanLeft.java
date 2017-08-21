@@ -1,15 +1,11 @@
 package model;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JPanel;
-
-public class DegreePanel extends JPanel {
+public class DegreePanLeft extends JPanel {
 	/**
 	 * 
 	 */
@@ -17,8 +13,8 @@ public class DegreePanel extends JPanel {
 	private int left = 12;
 	private static final long serialVersionUID = 1L;
 	private Piece selectPiece;
-	private List<Point> piecesPoint;
-	private List<Piece> diffDegreePiece; 
+	private List<Point> piecesPoint=new ArrayList<Point>();
+	private List<Piece> diffDegreePiece=new ArrayList<Piece>();
 	public List<Point> getPiecesPoint(){
 		return piecesPoint;
 	}
@@ -28,7 +24,8 @@ public class DegreePanel extends JPanel {
 		Piece selectPiece2= selectPiece.getRotatePiece("2", selectPiece);
 		Piece selectPiece3= selectPiece.getRotatePiece("3", selectPiece);
 		Piece selectPiece4= selectPiece.getRotatePiece("4", selectPiece);
-		diffDegreePiece.add(selectPiece1);
+
+        diffDegreePiece.add(selectPiece1);
 		diffDegreePiece.add(selectPiece2);
 		diffDegreePiece.add(selectPiece3);
 		diffDegreePiece.add(selectPiece4);
@@ -36,9 +33,7 @@ public class DegreePanel extends JPanel {
 	public List<Piece> getDiffDegreePiece(){
 		return diffDegreePiece;
 	}
-	public DegreePanel() {
-		
-	}
+
 	
 	
 	
@@ -49,9 +44,9 @@ public class DegreePanel extends JPanel {
 		if(selectPiece!=null){
 			
 			int outline = 13;
-			
+
 				for(int col=0;col<4;col++){
-					diffDegreePiece.get(col++).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top,0,col);
+					diffDegreePiece.get(col).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top,0,col);
 			
 					piecesPoint.add(new Point(left+col*(Piece.SIZE_PIECE+outline),top));
 				}

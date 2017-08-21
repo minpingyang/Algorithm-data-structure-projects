@@ -124,7 +124,7 @@ public class Piece {
 	 * This method is used to test
 	 **/
 	public void printWeapon() {
-		System.out.println("top: " + topWeapon + "  right:  " + rightWeapon + "  bot" + botWeapon + "   " + leftWeapon);
+		System.out.println("top: " + topWeapon + "  right:" + rightWeapon + "  bot " + botWeapon + "   left " + leftWeapon);
 	}
 
 	/**
@@ -241,8 +241,7 @@ public class Piece {
 
 
 	public Piece getRotatePiece(String degree, Piece ot) {
-		Piece temp = null;
-		temp.setType(ot.getType());
+		Piece temp = new Piece(ot.getType());
 		temp.setName(this.getName());
 		if (degree.equals("2")) {
 			temp.setFourWeapon(ot.getLeftWeapon(), ot.getTopWeapon(), ot.getTopWeapon(), ot.getBottomWeapon());
