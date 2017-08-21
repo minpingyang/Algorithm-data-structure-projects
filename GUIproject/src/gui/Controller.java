@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.CardLayout;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -8,6 +9,7 @@ import java.awt.event.MouseListener;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import model.LeftCreation;
 import model.Piece;
@@ -28,16 +30,19 @@ public class Controller implements MouseListener {
 	private Piece previousSe = null;
 	private char creatPiName;
 	private String creatDegree;
+	private JPanel panelConLeft;
+	private CardLayout cardLayout;
 
-	public Controller(LeftCreation leftCreation, RightCreation rightCreation, Player greenPlayer, Player yellowPlayer,
-			Frame gui, View view) {
+	public Controller(View view) {
 
-		leftPoint = leftCreation.getPiecesPoint();
-		leftPieces = greenPlayer.getPieces();
-		rightPoint = rightCreation.getPiecesPoint();
-		rightPieces = yellowPlayer.getPieces();
-		this.gui = gui;
+		leftPoint = view.getLeftCreation().getPiecesPoint();
+		leftPieces = view.getGreenPlayer().getPieces();
+		rightPoint = view.getRightCreation().getPiecesPoint();
+		rightPieces = view.getYellowPlayer().getPieces();
+		gui = view.getJFrame();
 		this.view = view;
+		panelConLeft=view.getPanelConLeft();
+		cardLayout=view.getCardLayout();
 	}
 
 	
@@ -72,7 +77,7 @@ public class Controller implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 
 	}
-	public void chooseOrientation() {
+	public void chooseOrientation() throws InterruptedException {
 		
 		String[] options = new String[] {"0", "90", "180", "270"};
 	    int response = JOptionPane.showOptionDialog(null, "choose the degree", "Orientation Chooser",
@@ -99,7 +104,7 @@ public class Controller implements MouseListener {
 	
 	}
 	
-	public void selectHelper(List<Point> points, List<Piece> pieces,Point p){
+	public void selectHelper(List<Point> points, List<Piece> pieces,Point p) throws InterruptedException{
 	
 		boolean clickOn = doesClickOne(p, points);
 	
@@ -140,9 +145,19 @@ public class Controller implements MouseListener {
 		
 		if (p != null) {
 			if(e.getSource() instanceof LeftCreation){
-				selectHelper(leftPoint, leftPieces, p);
+				try {
+					selectHelper(leftPoint, leftPieces, p);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}else if(e.getSource() instanceof RightCreation){
-				selectHelper(rightPoint, rightPieces, p);
+				try {
+					selectHelper(rightPoint, rightPieces, p);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}	
 		}
 

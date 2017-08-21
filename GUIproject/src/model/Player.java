@@ -1,19 +1,23 @@
 package model;
 
+import model.Piece.Type;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.Attributes.Name;
-
-import javax.swing.border.EmptyBorder;
-
-import model.Piece.Type;
 
 
 
 public class Player {
 	private Piece.Type cardType;
 	private List<Piece> pieces;
-	
+	private boolean hasCreate=false; // with one turn
+	public void setHasCreate(boolean b){
+	    hasCreate = b;
+    }
+    public boolean getHasCreate(){
+	    return hasCreate;
+    }
+
 	public Player(Piece.Type cardType) {
 		this.cardType = cardType;
 		pieces = new ArrayList<Piece>();
