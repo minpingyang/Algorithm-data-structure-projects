@@ -16,13 +16,13 @@ public class Controller implements MouseListener {
 	private List<Point> rightPoint,degreeRightPoint;
 	private List<Piece> rightPieces,degreeRightPieces;
 
-	private int selectIndex;
+	private Point[][] boardPoint= new Point[10][10];
+	private int selectIndex,rowB,colB;
+
 	private View view;
-	private Frame gui;
+	private JFrame jFrame;
 	private int hasClicked = 0;
 	private Piece previousSe = null;
-	private char creatPiName;
-	private String creatDegree;
 
 	private DegreePanLeft degreePanLeft;
 	private DegreePanRight degreePanRight;
@@ -30,13 +30,15 @@ public class Controller implements MouseListener {
 	private JPanel panelConLeft,panelConRight;
 	private CardLayout cardLayout1,cardLayout2;
 
+	private Board board;
+
 	public Controller(View view) {
 
 		leftPoint = view.getLeftCreation().getPiecesPoint();
 		leftPieces = view.getGreenPlayer().getPieces();
 		rightPoint = view.getRightCreation().getPiecesPoint();
 		rightPieces = view.getYellowPlayer().getPieces();
-		gui = view.getJFrame();
+		jFrame = view.getJFrame();
 		this.view = view;
 
 		panelConLeft=view.getPanelConLeft();
@@ -53,6 +55,8 @@ public class Controller implements MouseListener {
 
 		degreeRightPieces=degreePanRight.getDiffDegreePiece();
 		degreeRightPoint=degreePanRight.getPiecesPoint();
+		board= view.getBoard();
+		boardPoint = board.getPiecePoint();
 	}
 
 	
@@ -75,45 +79,83 @@ public class Controller implements MouseListener {
 			if (!checkTwoPoint(clickP, piecePoint)) {
 				continue;
 			} else {
+
 				selectIndex = piecePoints.indexOf(piecePoint);
-				return true;
+                System.out.println("selectIndex: "+selectIndex);
+                return true;
 			}
 		}
 
 		return false;
 	}
+    public boolean doesClickOne(Point[][] points,Point p){
+	    for(int row=0;row<10;row++){
+	        for(int col=0;col<10;col++){
+	            if(points[row][col]!=null&&checkTwoPoint(p,points[row][col])){
+                    rowB= row;
+                    colB = col;
+//                    System.out.println("find the clicked piece on the board");
+//                    System.out.println("rowB: "+rowB+" colB"+colB);
+                    return true;
+                }
+            }
+        }
+        return false;
+
+    }
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-
-	}
-	public void chooseOrientation() throws InterruptedException {
-		
-		String[] options = new String[] {"0", "90", "180", "270"};
-	    int response = JOptionPane.showOptionDialog(null, "choose the degree", "Orientation Chooser",
-	        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-	        null, options, options[0]);
-	    switch (response) {
-		case 0:
-			creatDegree="1";
-			break;
-		case 1:
-			creatDegree="2";
-			break;
-		case 2:
-			creatDegree="3";
-			break;
-		case 3:
-			creatDegree="4";
-			break;	
-		default:
-			break;
-		}
-	    String command = "create "+creatPiName+" "+creatDegree;
-	    view.inputCommand(command);
-	
 	}
 
+	public void selectHelper(Point[][] points,Point p){
+		boolean clickOn= doesClickOne(points,p);
+		if(!clickOn){
+            System.out.println("have not clicked right position");
+            return;
+        }
+        Piece selectPiece = board.getPieceBoard()[rowB][colB];
+		clickHelper(selectPiece,false,false,true);
+
+
+	}
+    public  void clickHelper(Piece selectPiece,boolean isDegreePanel,boolean isLeft,boolean isBoard){
+        // s->0->hig s->1->hig
+        selectPiece.setIsHighLight(true);
+
+        hasClicked++;// has->1 ->2->1
+        if ((hasClicked == 2 || hasClicked == 1) && previousSe != null) {
+            // 0->hidd
+            previousSe.setIsHighLight(false);
+        }
+
+
+        if (hasClicked == 1) {//
+            // pre->0
+            previousSe = selectPiece; // 0 : 0
+            jFrame.repaint();
+        }
+        if (hasClicked == 2) {
+            // pr->1
+            previousSe = selectPiece;
+            hasClicked = 0;
+            jFrame.repaint();
+        }
+
+        if(!isBoard) selectOrientation(selectPiece,isDegreePanel,isLeft);
+        if(isDegreePanel){
+            String degree = Integer.toString(selectIndex+1);
+            System.out.println("degree"+degree);
+            char name= selectPiece.getName();
+            String command = "create "+name+" "+degree;
+            try {
+                view.inputCommand(command);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
 	
 	public void selectHelper(List<Point> points, List<Piece> pieces,Point p,boolean isDegreePanel,boolean isLeft) throws InterruptedException{
 	
@@ -124,40 +166,9 @@ public class Controller implements MouseListener {
 			return;
 		}
         Piece selectPiece=pieces.get(selectIndex);
-		creatPiName=selectPiece.getName();
-		// s->0->hig s->1->hig
-		selectPiece.setIsHighLight(true);
-		
-		hasClicked++;// has->1 ->2->1
-		if ((hasClicked == 2 || hasClicked == 1) && previousSe != null) {
-			// 0->hidd
-			previousSe.setIsHighLight(false);
-		}
-
-		
-		if (hasClicked == 1) {//
-			// pre->0
-			previousSe = selectPiece; // 0 : 0
-			gui.repaint();
-		}
-		if (hasClicked == 2) {
-			// pr->1
-			previousSe = selectPiece;
-			hasClicked = 0;
-			gui.repaint();
-		}
-//		chooseOrientation();
-
-        selectOrientation(selectPiece,isDegreePanel,isLeft);
-        if(isDegreePanel){
-            String degree = Integer.toString(selectIndex+1);
-            System.out.println("degree"+degree);
-            char name= selectPiece.getName();
-            String command = "create "+name+" "+degree;
-            view.inputCommand(command);
-
-        }
+        clickHelper(selectPiece,isDegreePanel,isLeft,false);
 	}
+
 	public void selectOrientation(Piece selectPiece,boolean isDegreePanel,boolean isLeft){
 
         if(!isDegreePanel&&isLeft){
@@ -171,7 +182,7 @@ public class Controller implements MouseListener {
             cardLayout2.show(panelConRight,"4");
 //            panelConRight.getClass().getName();
         }else if(isDegreePanel&&!isLeft){
-            cardLayout2.show(panelConRight,"2");
+            cardLayout2.show(panelConRight,"3");
         }
 
     }
@@ -206,6 +217,9 @@ public class Controller implements MouseListener {
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
+            }else if(e.getSource() instanceof Board){
+                System.out.println("click the board panel");
+                selectHelper(boardPoint,p);
             }
 		}
 
@@ -213,20 +227,14 @@ public class Controller implements MouseListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

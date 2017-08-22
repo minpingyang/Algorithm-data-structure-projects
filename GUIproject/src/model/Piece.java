@@ -257,8 +257,6 @@ public class Piece {
 	}
 
 	private void setType(Type type1) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void drawWeaponHelper(Graphics g, char c, int x, int y, boolean col, int offset) {
@@ -311,7 +309,7 @@ public class Piece {
 	}
 
 	public void highLightSelect(Graphics g) {
-		g.setColor(new Color(255, 255, 255));
+		g.setColor(new Color(0, 255, 239));
 		g.fillRect(panelX - selectWidth, panelY - selectWidth, SIZE_PIECE + selectWidth * 2,
 				SIZE_PIECE + selectWidth * 2);
 	}

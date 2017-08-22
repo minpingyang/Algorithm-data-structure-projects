@@ -41,6 +41,8 @@ public class View extends JComponent implements Observer {
 	private Stack<Character> nameStack;
 	private Stack<String> degreeStack;
 	private boolean hasReaction;
+
+
 	public JPanel getPanelConRight(){
 	    return panelConRight;
     }
@@ -83,7 +85,7 @@ public class View extends JComponent implements Observer {
 
 
 
-
+		board.addMouseListener(new Controller(this));
 		degreePanRight.addMouseListener(new Controller(this));
 		degreePanLeft.addMouseListener(new Controller(this));
 		leftCreation.addMouseListener(new Controller(this));
@@ -389,10 +391,10 @@ public class View extends JComponent implements Observer {
 		temp.setHasCreate(board.getHasCreate());
 		for (int row = 0; row < 10; row++) {
 			for (int col = 0; col < 10; col++) {
-				temp.piecesBoard[row][col] = board.piecesBoard[row][col];
-				if (board.piecesBoard[row][col].getType() == Piece.Type.YellowPiece
-						|| board.piecesBoard[row][col].getType() == Piece.Type.GreenPiece) {
-					temp.piecesBoard[row][col].deepClone(board.piecesBoard[row][col]);
+				temp.getPiecesBoard()[row][col]=board.getPiecesBoard()[row][col];
+				if (board.getPiecesBoard()[row][col].getType() == Piece.Type.YellowPiece
+						|| board.getPiecesBoard()[row][col].getType() == Piece.Type.GreenPiece) {
+					temp.getPiecesBoard()[row][col].deepClone(board.getPiecesBoard()[row][col]);
 //					System.out.println("temp undo !!!!weapon");
 //					temp.piecesBoard[row][col].printWeapon();
 //					System.out.println("temp undo !!!!weapon");
@@ -531,7 +533,6 @@ public class View extends JComponent implements Observer {
 
 	@Override
 	protected void paintComponent(Graphics g) {
-		// TODO Auto-generated method stub
 		super.paintComponent(g);
 
 	}

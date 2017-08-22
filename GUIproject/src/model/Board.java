@@ -1,7 +1,6 @@
 package model;
 
 
-
 import gui.View;
 import model.Piece.Type;
 
@@ -25,17 +24,33 @@ public class Board  extends JPanel{
 	Piece[][] board;
 	private int rows = 10; // the row of the board
 	private int cols = 10;
-	public Piece[][]piecesBoard;// the 10*10 2D array to store all the pieces of the board
+	private Piece[][]piecesBoard;// the 10*10 2D array to store all the pieces of the board
 	private Piece actPiece; // the pieces just now was being moved/rotated/created --> used fo checking reactions
 	private int pCol = 0, pRow = 0; //
 	private boolean hasCreate=false; // the boolean indicating if this turn, the player already created a piece
 	private Queue<Character> moveQue;
+	private Point[][] piecePoint = new Point[10][10];
+
+
 	public void setHasCreate(boolean b){
 		hasCreate=b;
 	}
 	public boolean getHasCreate(){
 		return hasCreate;
 	}
+
+	public Point[][] getPiecePoint(){
+	    return piecePoint;
+    }
+	public void setPiecesBoard(Piece[][] temp){
+	    piecesBoard= temp;
+    }
+
+
+    public Piece[][] getPiecesBoard(){
+	    return piecesBoard;
+    }
+
 	/***
 	 * construtor of the class
 	 * create a 
@@ -589,6 +604,9 @@ public class Board  extends JPanel{
 		for(int row = 0; row<10;row++){
 			for(int col=0;col<10;col++){
 				piecesBoard[row][col].drawPiece(g,col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE,row,col);
+				if(piecesBoard[row][col].getType()==Type.GreenPiece||piecesBoard[row][col].getType()==Type.YellowPiece){
+				    piecePoint[row][col]=new Point(col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE);
+                }
 			}
 		}
 	}
