@@ -41,10 +41,17 @@ public class View extends JComponent implements Observer {
 	private Stack<Character> nameStack;
 	private Stack<String> degreeStack;
 	private boolean hasReaction;
+    private boolean doesClPieBoard=false;
 
 
 	public JPanel getPanelConRight(){
 	    return panelConRight;
+    }
+    public boolean getDoesCliPieBoard(){
+	    return doesClPieBoard;
+    }
+    public void setDoesClPieBoard(boolean b){
+        doesClPieBoard=b;
     }
 
 	public View() {
@@ -52,10 +59,11 @@ public class View extends JComponent implements Observer {
 		isGreenTurn = true;
 		nameStack=new Stack<Character>();
 		degreeStack=new Stack<String>();
-		
-		this.setFocusable(true);
-		frame = new JFrame("Sword and Shield");
 
+        this.setFocusable(true);
+
+		frame = new JFrame("Sword and Shield");
+        frame.setFocusable(true);
 		panelConLeft = new JPanel();
 		cardLayout1 = new CardLayout();
 		panelConLeft.setLayout(cardLayout1);
@@ -81,46 +89,54 @@ public class View extends JComponent implements Observer {
 		panelConRight.add(rightCreation,"3");
 		panelConRight.add(degreePanRight,"4");
 		cardLayout2.show(panelConRight,"3");
+//        frame.addKeyListener(new KeyController());
+		frame.addKeyListener(new Controller(this));
+        //board.addKeyListener(new Controller(this));
 
-
-
+        board.addKeyListener(new Controller(this));
 
 		board.addMouseListener(new Controller(this));
 		degreePanRight.addMouseListener(new Controller(this));
 		degreePanLeft.addMouseListener(new Controller(this));
 		leftCreation.addMouseListener(new Controller(this));
 		rightCreation.addMouseListener(new Controller(this));
+        leftCreation.setFocusable(true);
+        rightCreation.setFocusable(true);
 
-
-		// addMouseListener(new
-		// Controller(leftCreation,rightCreation,greenPlayer,yellowPlayer));
 		leftCemetery = new LeftCemetery(greenPlayer);
 		rightCemetery = new RightCemetery(yellowPlayer);
 		menu.setLayout(new FlowLayout());
 		startGame = new JButton("Begin new game");
 		exitGame = new JButton("Quit");
 		info = new JButton("Info");
+		info.setFocusable(false);
 		menu.add(startGame);
 		menu.add(exitGame);
 		menu.add(info);
+		menu.setFocusable(false);
 		undo = new JButton("Undo");
+		undo.setFocusable(false);
 		pass = new JButton("Pass");
+		pass.setFocusable(false);
 		surrender = new JButton("Surrender");
+		surrender.setFocusable(false);
 		jtb = new JToolBar();
 		jtb.add(undo);
 		jtb.add(pass);
 		jtb.add(surrender);
 		jtb.add(menu);
 		jtb.setBackground(Color.PINK);
+		jtb.setFocusable(false);
 		menu.setBackground(Color.pink);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		frame.add(jtb, BorderLayout.NORTH);
-
+        frame.add(board);
+		addKeyListener(new Controller(this));
+//        addKeyListener(new KeyController());
 		frame.setVisible(true);
 
-		// frame.addMouseListener(new
-		// Controller(leftCreation,rightCreation,greenPlayer,yellowPlayer));
+
 		final JSplitPane hSplitRigt = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		final JSplitPane wholeBoard = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		final JSplitPane vSplitLeft = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -152,8 +168,9 @@ public class View extends JComponent implements Observer {
 		wholeBoard.setContinuousLayout(true);
 		wholeBoard.setOneTouchExpandable(true);
 		hSplitRigt.setDividerLocation(50);
+		wholeBoard.addKeyListener(new Controller(this));
+//        wholeBoard.addKeyListener(new KeyController());
 		frame.add(wholeBoard, BorderLayout.CENTER);
-
 		frame.pack();
 
 		buttonFuc();
@@ -193,6 +210,7 @@ public class View extends JComponent implements Observer {
             public void actionPerformed(ActionEvent ev) {
                 try {
                     excute("pass");
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -456,6 +474,7 @@ public class View extends JComponent implements Observer {
 				doActionSuccess = doesMove;
 				doesAct = doActionSuccess;
 				if(doesMove){
+				    board.findPieceOnBoard(pieceName).setIsHighLight(false);
 					undoStack.add(temp);
 					isRotate=false;
 				}
@@ -486,7 +505,7 @@ public class View extends JComponent implements Observer {
 			}
 		}
 		
-		 System.out.println("stack size"+undoStack.size());
+//		 System.out.println("stack size"+undoStack.size());
 		// leftPieces.setInfo(info);
 		return doActionSuccess;
 	}

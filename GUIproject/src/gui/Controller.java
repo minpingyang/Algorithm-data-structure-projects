@@ -4,12 +4,14 @@ import model.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
 
-public class Controller implements MouseListener {
-
+public class Controller implements MouseListener,KeyListener {
+//    public static boolean canClick= true;
 	private List<Point> leftPoint,degreeLeftPoint;
 	private List<Piece> leftPieces,degreeLeftPieces;
 
@@ -17,7 +19,7 @@ public class Controller implements MouseListener {
 	private List<Piece> rightPieces,degreeRightPieces;
 
 	private Point[][] boardPoint= new Point[10][10];
-	private int selectIndex,rowB,colB;
+	private int selectIndex;
 
 	private View view;
 	private JFrame jFrame;
@@ -26,13 +28,13 @@ public class Controller implements MouseListener {
 
 	private DegreePanLeft degreePanLeft;
 	private DegreePanRight degreePanRight;
-
+    private int selectRange=Piece.SIZE_PIECE/3;
 	private JPanel panelConLeft,panelConRight;
 	private CardLayout cardLayout1,cardLayout2;
 
 	private Board board;
 
-	public Controller(View view) {
+    public Controller(View view) {
 
 		leftPoint = view.getLeftCreation().getPiecesPoint();
 		leftPieces = view.getGreenPlayer().getPieces();
@@ -72,6 +74,30 @@ public class Controller implements MouseListener {
 
 		return b;
 	}
+	//for move
+    public int checkPoitMove(Point clickP,Point pointP){
+        double cX = clickP.getX();
+        double cY = clickP.getY();
+        double rightMostOut = pointP.getX() + Piece.SIZE_PIECE;
+        double leftMostOut = pointP.getX();
+        double topMostOut = pointP.getY();
+        double bottomMostOut = pointP.getY() + Piece.SIZE_PIECE;
+        double rightMostIn = rightMostOut-selectRange;
+        double leftMostIn= leftMostOut+selectRange;
+        double topMostIn= topMostOut+selectRange;
+        double bottomMostIn = bottomMostOut-selectRange;
+        boolean bLeft = cX>leftMostOut&&cX<leftMostIn&& cY>topMostIn&&cY<bottomMostIn;
+        boolean bRight =cX<rightMostOut&&cX>rightMostIn&& cY>topMostIn&&cY<bottomMostIn;
+        boolean bUp = cX>leftMostIn&&cX<rightMostIn&&cY>topMostOut&&cY<topMostIn;
+        boolean bDown= cX>leftMostIn&&cX<rightMostIn&&cY>bottomMostIn&&cY<bottomMostOut;
+        if(bUp) return 1;
+        if(bRight) return 2;
+        if(bDown) return 3;
+        if(bLeft) return 4;
+
+        return 0;
+
+    }
 
 	public boolean doesClickOne(Point clickP, List<Point> piecePoints) {
 
@@ -81,7 +107,6 @@ public class Controller implements MouseListener {
 			} else {
 
 				selectIndex = piecePoints.indexOf(piecePoint);
-                System.out.println("selectIndex: "+selectIndex);
                 return true;
 			}
 		}
@@ -92,10 +117,9 @@ public class Controller implements MouseListener {
 	    for(int row=0;row<10;row++){
 	        for(int col=0;col<10;col++){
 	            if(points[row][col]!=null&&checkTwoPoint(p,points[row][col])){
-                    rowB= row;
-                    colB = col;
-//                    System.out.println("find the clicked piece on the board");
-//                    System.out.println("rowB: "+rowB+" colB"+colB);
+                    board.setRowB(row);
+                    board.setColB(col);
+
                     return true;
                 }
             }
@@ -108,17 +132,7 @@ public class Controller implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 	}
 
-	public void selectHelper(Point[][] points,Point p){
-		boolean clickOn= doesClickOne(points,p);
-		if(!clickOn){
-            System.out.println("have not clicked right position");
-            return;
-        }
-        Piece selectPiece = board.getPieceBoard()[rowB][colB];
-		clickHelper(selectPiece,false,false,true);
 
-
-	}
     public  void clickHelper(Piece selectPiece,boolean isDegreePanel,boolean isLeft,boolean isBoard){
         // s->0->hig s->1->hig
         selectPiece.setIsHighLight(true);
@@ -141,11 +155,11 @@ public class Controller implements MouseListener {
             hasClicked = 0;
             jFrame.repaint();
         }
+        view.setDoesClPieBoard(isBoard);   // TODO ALREADY MOVED CANNOT BE SELECTED
+        if(!isBoard) {selectOrientation(selectPiece,isDegreePanel,isLeft);}
 
-        if(!isBoard) selectOrientation(selectPiece,isDegreePanel,isLeft);
         if(isDegreePanel){
             String degree = Integer.toString(selectIndex+1);
-            System.out.println("degree"+degree);
             char name= selectPiece.getName();
             String command = "create "+name+" "+degree;
             try {
@@ -156,7 +170,19 @@ public class Controller implements MouseListener {
 
         }
     }
-	
+    //for board
+    public void selectHelper(Point[][] points,Point p){
+        boolean clickOn= doesClickOne(points,p);
+        if(!clickOn){
+            System.out.println("have not clicked right position");
+            return;
+        }
+        Piece selectPiece = board.getPieceBoard()[board.getRowB()][board.getColB()];
+        clickHelper(selectPiece,false,false,true);
+
+
+    }
+    //for left/right
 	public void selectHelper(List<Point> points, List<Piece> pieces,Point p,boolean isDegreePanel,boolean isLeft) throws InterruptedException{
 	
 		boolean clickOn = doesClickOne(p, points);
@@ -172,8 +198,9 @@ public class Controller implements MouseListener {
 	public void selectOrientation(Piece selectPiece,boolean isDegreePanel,boolean isLeft){
 
         if(!isDegreePanel&&isLeft){
-            degreePanLeft.setSelectPiece(selectPiece);
-            cardLayout1.show(panelConLeft,"2");
+            System.out.println("selectPiece: "+selectPiece.getName());
+            view.getDegreePanLeft().setSelectPiece(selectPiece);
+            cardLayout1.show(view.getPanelConLeft(),"2");
         }else if(isDegreePanel&&isLeft){
             cardLayout1.show(panelConLeft,"1");
         }else if(!isDegreePanel&&!isLeft){
@@ -189,6 +216,7 @@ public class Controller implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+//	    if(!canClick) return;
 		Point p = e.getPoint();
 		
 		
@@ -218,12 +246,16 @@ public class Controller implements MouseListener {
                     e1.printStackTrace();
                 }
             }else if(e.getSource() instanceof Board){
-                System.out.println("click the board panel");
-                selectHelper(boardPoint,p);
+
+                    selectHelper(boardPoint,p);
+
             }
 		}
 
 	}
+	public void clickMove(){
+
+    }
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
@@ -237,4 +269,42 @@ public class Controller implements MouseListener {
 	public void mouseExited(MouseEvent e) {
 	}
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+       int key = e.getKeyCode();
+       if(!view.getDoesCliPieBoard()) {
+           return;
+       }
+       String dir="1";
+
+       if(key==KeyEvent.VK_RIGHT||key==KeyEvent.VK_KP_RIGHT) dir="right";
+       if(key==KeyEvent.VK_LEFT||key== KeyEvent.VK_KP_LEFT) dir="left";
+       if(key==KeyEvent.VK_UP||key==KeyEvent.VK_KP_UP) dir ="up";
+       if(key==KeyEvent.VK_DOWN|| key==KeyEvent.VK_KP_DOWN) dir= "down";
+
+
+
+
+
+       if(!dir.equals("1")){
+
+           char piecesName = board.getPiecesBoard()[board.getRowB()][board.getColB()].getName();
+           String command = "move "+piecesName+" "+dir;
+           System.out.println("command: "+command);
+           try {
+               view.inputCommand(command);
+           } catch (InterruptedException e1) {
+               e1.printStackTrace();
+           }
+       }
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
 }

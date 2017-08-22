@@ -18,24 +18,33 @@ public class DegreePanLeft extends JPanel {
 	public List<Point> getPiecesPoint(){
 		return piecesPoint;
 	}
+
 	public void setSelectPiece(Piece temp){
-		selectPiece=temp;
+		List<Piece> late= new ArrayList<Piece>();
+	    selectPiece=temp;
 		Piece selectPiece1= selectPiece.getRotatePiece("1", selectPiece);
 		Piece selectPiece2= selectPiece.getRotatePiece("2", selectPiece);
 		Piece selectPiece3= selectPiece.getRotatePiece("3", selectPiece);
 		Piece selectPiece4= selectPiece.getRotatePiece("4", selectPiece);
 
+//		System.out.println("name: "+selectPiece1.getName());
+//
+////		selectPiece1.printWeapon();
+////		selectPiece2.printWeapon();
+////		selectPiece3.printWeapon();
+////		selectPiece4.printWeapon();
+        diffDegreePiece.clear();
         diffDegreePiece.add(selectPiece1);
-		diffDegreePiece.add(selectPiece2);
+        diffDegreePiece.add(selectPiece2);
 		diffDegreePiece.add(selectPiece3);
 		diffDegreePiece.add(selectPiece4);
+
 	}
 	public List<Piece> getDiffDegreePiece(){
 		return diffDegreePiece;
 	}
 
-	
-	
+
 	
 	@Override
 	public void paint(Graphics g){
@@ -47,7 +56,8 @@ public class DegreePanLeft extends JPanel {
 
 				for(int col=0;col<4;col++){
 					diffDegreePiece.get(col).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top,0,col);
-			
+                    System.out.println("draw name: "+diffDegreePiece.get(col).getName());
+                    diffDegreePiece.get(col).printWeapon();
 					piecesPoint.add(new Point(left+col*(Piece.SIZE_PIECE+outline),top));
 				}
 		

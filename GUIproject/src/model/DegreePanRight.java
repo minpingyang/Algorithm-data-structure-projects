@@ -28,6 +28,7 @@ public class DegreePanRight extends JPanel {
         Piece selectPiece3= selectPiece.getRotatePiece("3", selectPiece);
         Piece selectPiece4= selectPiece.getRotatePiece("4", selectPiece);
 
+        diffDegreePiece.clear();
         diffDegreePiece.add(selectPiece1);
         diffDegreePiece.add(selectPiece2);
         diffDegreePiece.add(selectPiece3);

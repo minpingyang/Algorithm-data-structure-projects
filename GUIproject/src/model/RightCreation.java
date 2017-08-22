@@ -1,13 +1,9 @@
 package model;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.Point;
-
-import javax.swing.JPanel;
 
 
 
@@ -26,6 +22,7 @@ public class RightCreation extends JPanel{
 	public List<Point> getPiecesPoint(){
 		return piecesPoint;
 	}
+
 	public RightCreation(Player player) {
 		yellowPlayer = player;
 		pieces = new ArrayList<Piece>();
