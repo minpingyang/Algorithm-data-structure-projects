@@ -232,8 +232,11 @@ public class Controller implements MouseListener, KeyListener {
                 e1.printStackTrace();
             }
         }
-
+        if(dir==5){
             selectOrientationBoard(selectPiece, isRotation);
+        }
+
+
 
 
     }

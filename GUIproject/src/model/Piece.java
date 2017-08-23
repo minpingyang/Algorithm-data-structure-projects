@@ -4,17 +4,19 @@ import java.awt.*;
 import java.util.HashMap;
 
 public class Piece {
-	public static final int SIZE_PIECE = 70;// may be used by other classes
+	public static int SIZE_PIECE = 70;// may be used by other classes
 	private Type type;
 	private char[][] equipment;
 	private char name;// first row represents: second row represents
 	private char topWeapon, rightWeapon, botWeapon, leftWeapon;
 	private boolean hasRotate, hasMove;
 	private int weaponWidth = SIZE_PIECE / 8;
+
 	private int selectWidth = weaponWidth / 2;
 	private int panelX, panelY;
 	private boolean isHighLight = false;
-
+	private int rotatePSize = SIZE_PIECE+10;
+	private int rotateWeaponWidth=rotatePSize/8;
 	public void setIsHighLight(boolean b) {
 		isHighLight = b;
 	}
@@ -290,6 +292,37 @@ public class Piece {
 			}
 		}
 	}
+	public void drawRotateWeaponHelper(Graphics g, char c, int x, int y, boolean col, int offset) {
+
+		int i = offset == 0 ? 0 : 1;
+
+		if (col) {
+			switch (c) {
+				case '#':// shield horizontal
+					g.fillRect(x, y + offset - rotateWeaponWidth * i, rotatePSize, rotateWeaponWidth); // horizontal
+					// shield
+					break;
+				case '|':// sword vertical
+					g.fillRect(x + rotatePSize / 2, y + offset / 2, rotateWeaponWidth , rotatePSize / 2); // vertical
+					// sword
+					break;
+				default:
+					break;
+			}
+		} else {
+			switch (c) {
+				case '#':// shield vertical
+					g.fillRect(x + offset - rotateWeaponWidth * i, y, rotateWeaponWidth, rotatePSize); // shield
+					// vertical
+					break;
+				case '|':// sword horizontal
+					g.fillRect(x + offset / 2, y + rotatePSize / 2, rotatePSize / 2, rotateWeaponWidth); // sword
+					break;
+				default:
+					break;
+			}
+		}
+	}
 
 	public void drawWeapon(Graphics g, int x, int y) {
 		if (this.type == Type.GreenPiece) {
@@ -307,11 +340,55 @@ public class Piece {
 		drawWeaponHelper(g, right, x, y, false, SIZE_PIECE);
 
 	}
+	public void drawRotateWeapon(Graphics g, int x, int y) {
+		if (this.type == Type.GreenPiece) {
+			g.setColor(Color.red);
+		} else if (this.type == Type.YellowPiece) {
+			g.setColor(new Color(178, 0, 255));
+		}
+		char top = this.equipment[0][1];
+		char left = this.equipment[1][0];
+		char bottom = this.equipment[2][1];
+		char right = this.equipment[1][2];
+		drawRotateWeaponHelper(g, top, x, y, true, 0);
+		drawRotateWeaponHelper(g, bottom, x, y, true, rotatePSize);
+		drawRotateWeaponHelper(g, left, x, y, false, 0);
+		drawRotateWeaponHelper(g, right, x, y, false, rotatePSize);
+
+	}
 
 	public void highLightSelect(Graphics g) {
 		g.setColor(new Color(0, 255, 239));
 		g.fillRect(panelX - selectWidth, panelY - selectWidth, SIZE_PIECE + selectWidth * 2,
 				SIZE_PIECE + selectWidth * 2);
+	}
+
+	public void drawRotatePiece(Graphics g, int x, int y, int row, int col){
+
+		if (this.type == Type.GreenPiece) {
+			if (isHighLight) {
+				highLightSelect(g);
+			}
+			g.setColor(Color.BLACK);
+			g.fillRect(x, y, rotatePSize, rotatePSize);
+			g.setColor(Color.GREEN);
+			g.fillOval(x, y, rotatePSize, rotatePSize);
+			drawRotateWeapon(g, x, y);
+			panelX = x;
+			panelY = y;
+		} else if (this.type == Type.YellowPiece) {
+			if (isHighLight) {
+				highLightSelect(g);
+			}
+			g.setColor(Color.BLACK);
+			g.fillRect(x, y, rotatePSize, rotatePSize);
+			g.setColor(Color.yellow);
+			g.fillOval(x, y, rotatePSize, rotatePSize);
+			drawRotateWeapon(g, x, y);
+			panelX = x;
+			panelY = y;
+		}
+
 	}
 
 	public void drawPiece(Graphics g, int x, int y, int row, int col) {

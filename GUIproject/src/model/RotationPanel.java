@@ -2,6 +2,7 @@ package model;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by minpingyang on 23/08/17.
@@ -40,12 +41,23 @@ public class RotationPanel extends JPanel {
             }
         }
         //super.paint(g2d);
+        selectPiece.setIsHighLight(false);
+
+        ArrayList<Integer> roCol= board.findPieceCoord(selectPiece.getName());
+        int row = roCol.get(0);
+        int col = roCol.get(1);
+        selectPiece.drawRotatePiece(g,col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE,board.getRowB(),board.getColB());
+
 
 
     }
     @Override
     protected void paintComponent(Graphics g) {
+
         super.paintComponent(g);
+        int rotateSize= Piece.SIZE_PIECE+10;
+        System.out.println("paint component");
+        selectPiece.drawPiece(g,board.getColB()*rotateSize,board.getRowB()*rotateSize,board.getRowB(),board.getColB());
         // Fake the background
 //        g.setColor(getBackground());
 //        g.fillRect(0, 0, getWidth(), getHeight());
