@@ -28,7 +28,7 @@ public class Controller implements MouseListener,KeyListener {
 
 	private DegreePanLeft degreePanLeft;
 	private DegreePanRight degreePanRight;
-    private int selectRange=Piece.SIZE_PIECE/3;
+    private int selectRange=Piece.SIZE_PIECE/4;
 	private JPanel panelConLeft,panelConRight;
 	private CardLayout cardLayout1,cardLayout2;
 
@@ -99,6 +99,43 @@ public class Controller implements MouseListener,KeyListener {
 
     }
 
+    public void clickToMove(Point[][] points, Point p){
+        boolean clickOn =doesClickOne(points,p,true);
+        if(!clickOn){
+            System.out.println("have not clicked right position");
+            return;
+        }
+        Piece selectPiece=board.getPieceBoard()[board.getRowB()][board.getColB()];
+        int dir = board.getMoveDir();
+        String direction="1";
+        if(dir==1) direction="up";
+        if(dir==2) direction="right";
+        if(dir==3) direction="down";
+        if(dir==4) direction= "left";
+        if(!direction.equals("1")){
+            char piecesName = board.getPiecesBoard()[board.getRowB()][board.getColB()].getName();
+            String command = "move "+piecesName+" "+direction;
+            System.out.println("command: "+command);
+            try {
+                view.inputCommand(command);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+    }
+    //for board
+    public void selectHelper(Point[][] points,Point p){
+        boolean clickOn= doesClickOne(points,p,false);
+        if(!clickOn){
+            System.out.println("have not clicked right position");
+            return;
+        }
+        Piece selectPiece = board.getPieceBoard()[board.getRowB()][board.getColB()];
+        clickHelper(selectPiece,false,false,true);
+
+
+    }
 	public boolean doesClickOne(Point clickP, List<Point> piecePoints) {
 
 		for (Point piecePoint : piecePoints) {
@@ -113,13 +150,20 @@ public class Controller implements MouseListener,KeyListener {
 
 		return false;
 	}
-    public boolean doesClickOne(Point[][] points,Point p){
+    public boolean doesClickOne(Point[][] points,Point p,boolean isMove){
 	    for(int row=0;row<10;row++){
 	        for(int col=0;col<10;col++){
-	            if(points[row][col]!=null&&checkTwoPoint(p,points[row][col])){
+	            if(!isMove&&points[row][col]!=null&&checkTwoPoint(p,points[row][col])){
                     board.setRowB(row);
                     board.setColB(col);
 
+                    return true;
+                }
+                if(isMove&&points[row][col]!=null&&(checkPoitMove(p,points[row][col])!=0)){
+                    System.out.println("Click Diretion "+checkPoitMove(p,points[row][col]));
+                    board.setRowB(row);
+                    board.setColB(col);
+                    board.setMoveDir(checkPoitMove(p,points[row][col]));
                     return true;
                 }
             }
@@ -170,18 +214,10 @@ public class Controller implements MouseListener,KeyListener {
 
         }
     }
-    //for board
-    public void selectHelper(Point[][] points,Point p){
-        boolean clickOn= doesClickOne(points,p);
-        if(!clickOn){
-            System.out.println("have not clicked right position");
-            return;
-        }
-        Piece selectPiece = board.getPieceBoard()[board.getRowB()][board.getColB()];
-        clickHelper(selectPiece,false,false,true);
 
 
-    }
+
+
     //for left/right
 	public void selectHelper(List<Point> points, List<Piece> pieces,Point p,boolean isDegreePanel,boolean isLeft) throws InterruptedException{
 	
@@ -194,6 +230,7 @@ public class Controller implements MouseListener,KeyListener {
         Piece selectPiece=pieces.get(selectIndex);
         clickHelper(selectPiece,isDegreePanel,isLeft,false);
 	}
+
 
 	public void selectOrientation(Piece selectPiece,boolean isDegreePanel,boolean isLeft){
 
@@ -246,8 +283,14 @@ public class Controller implements MouseListener,KeyListener {
                     e1.printStackTrace();
                 }
             }else if(e.getSource() instanceof Board){
+                    if(!view.getDoesCliPieBoard()){
+                        System.out.println("click to chose");
+                        selectHelper(boardPoint,p);
+                    }else{
+                        System.out.println("click to move");
+                        clickToMove(boardPoint,p);
+                    }
 
-                    selectHelper(boardPoint,p);
 
             }
 		}

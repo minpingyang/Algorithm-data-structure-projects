@@ -30,8 +30,9 @@ public class Board  extends JPanel{
 	private boolean hasCreate=false; // the boolean indicating if this turn, the player already created a piece
 	private Queue<Character> moveQue;
 	private Point[][] piecePoint = new Point[10][10];
-	private int rowB,colB;
-
+	private int rowB,colB,moveDir;
+    public void setMoveDir(int i){moveDir=i;}
+    public int getMoveDir(){return moveDir;}
 	public void setRowB(int i){
 		rowB=i;
 	}
