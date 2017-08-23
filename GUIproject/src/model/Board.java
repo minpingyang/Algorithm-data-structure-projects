@@ -21,7 +21,7 @@ import java.util.Set;
  * 
  * **/
 public class Board  extends JPanel{
-	Piece[][] board;
+	private Piece[][] board;
 	private int rows = 10; // the row of the board
 	private int cols = 10;
 	private Piece[][]piecesBoard;// the 10*10 2D array to store all the pieces of the board
@@ -60,11 +60,13 @@ public class Board  extends JPanel{
 	    piecesBoard= temp;
     }
 
-
     public Piece[][] getPiecesBoard(){
 	    return piecesBoard;
     }
 
+    public Piece[][] getBoard(){
+        return board;
+    }
 	/***
 	 * construtor of the class
 	 * create a 
@@ -608,6 +610,7 @@ public class Board  extends JPanel{
 	}
 	@Override
 	public void paint(Graphics g){
+		System.out.println("paint colorful board");
 		g.setColor(Color.PINK);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		for(int row = 0; row<10;row++){

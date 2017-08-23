@@ -33,17 +33,21 @@ public class View extends JComponent implements Observer {
 
     private DegreePanRight degreePanRight;
 	private CardLayout cardLayout1;
-    private CardLayout cardLayout2;
+    private CardLayout cardLayout2,cardLayout3;
 	private JPanel panelConLeft;
-	private JPanel panelConRight;
+	private JPanel panelConRight,panelConBoard;
 	private boolean isRotate;
 	private Stack<Board> undoStack;
 	private Stack<Character> nameStack;
 	private Stack<String> degreeStack;
 	private boolean hasReaction;
     private boolean doesClPieBoard=false;
+	private RotationPanel rotationPanel;
 
-
+	public  CardLayout getCardLayout3(){
+		return cardLayout3;
+	}
+	public JPanel getPanelConBoard(){return panelConBoard;}
 	public JPanel getPanelConRight(){
 	    return panelConRight;
     }
@@ -53,8 +57,13 @@ public class View extends JComponent implements Observer {
     public void setDoesClPieBoard(boolean b){
         doesClPieBoard=b;
     }
+    public RotationPanel getRotationPanel(){
+        return rotationPanel;
+    }
 
 	public View() {
+
+
 		undoStack = new Stack<Board>();
 		isGreenTurn = true;
 		nameStack=new Stack<Character>();
@@ -75,10 +84,21 @@ public class View extends JComponent implements Observer {
 		panelConRight.setLayout(cardLayout2);
         degreePanRight=new DegreePanRight();
 
+
+		board = new Board();
+        panelConBoard=new JPanel();
+        cardLayout3=new CardLayout();
+        panelConBoard.setLayout(cardLayout3);
+        rotationPanel=new RotationPanel(board);//TODO
+
+
 		JPanel menu = new JPanel();
 		greenPlayer = new Player(Piece.Type.GreenPiece);
 		yellowPlayer = new Player(Piece.Type.YellowPiece);
-		board = new Board();
+
+
+
+
 		leftCreation = new LeftCreation(greenPlayer);
         rightCreation = new RightCreation(yellowPlayer);
 
@@ -89,6 +109,13 @@ public class View extends JComponent implements Observer {
 		panelConRight.add(rightCreation,"3");
 		panelConRight.add(degreePanRight,"4");
 		cardLayout2.show(panelConRight,"3");
+
+
+		panelConBoard.add(board,"5");
+		panelConBoard.add(rotationPanel,"6");
+		cardLayout3.show(panelConBoard,"5");
+
+
 //        frame.addKeyListener(new KeyController());
 		frame.addKeyListener(new Controller(this));
         //board.addKeyListener(new Controller(this));
@@ -96,6 +123,7 @@ public class View extends JComponent implements Observer {
         board.addKeyListener(new Controller(this));
 
 		board.addMouseListener(new Controller(this));
+		rotationPanel.addMouseListener(new Controller(this));
 		degreePanRight.addMouseListener(new Controller(this));
 		degreePanLeft.addMouseListener(new Controller(this));
 		leftCreation.addMouseListener(new Controller(this));
@@ -131,7 +159,7 @@ public class View extends JComponent implements Observer {
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		frame.add(jtb, BorderLayout.NORTH);
-        frame.add(board);
+        frame.add(panelConBoard);
 		addKeyListener(new Controller(this));
 //        addKeyListener(new KeyController());
 		frame.setVisible(true);
@@ -157,7 +185,7 @@ public class View extends JComponent implements Observer {
 		vSplitRight.setContinuousLayout(true);
 		vSplitRight.setOneTouchExpandable(true);
 
-		hSplitRigt.setLeftComponent(board);
+		hSplitRigt.setLeftComponent(panelConBoard);
 		hSplitRigt.setRightComponent(vSplitRight);
 		hSplitRigt.setDividerLocation(1);
 		hSplitRigt.setContinuousLayout(true);
