@@ -235,6 +235,22 @@ public class View extends JComponent implements Observer {
 
             }
         });
+		surrender.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                String[] options = new String[] {"Back to menu"};
+                String message = " ";
+                if(isGreenTurn) {message="Right Player WIN";}
+                else{message ="Left Player WIN";}
+                int response = JOptionPane.showOptionDialog(null, message, "Game Over",
+                        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+                        null, options, options[0]);
+                if(response==0){
+                    frame.setVisible(false);
+                    menuF.setVisible(true);
+                }
+
+            }
+        });
 
 	}
 
