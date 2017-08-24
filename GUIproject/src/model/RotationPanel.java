@@ -31,7 +31,6 @@ public class RotationPanel extends JPanel {
     }
     @Override
     public void paint(Graphics g){
-        System.out.println("paint gray board");
         Graphics2D g2d = (Graphics2D) g.create();
 
         g2d.setComposite(AlphaComposite.getInstance(

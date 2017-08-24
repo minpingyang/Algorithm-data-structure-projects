@@ -150,7 +150,7 @@ public class Controller implements MouseListener, KeyListener {
                     return true;
                 }
                 if (isMove && points[row][col] != null && (checkPoitMove(p, points[row][col]) != 0)) {
-                    System.out.println("Click Diretion " + checkPoitMove(p, points[row][col]));
+//                    System.out.println("Click Diretion " + checkPoitMove(p, points[row][col]));
                     board.setRowB(row);
                     board.setColB(col);
                     board.setMoveDir(checkPoitMove(p, points[row][col]));
@@ -206,21 +206,27 @@ public class Controller implements MouseListener, KeyListener {
 
         }
     }
+//    public void clickToRotate(Point p, ){
+//
+//    }
+//
     //select for board Jpanel
     public void selectPieceOnBoard(Point[][] points, Point p,boolean isRotation) {
 
-        if(board.getIsRotationPanel()){
-            System.out.println("clickPx: "+p.getX()+"  clickPy: "+p.getY());
-            System.out.println("selectPointX: "+rotationPanel.getSelectPoint().getX()+"  selectPointY: "+rotationPanel.getSelectPoint().getY());
-
-        }
+//        if(board.getIsRotationPanel()){
+//            System.out.println("clickPx: "+p.getX()+"  clickPy: "+p.getY());
+//            System.out.println("selectPointX: "+rotationPanel.getSelectPoint().getX()+"  selectPointY: "+rotationPanel.getSelectPoint().getY());
+//
+//        }
 
         if(board.getIsRotationPanel()&&isRotation&&!checkTwoPoint(p,rotationPanel.getSelectPoint())) {
             cardLayout3.show(panelConBoard, "5");
+            //show rotation degree here
+            board.setIsRotationPanel(false);
+
         }
 
         boolean clickOn = doesClickOne(points, p, true);
-        boolean isRotationPanel=false;
         if (!clickOn) {
             System.out.println("have not clicked right position");
             return;
@@ -237,12 +243,17 @@ public class Controller implements MouseListener, KeyListener {
         if (!direction.equals("1") && dir != 5&&!board.getIsRotationPanel()) {
             char piecesName = board.getPiecesBoard()[board.getRowB()][board.getColB()].getName();
             String command = "move " + piecesName + " " + direction;
-//            System.out.println("command: "+command);
+            System.out.println("move command: "+command);
             try {
                 view.inputCommand(command);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
+        }
+        if(dir==5&&board.getIsRotationPanel()){
+            selectPiece.printWeapon();
+            selectPiece.rotate("2");
+            rotationPanel.repaint();
         }
         if(dir==5){
             selectRotationBoard(selectPiece, isRotation,p);
@@ -269,28 +280,18 @@ public class Controller implements MouseListener, KeyListener {
 
     public void selectRotationBoard(Piece selectPiece, boolean isRotationPanel, Point clickP) {
         if (!isRotationPanel) {
-            System.out.println("click to rotate");
             rotationPanel.setSelectPiece(selectPiece);
             rotationPanel.setSelectPoint();
             cardLayout3.show(panelConBoard, "6");
             board.setIsRotationPanel(true);
 
         }
-//        else if(isRotationPanel){
-//            System.out.println("clickPx: "+clickP.getX()+"clickPy: "+clickP.getY());
-//            System.out.println("selectPointX: "+rotationPanel.getSelectPoint().getX()+"selectPointY: "+rotationPanel.getSelectPoint().getY());
-//        }
-        //            clickPx: 181.0clickPy: 183.0
-//            selectPointX: 140.0selectPointY: 140.0
-//        else if(isRotationPanel&&!checkTwoPoint(clickP,rotationPanel.getSelectPoint())) {
-//            cardLayout3.show(panelConBoard, "5");
-//        }
+
 
     }
 
     public void selectOrientation(Piece selectPiece, boolean isDegreePanel, boolean isLeft) {
         if (!isDegreePanel && isLeft) {
-            System.out.println("selectPiece: " + selectPiece.getName());
             view.getDegreePanLeft().setSelectPiece(selectPiece);
             cardLayout1.show(view.getPanelConLeft(), "2");
         } else if (isDegreePanel && isLeft) {
@@ -337,18 +338,17 @@ public class Controller implements MouseListener, KeyListener {
                     e1.printStackTrace();
                 }
             } else if (e.getSource() instanceof Board) {
-                System.out.println("click Board panel");
                 if (!view.getDoesCliPieBoard()) {
-                    System.out.println("click to chose");
+//                    System.out.println("click to chose");
                     selectHelper(boardPoint, p);
                 } else {
-                    System.out.println("click to move");
+//                    System.out.println("click to move");
                     selectPieceOnBoard(boardPoint, p,false);//for move
 
 
                 }
             }else if(e.getSource() instanceof RotationPanel){
-                System.out.println("click rotation panel");
+//                System.out.println("click rotation panel");
                 selectPieceOnBoard(boardPoint, p,true);
 
             }

@@ -416,9 +416,9 @@ public class Board  extends JPanel{
 			return false;
 		}
 		//System.out.println("111111111");
-		temp.printWeapon();
+//		temp.printWeapon();
 		temp.rotate(degree);
-		temp.printWeapon();
+//		temp.printWeapon();
 		temp.setHasRotate(true);
 	    piecesBoard[pRow][pCol] = temp;
 	    actPiece = temp;
@@ -613,7 +613,7 @@ public class Board  extends JPanel{
 	}
 	@Override
 	public void paint(Graphics g){
-		System.out.println("paint colorful board");
+//		System.out.println("paint colorful board");
 		g.setColor(Color.PINK);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		for(int row = 0; row<10;row++){
