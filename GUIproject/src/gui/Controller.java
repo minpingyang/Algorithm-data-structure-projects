@@ -211,6 +211,9 @@ public class Controller implements MouseListener, KeyListener {
 //    }
 //
     //select for board Jpanel
+
+
+
     public void selectPieceOnBoard(Point[][] points, Point p,boolean isRotation) {
 
 //        if(board.getIsRotationPanel()){
@@ -218,11 +221,12 @@ public class Controller implements MouseListener, KeyListener {
 //            System.out.println("selectPointX: "+rotationPanel.getSelectPoint().getX()+"  selectPointY: "+rotationPanel.getSelectPoint().getY());
 //
 //        }
-
+        Piece selectPiece = board.getPieceBoard()[board.getRowB()][board.getColB()];
         if(board.getIsRotationPanel()&&isRotation&&!checkTwoPoint(p,rotationPanel.getSelectPoint())) {
             cardLayout3.show(panelConBoard, "5");
             //show rotation degree here
             board.setIsRotationPanel(false);
+            selectPiece.setHasRotate(true);
 
         }
 
@@ -231,7 +235,7 @@ public class Controller implements MouseListener, KeyListener {
             System.out.println("have not clicked right position");
             return;
         }
-        Piece selectPiece = board.getPieceBoard()[board.getRowB()][board.getColB()];
+
         int dir = board.getMoveDir();
         String direction = "1";
         if (dir == 1) direction = "up";
@@ -250,7 +254,7 @@ public class Controller implements MouseListener, KeyListener {
                 e1.printStackTrace();
             }
         }
-        if(dir==5&&board.getIsRotationPanel()){
+        if(dir==5&&board.getIsRotationPanel()&&!selectPiece.getHasRotate()){
             selectPiece.printWeapon();
             selectPiece.rotate("2");
             rotationPanel.repaint();
