@@ -1,5 +1,7 @@
 package model;
 
+import resources.ImageResource;
+
 import java.awt.*;
 import java.util.HashMap;
 
@@ -407,24 +409,13 @@ public class Piece {
 			g.setColor(Color.DARK_GRAY);
 			g.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
 		} else if (this.type == Type.LeftFace) {
-			g.setColor(Color.gray);
-			g.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
-			g.setColor(Color.white);
-			g.fillOval(x - 1, y - 1, SIZE_PIECE - 1, SIZE_PIECE - 1);
-			g.setColor(Color.black);
-			g.fillRect(x, y, SIZE_PIECE / 3, SIZE_PIECE / 3);
-			int temp = SIZE_PIECE / 5;
-			g.fillRect(x + 4 * temp, y + 4 * temp, temp, temp);
+			g.drawImage(ImageResource.RIGHT.img,x,y,SIZE_PIECE,SIZE_PIECE,null);
 
 		} else if (this.type == Type.RightFace) {
-			g.setColor(Color.gray);
-			g.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
-			g.setColor(Color.white);
-			g.fillOval(x - 1, y - 1, SIZE_PIECE - 1, SIZE_PIECE - 1);
-			g.setColor(Color.black);
-			g.fillRect(x, y, SIZE_PIECE / 3, SIZE_PIECE / 3);
-			int temp = SIZE_PIECE / 5;
-			g.fillRect(x + 4 * temp, y + 4 * temp, temp, temp);
+
+			g.drawImage(ImageResource.LEFT.img,x,y,SIZE_PIECE,SIZE_PIECE,null);
+
+
 
 		} else if (this.type == Type.WhiteGrid) {
 			g.setColor(Color.WHITE);

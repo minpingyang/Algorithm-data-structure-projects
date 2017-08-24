@@ -1,6 +1,7 @@
 package gui;
 
 import model.*;
+import model.Menu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,9 +13,7 @@ import java.util.Observer;
 import java.util.Stack;
 
 public class View extends JComponent implements Observer {
-	private JButton startGame;
-	private JButton exitGame;
-	private JButton info;
+
 	private JButton undo;
 	private JButton pass;
 	private JButton surrender;
@@ -43,7 +42,8 @@ public class View extends JComponent implements Observer {
 	private boolean hasReaction;
     private boolean doesClPieBoard=false;
 	private RotationPanel rotationPanel;
-
+    private Menu menuF;
+    private JButton menuBtn;
 	public  CardLayout getCardLayout3(){
 		return cardLayout3;
 	}
@@ -73,6 +73,8 @@ public class View extends JComponent implements Observer {
 
 		frame = new JFrame("Sword and Shield");
         frame.setFocusable(true);
+        menuF =new Menu(this);
+
 		panelConLeft = new JPanel();
 		cardLayout1 = new CardLayout();
 		panelConLeft.setLayout(cardLayout1);
@@ -92,7 +94,7 @@ public class View extends JComponent implements Observer {
         rotationPanel=new RotationPanel(board);//TODO
 
 
-		JPanel menu = new JPanel();
+
 		greenPlayer = new Player(Piece.Type.GreenPiece);
 		yellowPlayer = new Player(Piece.Type.YellowPiece);
 
@@ -133,15 +135,12 @@ public class View extends JComponent implements Observer {
 
 		leftCemetery = new LeftCemetery(greenPlayer);
 		rightCemetery = new RightCemetery(yellowPlayer);
-		menu.setLayout(new FlowLayout());
-		startGame = new JButton("Begin new game");
-		exitGame = new JButton("Quit");
-		info = new JButton("Info");
-		info.setFocusable(false);
-		menu.add(startGame);
-		menu.add(exitGame);
-		menu.add(info);
-		menu.setFocusable(false);
+//		startGame = new JButton("Begin new game");
+//		exitGame = new JButton("Quit");
+////		info = new JButton("Info");
+//		info.setFocusable(false);
+        menuBtn = new JButton("Menu");
+		menuBtn.setFocusable(false);
 		undo = new JButton("Undo");
 		undo.setFocusable(false);
 		pass = new JButton("Pass");
@@ -152,17 +151,17 @@ public class View extends JComponent implements Observer {
 		jtb.add(undo);
 		jtb.add(pass);
 		jtb.add(surrender);
-		jtb.add(menu);
+		jtb.add(menuBtn);
 		jtb.setBackground(Color.PINK);
 		jtb.setFocusable(false);
-		menu.setBackground(Color.pink);
+		jtb.setLayout(new GridLayout(1,4));
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		frame.add(jtb, BorderLayout.NORTH);
         frame.add(panelConBoard);
 		addKeyListener(new Controller(this));
 //        addKeyListener(new KeyController());
-		frame.setVisible(true);
+		frame.setVisible(false);
 
 
 		final JSplitPane hSplitRigt = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -205,25 +204,16 @@ public class View extends JComponent implements Observer {
 
 	}
 
+
 	public void buttonFuc() {
-		startGame.addActionListener(new ActionListener() {
+		menuBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				new View();
 
+			    frame.setVisible(false);
+                menuF.setVisible(true);
 			}
 		});
-		exitGame.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				System.exit(0);
 
-			}
-		});
-		info.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				System.out.println("infomation>.....");
-
-			}
-		});
 		undo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 try {
@@ -263,7 +253,7 @@ public class View extends JComponent implements Observer {
 		return undoStack;
 	}
 	/**
-	 * this method is actived, when user input "pass" command 
+	 * this method is actived, when user input "pass" command
 	 * firstly, clear the "undostack".  because, undo is only allowed within one turn
 	 * set "hasCreate" to false.-> allow the player to create a new piece in a new turn
 	 * set "hasRotate" to false -> allow the player to rotate anypice once in a new turn
@@ -293,7 +283,7 @@ public class View extends JComponent implements Observer {
 	 * for example, if the creation grid is not empty, the create does allow. but the method will return true,which means the command does folllow the grammar of the game
 	 * @param command  --- the user inputer command
 	 * @return boolean ----- indicate if the command is legal.
-	 * 
+	 *
 	 * **/
 
 	public boolean isValidCommand(String command) {
@@ -316,12 +306,12 @@ public class View extends JComponent implements Observer {
 		return firstChecker || fourthChecker1;
 	}
 	/**
-	 * 
+	 *
 	 * @param dir ---  move direction --> up/down/right/left
 	 * @param pieceName --- the name of piece which will be moved in given direction
 	 * @return boolean --->> true ->indicate move the piece successfully
-	 * @throws InterruptedException 
-	 * 
+	 * @throws InterruptedException
+	 *
 	 * **/
 	public boolean move(String dir, char pieceName) throws InterruptedException {
 		if(board.checkNeighbour(pieceName, dir)){
@@ -333,7 +323,7 @@ public class View extends JComponent implements Observer {
 		return board.movePiece(pieceName, dir, false);
 	}
 	/**
-	 * 
+	 *
 	 * @param degree- the degree of the piece will be rotated --- 1/2/3/4
 	 * @param pieceName -  the name of piece which will be rotated in given degreee
 	 * @return boolean --- true ->indicate rotate the piece successfully
@@ -342,7 +332,7 @@ public class View extends JComponent implements Observer {
 		return board.rotatePiece(pieceName, degree,nonUndo);
 	}
 	/**
-	 * 
+	 *
 	 * @param degree-- the degree of the piece will be created --- 1/2/3/4
 	 * @param pieceName - > the name of piece which will be created in given degreee
 	 * @return boolean --- true ->indicate create the piece successfully
@@ -403,21 +393,21 @@ public class View extends JComponent implements Observer {
 	 * */
 	public void undo() {
 		if(isRotate&&!degreeStack.isEmpty()&&!nameStack.isEmpty()){
-			
+
 			String degree =degreeStack.pop();
 			char pieceName =nameStack.pop();
 			System.out.println("name: "+pieceName+" degree"+degree);
 			if(degree.equals("2")){
-				
+
 				rotate("4", pieceName,false);
 			}else if(degree.equals("3")){
-		
+
 				rotate("3", pieceName,false);
 			}else if(degree.equals("4")){
-				
+
 				rotate("2", pieceName,false);
 			}else if(degree.equals("1")){
-				
+
 				rotate("1", pieceName,false);
 			}
 		}
@@ -427,7 +417,7 @@ public class View extends JComponent implements Observer {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param board - > the board want to be deep cloned
 	 * @return Board--> return the board has already deep cloned from the passing board
 	 * **/
@@ -456,16 +446,16 @@ public class View extends JComponent implements Observer {
 	/**
 	 * This method is used after the command has be confirmed without grammar error,
 	 * then pass the commad in this method to excute the command
-	 * 
+	 *
 	 * @param   command  the grammar correct command is passed, which may be excuted in this method
 	 * @return   return a boolean value indicate if excutes the command successfully or not
-	 * 
+	 *
 	 * **/
 	public boolean excute(String command) throws InterruptedException {
 		boolean doActionSuccess = false;
 		boolean doesAct = false; // the boolean is used to determine if should check interaction between pieces
 		Board temp = deepCloneBoard(board);
-		
+
 		String[] line = command.split(" ");
 		if (line.length == 1) {
 			if (line[0].equals("pass")) {
@@ -478,11 +468,11 @@ public class View extends JComponent implements Observer {
 					doActionSuccess = true;
 					isRotate=false;
 				}
-				
-				
+
+
 			}
 		} else if (line.length == 3) {
-			
+
 			if (line[0].equals("create")) {
 				char pieceName = line[1].charAt(0);
 				String degree = line[2];
@@ -493,11 +483,11 @@ public class View extends JComponent implements Observer {
 					undoStack.add(temp);
 					isRotate=false;
 				}
-				
+
 			} else if (line[0].equals("move")) {
 				char pieceName = line[1].charAt(0);
 				String dir = line[2];
-				
+
 				boolean doesMove = move(dir, pieceName);
 				doActionSuccess = doesMove;
 				doesAct = doActionSuccess;
@@ -506,7 +496,7 @@ public class View extends JComponent implements Observer {
 					undoStack.add(temp);
 					isRotate=false;
 				}
-				
+
 			} else if (line[0].equals("rotate")) {
 				// System.out.println("11111");
 				char pieceName = line[1].charAt(0);
@@ -514,14 +504,14 @@ public class View extends JComponent implements Observer {
 				boolean doesRotate=rotate(degree, pieceName,true);
 				doActionSuccess = doesRotate;
 				doesAct = doActionSuccess;
-				
+
 				if(doesRotate){
 					isRotate=true;
 					degreeStack.add(degree);
 					nameStack.add(pieceName);
 					undoStack.add(temp);
 				}
-				
+
 			}
 
 		}
@@ -532,7 +522,7 @@ public class View extends JComponent implements Observer {
 				System.out.println("REACTION EXCUTED!!");
 			}
 		}
-		
+
 //		 System.out.println("stack size"+undoStack.size());
 		// leftPieces.setInfo(info);
 		return doActionSuccess;
@@ -544,8 +534,8 @@ public class View extends JComponent implements Observer {
 		}else if(result==2){
 			System.out.println("Right Player Loose!");
 		}
-			
-		
+
+
 		return 0;
 	}
 
