@@ -234,7 +234,7 @@ public class Controller implements MouseListener, KeyListener {
         if (dir == 4) direction = "left";
 
 
-        if (!direction.equals("1") && dir != 5) {
+        if (!direction.equals("1") && dir != 5&&!board.getIsRotationPanel()) {
             char piecesName = board.getPiecesBoard()[board.getRowB()][board.getColB()].getName();
             String command = "move " + piecesName + " " + direction;
 //            System.out.println("command: "+command);
