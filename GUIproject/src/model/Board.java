@@ -31,6 +31,9 @@ public class Board  extends JPanel{
 	private Queue<Character> moveQue;
 	private Point[][] piecePoint = new Point[10][10];
 	private int rowB,colB,moveDir;
+	private boolean isRotationPanel = false;
+	public boolean getIsRotationPanel(){return isRotationPanel;}
+	public void setIsRotationPanel(boolean b){isRotationPanel=b;}
     public void setMoveDir(int i){moveDir=i;}
     public int getMoveDir(){return moveDir;}
 	public void setRowB(int i){

@@ -12,12 +12,22 @@ public class RotationPanel extends JPanel {
     private Piece[][] piecesBoard;
     private Board board;
     private Piece[][] backgroudBoard;
+    private Point selectPoint;
+    public Point getSelectPoint(){
+        return selectPoint;
+    }
 
     public RotationPanel(Board board){
         this.board=board;
         this.piecesBoard=board.getPiecesBoard();
         this.backgroudBoard=board.getBoard();
 
+    }
+    public void setSelectPoint(){
+        ArrayList<Integer> roCol= board.findPieceCoord(selectPiece.getName());
+        int row = roCol.get(0);
+        int col = roCol.get(1);
+        selectPoint = new Point(col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE);
     }
     @Override
     public void paint(Graphics g){
@@ -47,7 +57,7 @@ public class RotationPanel extends JPanel {
         int row = roCol.get(0);
         int col = roCol.get(1);
         selectPiece.drawRotatePiece(g,col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE,board.getRowB(),board.getColB());
-
+//        selectPoint = new Point(col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE);
 
 
     }

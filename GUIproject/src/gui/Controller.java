@@ -208,7 +208,19 @@ public class Controller implements MouseListener, KeyListener {
     }
     //select for board Jpanel
     public void selectPieceOnBoard(Point[][] points, Point p,boolean isRotation) {
+
+        if(board.getIsRotationPanel()){
+            System.out.println("clickPx: "+p.getX()+"  clickPy: "+p.getY());
+            System.out.println("selectPointX: "+rotationPanel.getSelectPoint().getX()+"  selectPointY: "+rotationPanel.getSelectPoint().getY());
+
+        }
+
+        if(board.getIsRotationPanel()&&isRotation&&!checkTwoPoint(p,rotationPanel.getSelectPoint())) {
+            cardLayout3.show(panelConBoard, "5");
+        }
+
         boolean clickOn = doesClickOne(points, p, true);
+        boolean isRotationPanel=false;
         if (!clickOn) {
             System.out.println("have not clicked right position");
             return;
@@ -233,7 +245,7 @@ public class Controller implements MouseListener, KeyListener {
             }
         }
         if(dir==5){
-            selectOrientationBoard(selectPiece, isRotation);
+            selectRotationBoard(selectPiece, isRotation,p);
         }
 
 
@@ -255,14 +267,24 @@ public class Controller implements MouseListener, KeyListener {
         clickHelper(selectPiece, isDegreePanel, isLeft, false);
     }
 
-    public void selectOrientationBoard(Piece selectPiece, boolean isRotationPanel) {
+    public void selectRotationBoard(Piece selectPiece, boolean isRotationPanel, Point clickP) {
         if (!isRotationPanel) {
             System.out.println("click to rotate");
             rotationPanel.setSelectPiece(selectPiece);
+            rotationPanel.setSelectPoint();
             cardLayout3.show(panelConBoard, "6");
-        } else {
-            cardLayout3.show(panelConBoard, "5");
+            board.setIsRotationPanel(true);
+
         }
+//        else if(isRotationPanel){
+//            System.out.println("clickPx: "+clickP.getX()+"clickPy: "+clickP.getY());
+//            System.out.println("selectPointX: "+rotationPanel.getSelectPoint().getX()+"selectPointY: "+rotationPanel.getSelectPoint().getY());
+//        }
+        //            clickPx: 181.0clickPy: 183.0
+//            selectPointX: 140.0selectPointY: 140.0
+//        else if(isRotationPanel&&!checkTwoPoint(clickP,rotationPanel.getSelectPoint())) {
+//            cardLayout3.show(panelConBoard, "5");
+//        }
 
     }
 
