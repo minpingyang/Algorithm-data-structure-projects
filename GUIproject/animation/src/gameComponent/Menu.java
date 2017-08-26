@@ -42,6 +42,14 @@ public class Menu extends JFrame implements MouseListener{
 
 
             }else if(canvas.getInfoBtn().contains(clickP)){
+                String[] options = new String[] {"Back to menu"};
+                String message = "Author: Minping\nLeft Player first. \nClick Pass button to Pass to other player turn" +
+                        "\nIn one turn, only allow create once, \nEvery piece can only either move or rotate once.";
+
+                int response = JOptionPane.showOptionDialog(null, message, "Information",
+                        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+                        null, options, options[0]);
+
 
             }else if(canvas.getInfoBtn().contains(clickP)){
                 System.exit(0);
