@@ -255,7 +255,7 @@ public class View extends JComponent {
 		undo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 try {
-                    excute("undo");
+                   inputCommand("undo");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -368,13 +368,14 @@ public class View extends JComponent {
 	 *
 	 * **/
 	public boolean move(String dir, char pieceName) throws InterruptedException {
+		//this case is used to move multiple piece if there are no reaction happen
 		if(board.checkNeighbour(pieceName, dir)){
 			while(!board.getMoveQueue().isEmpty()){
-				char neighbourName = board.getMoveQueue().poll();
-				board.movePiece(neighbourName, dir, true);
+				char neighbourName = board.getMoveQueue().pop();
+				board.movePiece(neighbourName, dir, true,true);
 			}
 		}
-		return board.movePiece(pieceName, dir, false);
+		return board.movePiece(pieceName, dir, false,false);
 	}
 	/**
 	 *
@@ -392,7 +393,6 @@ public class View extends JComponent {
 	 * @return boolean --- true ->indicate create the piece successfully
 	 * **/
 	public boolean create(String degree, char pieceName) {
-		System.out.println("degree"+degree+"    name:"+pieceName);
 		boolean doesCreate = false;
 		if (isGreenTurn) {// green piece
 			List<Piece> gPieces = greenPlayer.getPieces();//get the list of pieces the particular player has
@@ -465,8 +465,10 @@ public class View extends JComponent {
 				rotate("1", pieceName,false);
 			}
 		}
-		board= deepCloneBoard(undoStack.pop());
+		board= deepCloneBoard(undoStack.peek());
+		board.setPieceBoard(undoStack.peek().getPieceBoard());
 
+		undoStack.pop();
 
 	}
 
@@ -512,11 +514,12 @@ public class View extends JComponent {
 
 		String[] line = command.split(" ");
 		if (line.length == 1) {
-			if (line[0].equals("pass")) {
+			String info = line[0];
+			if (info.equals("pass")) {
 				switchTurn();
 				doActionSuccess = true;
 				isRotate=false;
-			} else if (line[0].equals("undo")) {
+			} else if (info.equals("undo")) {
 				if(!undoStack.isEmpty()){
 					undo();
 					doActionSuccess = true;
@@ -527,6 +530,7 @@ public class View extends JComponent {
 			}
 		} else if (line.length == 3) {
 
+
 			if (line[0].equals("create")) {
 				char pieceName = line[1].charAt(0);
 				String degree = line[2];
@@ -534,6 +538,7 @@ public class View extends JComponent {
 				doActionSuccess = doesCreate;
 				doesAct = doActionSuccess; //
 				if(doesCreate){ //only if create successfully
+					board.findPieceOnBoard(pieceName).setIsHighLight(false);
 					undoStack.add(temp);
 					isRotate=false;
 				}
@@ -546,7 +551,7 @@ public class View extends JComponent {
 				doActionSuccess = doesMove;
 				doesAct = doActionSuccess;
 				if(doesMove){
-				    board.findPieceOnBoard(pieceName).setIsHighLight(false);
+					board.findPieceOnBoard(pieceName).setIsHighLight(false);
 					undoStack.add(temp);
 					isRotate=false;
 				}
@@ -560,6 +565,7 @@ public class View extends JComponent {
 				doesAct = doActionSuccess;
 
 				if(doesRotate){
+					board.findPieceOnBoard(pieceName).setIsHighLight(false);
 					isRotate=true;
 					degreeStack.add(degree);
 					nameStack.add(pieceName);
@@ -577,7 +583,7 @@ public class View extends JComponent {
 			}
 		}
 
-//		 System.out.println("stack size"+undoStack.size());
+		// System.out.println("stack size"+undoStack.size());
 		// leftPieces.setInfo(info);
 		return doActionSuccess;
 	}
@@ -590,9 +596,14 @@ public class View extends JComponent {
 		}
 
 
-		return 0;
+		return result;
 	}
-
+	/**
+	 * This method is used to print out the board
+	 * **/
+	public void printOutBoard() {
+		board.printBoard();
+	}
 	public void inputCommand(String input) throws InterruptedException {
 
 
@@ -606,14 +617,24 @@ public class View extends JComponent {
 				System.out.println(", but doesnt follow the rule of game");
 			} else {
 				System.out.println();
-
+				printOutBoard();
 				frame.repaint();
 
 				System.out.println();
 			}
 			int isGameStop = doesWin();
 			if (isGameStop != 0) {
-				System.out.println("Game Over");
+				String[] options = new String[] {"Back to menu"};
+				String message = " ";
+				if(isGameStop==1) {message="Right Player WIN";}
+				else{message ="Left Player WIN";}
+				int response = JOptionPane.showOptionDialog(null, message, "Game Over",
+						JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+						null, options, options[0]);
+				if(response==0){
+					frame.setVisible(false);
+					menuF.setVisible(true);
+				}
 
 			}
 

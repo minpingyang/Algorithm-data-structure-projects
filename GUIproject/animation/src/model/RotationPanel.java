@@ -15,6 +15,7 @@ public class RotationPanel extends Observable {
     private Board board;
     private Piece[][] backgroudBoard;
     private Point selectPoint;
+    private int rotateTime;
     public Point getSelectPoint(){
         return selectPoint;
     }
@@ -28,6 +29,7 @@ public class RotationPanel extends Observable {
         this.board=board;
         this.piecesBoard=board.getPiecesBoard();
         this.backgroudBoard=board.getBoard();
+        rotateTime=0;
         setChanged();
         notifyObservers();
 
@@ -40,9 +42,11 @@ public class RotationPanel extends Observable {
         setChanged();
         notifyObservers();
     }
-
+    public int getRotateTime(){return rotateTime;}
     public void rotatePiece(String degree,Piece selectPiece){
         if (degree.equals("2")) {
+            rotateTime++;
+            System.out.println("rotate Time: "+rotateTime);
             selectPiece.setFourWeapon(selectPiece.getLeftWeapon(), selectPiece.getTopWeapon(), selectPiece.getRightWeapon(),selectPiece.getBottomWeapon());
         }
         setChanged();

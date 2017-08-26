@@ -2,12 +2,11 @@ package model;
 
 
 import gameComponent.Piece;
-import gui.View;
 import gameComponent.Piece.Type;
+import gui.View;
 
 import java.awt.*;
 import java.util.*;
-import java.util.Queue;
 
 
 /***
@@ -26,7 +25,7 @@ public class Board  extends Observable{
 	private Piece actPiece; // the pieces just now was being moved/rotated/created --> used fo checking reactions
 	private int pCol = 0, pRow = 0; //
 	private boolean hasCreate=false; // the boolean indicating if this turn, the player already created a piece
-	private Queue<Character> moveQue;
+	private Stack<Character> moveQue;
 	private Point[][] piecePoint = new Point[10][10];
 	private int rowB,colB,moveDir;
 	private boolean isRotationPanel = false;
@@ -75,6 +74,8 @@ public class Board  extends Observable{
 	 *
 	 * **/
 	public Board(){
+		moveQue=new Stack<Character>();
+		piecesBoard = new Piece[rows][cols];
 		board =new Piece[rows][cols];
 		piecesBoard = new Piece[rows][cols];
 		// initialise all pieces,fill all gray and while rectangle
@@ -83,6 +84,7 @@ public class Board  extends Observable{
 				piecesBoard[row][col] =new Piece(Piece.Type.NonePiece);
 			    if((row<2&&col<2)||(row>7&&col>7)){
 			    	board[row][col] = new Piece(Piece.Type.OutBoard);
+					piecesBoard[row][col] = new Piece(Piece.Type.OutBoard);
 			    }else if((row%2==0 && col%2==0)||(row%2!=0 && col%2!=0)){
 					board[row][col] = new Piece(Piece.Type.GrayGrid);
 				}else{
@@ -90,8 +92,8 @@ public class Board  extends Observable{
 				}
 			}
 		}
-		board[1][1] =new Piece(Piece.Type.LeftFace);
-		board[8][8] =new Piece(Piece.Type.RightFace);
+		piecesBoard[1][1]=board[1][1] =new Piece(Piece.Type.LeftFace);
+		piecesBoard[8][8]=board[8][8] =new Piece(Piece.Type.RightFace);
 		piecesBoard[2][2]=board[2][2] = new Piece(Piece.Type.LeftCreation);
 		piecesBoard[7][7]=board[7][7] = new Piece(Piece.Type.RightCreation);
 		setChanged();
@@ -168,59 +170,56 @@ public class Board  extends Observable{
 		if(actPiece!=null){
 			//System.out.println("name:"+actPiece.getName());
 			selfCoord=findPieceCoord(actPiece.getName());
-		if(selfCoord.size()==2){
-			xRow=selfCoord.get(0);
-			xCol=selfCoord.get(1);
-			if(xCol>0){
-				Piece leftPiece= piecesBoard[xRow][xCol-1];
-				//System.out.println("0000leftpiece: "+leftPiece.getName());
-				boolean b1 =(leftPiece.getType()==Type.GreenPiece||leftPiece.getType()==Type.YellowPiece)&&(leftPiece.getRightWeapon()=='|'||actPiece.getLeftWeapon()=='|');
-				if(b1){	
-					//System.out.println("1111leftpiece: "+leftPiece.getName());
-					piecesBoard[xRow][xCol].addNeighbourPiece("left", leftPiece);
+			if(selfCoord.size()==2){
+				xRow=selfCoord.get(0);
+				xCol=selfCoord.get(1);
+				if(xCol>0){
+					Piece leftPiece= piecesBoard[xRow][xCol-1];
+					//System.out.println("0000leftpiece: "+leftPiece.getName());
+					boolean b1 =(leftPiece.getType()==Type.GreenPiece||leftPiece.getType()==Type.YellowPiece)&&(leftPiece.getRightWeapon()=='|'||actPiece.getLeftWeapon()=='|');
+					if(b1){
+						//System.out.println("1111leftpiece: "+leftPiece.getName());
+						piecesBoard[xRow][xCol].addNeighbourPiece("left", leftPiece);
+					}
+				}
+				if(xCol<9){
+					Piece rightPiece=piecesBoard[xRow][xCol+1];
+					//System.out.println("000rightPiece: "+rightPiece.getName()+"leftwep:"+rightPiece.getLeftWeapon()+"  "+actPiece+"rightwP"+actPiece.getRightWeapon());
 
-				}	
-			} 
-			if(xCol<9){
-				Piece rightPiece=piecesBoard[xRow][xCol+1];
-				//System.out.println("000rightPiece: "+rightPiece.getName()+"leftwep:"+rightPiece.getLeftWeapon()+"  "+actPiece+"rightwP"+actPiece.getRightWeapon());
-				
-				boolean b2 = (rightPiece.getType()==Type.GreenPiece||rightPiece.getType()==Type.YellowPiece)&&(rightPiece.getLeftWeapon()=='|'||actPiece.getRightWeapon()=='|');
-				if(b2){
-					//System.out.println("1111rightPiece: "+rightPiece.getName());
-					piecesBoard[xRow][xCol].addNeighbourPiece("right", rightPiece);
+					boolean b2 = (rightPiece.getType()==Type.GreenPiece||rightPiece.getType()==Type.YellowPiece)&&(rightPiece.getLeftWeapon()=='|'||actPiece.getRightWeapon()=='|');
+					if(b2){
+						//System.out.println("1111rightPiece: "+rightPiece.getName());
+						piecesBoard[xRow][xCol].addNeighbourPiece("right", rightPiece);
+					}
+				}
+				if(xRow<9){
+					Piece botPiece=piecesBoard[xRow+1][xCol];
+					//System.out.println("00000botPiece: "+botPiece.getName()+" topWP "+botPiece.getTopWeapon()+" "+actPiece+" botmWp "+actPiece.getBottomWeapon());
+					boolean b3 = (botPiece.getType()==Type.GreenPiece||botPiece.getType()==Type.YellowPiece)&&(botPiece.getTopWeapon()=='|'||actPiece.getBottomWeapon()=='|');
+					if(b3){
+						//System.out.println("1111botPiece: "+botPiece.getName());
+						piecesBoard[xRow][xCol].addNeighbourPiece("bottom", botPiece);
+					}
+				}
+				if(xRow>0){
+					Piece topPiece = piecesBoard[xRow-1][xCol];
 
+					boolean b4= (topPiece.getType()==Type.GreenPiece||topPiece.getType()==Type.YellowPiece)&&(topPiece.getBottomWeapon()=='|'||actPiece.getTopWeapon()=='|');
+					if(b4){
+						//System.out.println("1111topPiece: "+topPiece.getName());
+						piecesBoard[xRow][xCol].addNeighbourPiece("top", topPiece);
+					}
 				}
 			}
-			if(xRow<9){
-				Piece botPiece=piecesBoard[xRow+1][xCol];
-				//System.out.println("00000botPiece: "+botPiece.getName()+" topWP "+botPiece.getTopWeapon()+" "+actPiece+" botmWp "+actPiece.getBottomWeapon());
-				boolean b3 = (botPiece.getType()==Type.GreenPiece||botPiece.getType()==Type.YellowPiece)&&(botPiece.getTopWeapon()=='|'||actPiece.getBottomWeapon()=='|');
-				if(b3){
-					//System.out.println("1111botPiece: "+botPiece.getName());
-					piecesBoard[xRow][xCol].addNeighbourPiece("bottom", botPiece);
-
-				}
-			}
-			if(xRow>0){
-				Piece topPiece = piecesBoard[xRow-1][xCol];
-				
-				boolean b4= (topPiece.getType()==Type.GreenPiece||topPiece.getType()==Type.YellowPiece)&&(topPiece.getBottomWeapon()=='|'||actPiece.getTopWeapon()=='|');
-				if(b4){
-					//System.out.println("1111topPiece: "+topPiece.getName());
-					piecesBoard[xRow][xCol].addNeighbourPiece("top", topPiece);
-
-				}
-			}
-		}
 			//this below part is used to act the reaction, what kind of reaction will happen depends on their weapon and their
-		//relative position
+			//relative position
 			if(!piecesBoard[xRow][xCol].getNeighbourPiece().isEmpty()){
-			Piece tempPiece = 	piecesBoard[xRow][xCol];
-			System.out.println("There is a interaction happen!!");
+				Piece tempPiece = 	piecesBoard[xRow][xCol];
+				//System.out.println("There is a interaction happen!!");
+				setChanged();
+				notifyObservers();
+				Thread.sleep(1000);
 
-			Thread.sleep(1000);
-			
 				Set<String> keys =tempPiece.getNeighbourPiece().keySet();
 				keySize=keys.size();
 				for(String key:keys){
@@ -231,73 +230,46 @@ public class Board  extends Observable{
 					int Nrow= neighCoord.get(0);
 					int Ncol=neighCoord.get(1);
 					switch (act) {
-					case 0:
-						piecesBoard[Nrow][Ncol]=removeHelper(Nrow,Ncol);
-						piecesBoard[xRow][xCol]=removeHelper(xRow, xCol);
-						piecesBoard[Nrow][Ncol].getNeighbourPiece().remove(actPiece.getName());
-						piecesBoard[xRow][xCol].getNeighbourPiece().remove(neighP.getName());
+						case 0:
+							piecesBoard[Nrow][Ncol]=removeHelper(Nrow,Ncol);
+							piecesBoard[xRow][xCol]=removeHelper(xRow, xCol);
+							//System.out.println(piecesBoard[Nrow][Ncol].getName()+" ADN "+piecesBoard[xRow][xCol].getName()+" are dead");
+							break;
+						case 1:
+							String dir1=pushBackDir(key, false);
 
-						//System.out.println(piecesBoard[Nrow][Ncol].getName()+" ADN "+piecesBoard[xRow][xCol].getName()+" are dead");
-						break;
-					case 1:
-						String dir1=pushBackDir(key, false);
-						movePiece(neighP.getName(), dir1, true);
-						System.out.println(neighP.getName()+ "neighbour move back in direction"+dir1);
-						piecesBoard[Nrow][Ncol].getNeighbourPiece().remove(neighP.getName());
-						//System.out.println("111111"+neighP.getName()+" was pushed "+dir1);
-						
-						piecesBoard[xRow][xCol].getNeighbourPiece().remove(neighP.getName());
-						ArrayList<Integer> rowCols1 = findPieceCoord(actPiece.getName());
-						piecesBoard[rowCols1.get(0)][rowCols1.get(1)].getNeighbourPiece().remove(actPiece.getName());
+							movePiece(neighP.getName(), dir1, true,false);
 
-						break;
-					case 2:
-						piecesBoard[xRow][xCol]=removeHelper(xRow, xCol);
-						//System.out.println("222222"+piecesBoard[xRow][xCol].getName()+" dead");
-						piecesBoard[Nrow][Ncol].getNeighbourPiece().remove(actPiece.getName());
-						piecesBoard[xRow][xCol].getNeighbourPiece().remove(neighP.getName());
 
-						break;
-					case 3:
-						String dir2=pushBackDir(key, true);
-						movePiece(tempPiece.getName(), dir2, true);
-						
-						System.out.println(tempPiece.getName()+" selft move back"+dir2);
-						//System.out.println("3333333"+tempPiece.getName()+" was pushed "+dir2);
-						piecesBoard[Nrow][Ncol].getNeighbourPiece().remove(actPiece.getName());
-						ArrayList<Integer> rowCols3 = findPieceCoord(actPiece.getName());
-						
-						piecesBoard[rowCols3.get(0)][rowCols3.get(1)].getNeighbourPiece().remove(neighP.getName());
+							//System.out.println("111111"+neighP.getName()+" was pushed "+dir1);
+							break;
+						case 2:
+							piecesBoard[xRow][xCol]=removeHelper(xRow, xCol);
+							//System.out.println("222222"+piecesBoard[xRow][xCol].getName()+" dead");
+							break;
+						case 3:
+							String dir2=pushBackDir(key, true);
 
-						break;
-					case 4:
-						piecesBoard[Nrow][Ncol]=removeHelper(Nrow, Ncol);
-						//System.out.println("4444444"+piecesBoard[Nrow][Ncol].getName()+" dead");
-						piecesBoard[Nrow][Ncol].getNeighbourPiece().remove(actPiece.getName());
-						piecesBoard[xRow][xCol].getNeighbourPiece().remove(neighP.getName());
+							movePiece(tempPiece.getName(), dir2, true,false);
 
-						
-						break;
-					default:
-						break;
+
+							//System.out.println("3333333"+tempPiece.getName()+" was pushed "+dir2);
+							break;
+						case 4:
+							piecesBoard[Nrow][Ncol]=removeHelper(Nrow, Ncol);
+							//System.out.println("4444444"+piecesBoard[Nrow][Ncol].getName()+" dead");
+							break;
+						default:
+							break;
 					}
-					piecesBoard[Nrow][Ncol].getNeighbourPiece().remove(actPiece.getName());
-					piecesBoard[xRow][xCol].getNeighbourPiece().remove(neighP.getName());
-
-
 				}
-				piecesBoard[xRow][xCol].setNeighbourPiece(new HashMap<String,Piece>());
-
-				
 			}
 
 		}
-		
+
 		if(keySize>0){
 			//if there is a interation, now change the pieceboard to the new board (after reation has done)
 			piecesBoard[xRow][xCol].setNeighbourPiece(new HashMap<String,Piece>());
-            setChanged();
-            notifyObservers();
 			setChanged();
 			notifyObservers();
 			return true;
@@ -387,6 +359,7 @@ public class Board  extends Observable{
 
 			}
 		}
+
 		setChanged();
 		notifyObservers();
 	}
@@ -412,7 +385,6 @@ public class Board  extends Observable{
 	 * **/
 	public boolean createPiece(Piece temp) {
 		if(hasCreate||!isEmptyCreationArea()){
-			System.out.println("hasCreate"+hasCreate+"  isEmpty"+isEmptyCreationArea());
 			return false;
 		}
 		if (temp.getType() == Piece.Type.GreenPiece) {
@@ -435,16 +407,12 @@ public class Board  extends Observable{
 	 * **/
 	public boolean rotatePiece(char pieceName, String degree,boolean nonUndo) {
 		Piece temp = findPieceOnBoard(pieceName);
-		//System.out.println("222222222222");
 		if ((temp == null || temp.getHasRotate() || temp.getHasMove())&&nonUndo) {
 
 			return false;
 		}
-		//System.out.println("111111111");
-//		temp.printWeapon();
 		temp.rotate(degree);
 
-//		temp.printWeapon();
 		temp.setHasRotate(true);
 	    piecesBoard[pRow][pCol] = temp;
 	    actPiece = temp;
@@ -504,10 +472,11 @@ public class Board  extends Observable{
 		}
 		return '0';
 	}
-	public Queue<Character> getMoveQueue(){
+	public Stack<Character> getMoveQueue(){
 		return moveQue;
 	}
-	public void setMoveQueue(Queue<Character>temp){
+
+	public void setMoveQueue(Stack<Character>temp){
 		moveQue=temp;
 		setChanged();
 		notifyObservers();
@@ -516,49 +485,49 @@ public class Board  extends Observable{
 		char neigName='1';
 		boolean hasNeighbour=false;
 		switch (dir) {
-		case "right":
-			while(col<9&&(neigName!='0')){
-				neigName = checkNeighbourHelper2(row, ++col);
-				if(neigName!='0'){
-					moveQue.add(neigName);
-					hasNeighbour=true;
+			case "right":
+				while(col<9&&(neigName!='0')){
+					neigName = checkNeighbourHelper2(row, ++col);
+					if(neigName!='0'){
+						moveQue.add(neigName);
+						System.out.println("right neigName(queue name):"+neigName);
+						hasNeighbour=true;
+					}
 				}
-			}
-			break;
-		case "left":
-			while(col>0&&(neigName!='0')){
-				neigName = checkNeighbourHelper2(row, --col);
-				if(neigName!='0'){
-					moveQue.add(neigName);
-					hasNeighbour=true;
+				break;
+			case "left":
+				while(col>0&&(neigName!='0')){
+					neigName = checkNeighbourHelper2(row, --col);
+					if(neigName!='0'){
+						moveQue.add(neigName);
+						System.out.println("left neigName(queue name):"+neigName);
+						hasNeighbour=true;
+					}
 				}
-			}
-			break;
-		case "up":
-			while(row>0&&(neigName!='0')){
-				neigName = checkNeighbourHelper2(--row, col);
-				if(neigName!='0'){
-					moveQue.add(neigName);
-					hasNeighbour=true;
+				break;
+			case "up":
+				while(row>0&&(neigName!='0')){
+					neigName = checkNeighbourHelper2(--row, col);
+					if(neigName!='0'){
+						moveQue.add(neigName);
+						hasNeighbour=true;
+					}
 				}
-			}
-			break;
-		case "down":
-			while(row<9&&(neigName!='0')){
-				neigName = checkNeighbourHelper2(++row, col);
-				if(neigName!='0'){
-					moveQue.add(neigName);
-					hasNeighbour=true;
+				break;
+			case "down":
+				while(row<9&&(neigName!='0')){
+					neigName = checkNeighbourHelper2(++row, col);
+					if(neigName!='0'){
+						moveQue.add(neigName);
+						hasNeighbour=true;
+					}
 				}
-			}
-			break;
+				break;
 
-		default:
-			break;
+			default:
+				break;
 		}
-		setChanged();
-		notifyObservers();
-		
+
 		return hasNeighbour;
 	}
 	public boolean checkNeighbour(char pieceName,String dir) throws InterruptedException{
@@ -600,59 +569,80 @@ public class Board  extends Observable{
 	 * @return a boolean indicates if move the piece successfully
 	 * **/
 
-	public boolean movePiece(char pieceName, String dir,boolean isPushed) {
+	public boolean movePiece(char pieceName, String dir,boolean isPushed,boolean mulitpleMove) {
 		Piece temp = findPieceOnBoard(pieceName);
-		if ((temp == null || temp.getHasMove() || temp.getHasRotate())&&!isPushed) {
+		if (temp == null ) {
+			return false;
+		}
+		if(temp.getHasMove()&&!mulitpleMove){
+			return false;
+		}
+		if( temp.getHasRotate()&&!isPushed){
 			return false;
 		}
 		if (dir.equals("up")) {
 			if (!(moveHelper(pRow - 1, pCol))) {
 				return false;
 			} else {
-				piecesBoard[pRow][pCol] = removeHelper(pRow, pCol); // REMOVE	
+				piecesBoard[pRow][pCol] = removeHelper(pRow, pCol); // REMOVE
 				pRow = pRow - 1;
 				piecesBoard[pRow][pCol] = temp; // add
-
 			}
 		} else if (dir.equals("down")) {
 			if (!(moveHelper(pRow + 1, pCol))) {
 				return false;
 			} else {
-				
-				piecesBoard[pRow][pCol] = removeHelper(pRow, pCol); // REMOVE	
+
+				piecesBoard[pRow][pCol] = removeHelper(pRow, pCol); // REMOVE
 				pRow = pRow + 1;
 				piecesBoard[pRow][pCol] = temp; // add
-
 			}
 		} else if (dir.equals("left")) {
 			if (!(moveHelper(pRow, pCol - 1))) {
 				return false;
 			} else {
-				
-				piecesBoard[pRow][pCol] = removeHelper(pRow, pCol); // REMOVE	
+
+				piecesBoard[pRow][pCol] = removeHelper(pRow, pCol); // REMOVE
 				pCol = pCol - 1;
 				piecesBoard[pRow][pCol] = temp; // add
-
 			}
 		} else if (dir.equals("right")) {
 			if (!(moveHelper(pRow, pCol + 1))) {
 				return false;
 			} else {
-				piecesBoard[pRow][pCol] = removeHelper(pRow, pCol); // REMOVE	
+				piecesBoard[pRow][pCol] = removeHelper(pRow, pCol); // REMOVE
 				pCol = pCol + 1;
 				piecesBoard[pRow][pCol] = temp; // add
-
 			}
 		}
 		if(!isPushed){
 			temp.setHasMove(true);
 		}
 		actPiece=temp;
-        setChanged();
-        notifyObservers();
+		setChanged();
+		notifyObservers();
 		return true;
+
 	}
 
+    public void printBoard() {
+
+        for(int row=0;row<10;row++){
+            for(int col=0;col<10;col++){
+                piecesBoard[row][col].fillPieceBoard();
+            }
+        }
+
+        for (int row = 0; row < 10; row++) {
+            for (int inRow = 0; inRow < 3; inRow++) {
+                for (int col = 0; col < 10; col++) {
+                    piecesBoard[row][col].drawWeaponToPiece(inRow);
+                    //piecesBoard[row][col].fillPieceBoard();
+                }
+                System.out.println();
+            }
+        }
+    }
 	
 	
 	

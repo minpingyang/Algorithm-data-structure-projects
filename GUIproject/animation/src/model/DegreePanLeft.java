@@ -30,12 +30,12 @@ public class DegreePanLeft extends Observable {
 		Piece selectPiece3= selectPiece.getRotatePiece("3", selectPiece);
 		Piece selectPiece4= selectPiece.getRotatePiece("4", selectPiece);
 
-//		System.out.println("name: "+selectPiece1.getName());
-//
-////		selectPiece1.printWeapon();
-////		selectPiece2.printWeapon();
-////		selectPiece3.printWeapon();
-////		selectPiece4.printWeapon();
+		System.out.println("name: "+selectPiece1.getName());
+
+		selectPiece1.printWeapon();
+		selectPiece2.printWeapon();
+		selectPiece3.printWeapon();
+		selectPiece4.printWeapon();
         diffDegreePiece.clear();
         diffDegreePiece.add(selectPiece1);
         diffDegreePiece.add(selectPiece2);

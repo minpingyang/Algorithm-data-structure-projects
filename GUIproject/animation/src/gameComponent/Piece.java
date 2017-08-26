@@ -237,19 +237,25 @@ public class Piece {
 		} else if (this.type == Piece.Type.OutBoard) {
 			this.fillPieceBoardHelper('X');
 		} else if (this.type == Piece.Type.RightCreation) {
-			this.fillPieceBoardHelper('R');
+			this.fillPieceBoardHelper(' ');
 		} else if (this.type == Piece.Type.LeftCreation) {
-			this.fillPieceBoardHelper('L');
+			this.fillPieceBoardHelper(' ');
 		}
 	}
 
 
 
+
+
+
+
+	/**********/
+
 	public Piece getRotatePiece(String degree, Piece ot) {
 		Piece temp = new Piece(ot.getType());
 		temp.setName(this.getName());
 		if (degree.equals("2")) {
-			temp.setFourWeapon(ot.getLeftWeapon(), ot.getTopWeapon(), ot.getTopWeapon(), ot.getBottomWeapon());
+			temp.setFourWeapon(ot.getLeftWeapon(), ot.getTopWeapon(), ot.getRightWeapon(), ot.getBottomWeapon());
 		} else if (degree.equals("3")) {
 			temp.setFourWeapon(ot.getBottomWeapon(), ot.getLeftWeapon(), ot.getTopWeapon(), ot.getRightWeapon());
 		} else if (degree.equals("4")) {
@@ -447,6 +453,23 @@ public class Piece {
 		} else if (this.type == Type.EmptyPiece) {
 			graphics2D.setColor(Color.pink);
 			graphics2D.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
+		}
+
+	}
+	//index - 0-3  -0-3
+	/**
+	 * This method is used to print out the piece in a correct position, accroding to their index of their 2D array equipment
+	 *
+	 * **/
+	public void drawWeaponToPiece(int inRow){
+
+		for(int col=0;col<3;col++){
+			if(inRow==1&&equipment[inRow][col]=='|'){
+				System.out.printf("%-2c",'-');
+			}else{
+				System.out.printf("%-2c",this.equipment[inRow][col]);
+			}
+
 		}
 
 	}

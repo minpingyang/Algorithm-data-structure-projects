@@ -270,6 +270,13 @@ public class Controller implements MouseListener, KeyListener {
             cardLayout3.show(panelConBoard, "5");
             //show rotation degree here
             board.setIsRotationPanel(false);
+            String command = "rotate "+selectPiece.getName()+" 1";
+            System.out.println("rotation command: "+command);
+            try {
+                view.inputCommand(command);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             selectPiece.setHasRotate(true);
 
         }
