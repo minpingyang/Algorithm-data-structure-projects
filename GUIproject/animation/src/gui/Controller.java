@@ -33,9 +33,10 @@ public class Controller implements MouseListener, KeyListener {
     private int selectRange = Piece.SIZE_PIECE / 4;
     private JPanel panelConLeft, panelConRight, panelConBoard;
     private CardLayout cardLayout1, cardLayout2, cardLayout3;
-
+    private LeftCreation leftCreation;
+    private RightCreation rightCreation;
     private Board board;
-
+    private AnimationController controller;
     public Controller(View view) {
 
         leftPoint = view.getLeftCreation().getPiecesPoint();
@@ -66,7 +67,8 @@ public class Controller implements MouseListener, KeyListener {
 
         panelConBoard = view.getPanelConBoard();
 
-
+        leftCreation=view.getLeftCreation();
+        rightCreation=view.getRightCreation();
     }
 
 
@@ -110,7 +112,42 @@ public class Controller implements MouseListener, KeyListener {
         return 0;
 
     }
+    public void animateRight(){
+        try {
+            if (controller != null) {
+                controller.stop();
+            }
+            controller = new AnimationController(500);
 
+            boolean fadeIn = view.getRightCreationView().getAlpha() < view.getDegPanRiView().getAlpha();
+
+            controller.add(controller.new AlphaRange(view.getRightCreationView(),null, fadeIn));
+            controller.add(controller.new AlphaRange(null,view.getDegPanRiView(), !fadeIn));
+
+            controller.start();
+        } catch (Animation.InvalidStateException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void animateLeft(){
+
+        try {
+            if (controller != null) {
+                controller.stop();
+            }
+            controller = new AnimationController(500);
+
+            boolean fadeIn = view.getLeftCreationView().getAlpha() < view.getDegPanLeView().getAlpha();
+
+            controller.add(controller.new AlphaRange(view.getLeftCreationView(),null, fadeIn));
+            controller.add(controller.new AlphaRange(null,view.getDegPanLeView(), !fadeIn));
+
+            controller.start();
+        } catch (Animation.InvalidStateException ex) {
+            ex.printStackTrace();
+        }
+    }
 
 
     //for board to select piece
@@ -171,6 +208,7 @@ public class Controller implements MouseListener, KeyListener {
     public void clickHelper(Piece selectPiece, boolean isDegreePanel, boolean isLeft, boolean isBoard) {
         // s->0->hig s->1->hig
         selectPiece.setIsHighLight(true);
+        leftCreation.startTimer();
 
         hasClicked++;// has->1 ->2->1
         if ((hasClicked == 2 || hasClicked == 1) && previousSe != null) {
@@ -192,7 +230,11 @@ public class Controller implements MouseListener, KeyListener {
         }
         view.setDoesClPieBoard(isBoard);   // TODO ALREADY MOVED CANNOT BE SELECTED
         if (!isBoard) {
-            selectOrientation(selectPiece, isDegreePanel, isLeft);
+            try {
+                selectOrientation(selectPiece, isDegreePanel, isLeft);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         if (isDegreePanel) {
@@ -287,6 +329,7 @@ public class Controller implements MouseListener, KeyListener {
             System.out.println("have not clicked right position");
             return;
         }
+
         Piece selectPiece = pieces.get(selectIndex);
         clickHelper(selectPiece, isDegreePanel, isLeft, false);
     }
@@ -305,18 +348,34 @@ public class Controller implements MouseListener, KeyListener {
 
     }
 
-    public void selectOrientation(Piece selectPiece, boolean isDegreePanel, boolean isLeft) {
+    public  void selectOrientation(Piece selectPiece, boolean isDegreePanel, boolean isLeft) throws InterruptedException {
         if (!isDegreePanel && isLeft) {
             view.getDegreePanLeft().setSelectPiece(selectPiece);
-            cardLayout1.show(view.getPanelConLeft(), "2");
+//            leftCreation.startTimer();
+            if(selectPiece.getType()== Piece.Type.GreenPiece){
+                animateLeft();
+                cardLayout1.show(view.getPanelConLeft(), "2");
+            }
+
+
+
+
+
+
         } else if (isDegreePanel && isLeft) {
+            animateLeft();
             cardLayout1.show(panelConLeft, "1");
         } else if (!isDegreePanel && !isLeft) {
-
             degreePanRight.setSelectPiece(selectPiece);
-            cardLayout2.show(panelConRight, "4");
+            
+            if(selectPiece.getType()==Piece.Type.YellowPiece){
+               animateRight();
+                cardLayout2.show(panelConRight, "4");
+            }
+
 //            panelConRight.getClass().getName();
         } else if (isDegreePanel && !isLeft) {
+            animateRight();
             cardLayout2.show(panelConRight, "3");
         }
     }
@@ -329,6 +388,7 @@ public class Controller implements MouseListener, KeyListener {
         if (p != null) {
             if (e.getSource() instanceof LeftCreationView) {
                 try {
+
                     selectHelper(leftPoint, leftPieces, p, false, true);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
@@ -421,4 +481,6 @@ public class Controller implements MouseListener, KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
     }
+    private static final class Lock { }
+    private final Object lock = new Lock();
 }

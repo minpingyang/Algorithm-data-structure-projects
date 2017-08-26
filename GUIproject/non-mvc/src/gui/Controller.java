@@ -1,6 +1,5 @@
 package gui;
 
-import gameComponent.Piece;
 import model.*;
 
 import javax.swing.*;
@@ -199,7 +198,6 @@ public class Controller implements MouseListener, KeyListener {
             String degree = Integer.toString(selectIndex + 1);
             char name = selectPiece.getName();
             String command = "create " + name + " " + degree;
-            System.out.println("create command"+command);
             try {
                 view.inputCommand(command);
             } catch (InterruptedException e) {
@@ -237,6 +235,7 @@ public class Controller implements MouseListener, KeyListener {
             System.out.println("have not clicked right position");
             return;
         }
+
         int dir = board.getMoveDir();
         String direction = "1";
         if (dir == 1) direction = "up";
@@ -244,7 +243,7 @@ public class Controller implements MouseListener, KeyListener {
         if (dir == 3) direction = "down";
         if (dir == 4) direction = "left";
 
-        selectPiece = board.getPieceBoard()[board.getRowB()][board.getColB()];
+
         if (!direction.equals("1") && dir != 5&&!board.getIsRotationPanel()) {
             char piecesName = board.getPiecesBoard()[board.getRowB()][board.getColB()].getName();
             String command = "move " + piecesName + " " + direction;
@@ -255,22 +254,14 @@ public class Controller implements MouseListener, KeyListener {
                 e1.printStackTrace();
             }
         }
-//        System.out.println("IS ROTATIONPANEL: "+board.getIsRotationPanel());
-//        System.out.println("!select has rotate "+!selectPiece.getHasRotate());
-
-        if(dir==5&&!selectPiece.getHasRotate()&&!selectPiece.getHasMove()){
-            selectRotationBoard(selectPiece, isRotation,p);
-        }
-
-
-
         if(dir==5&&board.getIsRotationPanel()&&!selectPiece.getHasRotate()){
             selectPiece.printWeapon();
-            rotationPanel.rotatePiece("2",selectPiece);
+            selectPiece.rotate("2");
+            rotationPanel.repaint();
         }
-
-
-
+        if(dir==5){
+            selectRotationBoard(selectPiece, isRotation,p);
+        }
 
 
 
@@ -298,8 +289,6 @@ public class Controller implements MouseListener, KeyListener {
             cardLayout3.show(panelConBoard, "6");
             board.setIsRotationPanel(true);
 
-
-
         }
 
 
@@ -326,32 +315,33 @@ public class Controller implements MouseListener, KeyListener {
 //	    if(!canClick) return;
         Point p = e.getPoint();
 
+
         if (p != null) {
-            if (e.getSource() instanceof LeftCreationView) {
+            if (e.getSource() instanceof LeftCreation) {
                 try {
                     selectHelper(leftPoint, leftPieces, p, false, true);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
-            } else if (e.getSource() instanceof RightCreationView) {
+            } else if (e.getSource() instanceof RightCreation) {
                 try {
                     selectHelper(rightPoint, rightPieces, p, false, false);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
-            } else if (e.getSource() instanceof DegPanLeView) {
+            } else if (e.getSource() instanceof DegreePanLeft) {
                 try {
                     selectHelper(degreeLeftPoint, degreeLeftPieces, p, true, true);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
-            } else if (e.getSource() instanceof DegPanRiView) {
+            } else if (e.getSource() instanceof DegreePanRight) {
                 try {
                     selectHelper(degreeRightPoint, degreeRightPieces, p, true, false);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
-            } else if (e.getSource() instanceof BoardView) {
+            } else if (e.getSource() instanceof Board) {
                 if (!view.getDoesCliPieBoard()) {
 //                    System.out.println("click to chose");
                     selectHelper(boardPoint, p);
@@ -361,7 +351,7 @@ public class Controller implements MouseListener, KeyListener {
 
 
                 }
-            }else if(e.getSource() instanceof RotationPanView){
+            }else if(e.getSource() instanceof RotationPanel){
 //                System.out.println("click rotation panel");
                 selectPieceOnBoard(boardPoint, p,true);
 

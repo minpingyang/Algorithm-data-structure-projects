@@ -1,13 +1,15 @@
 package model;
 
 
-import gameComponent.Piece;
 import gui.View;
-import gameComponent.Piece.Type;
+import model.Piece.Type;
 
+import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Queue;
+import java.util.Set;
 
 
 /***
@@ -18,7 +20,7 @@ import java.util.Queue;
  * @author minpingyang
  * 
  * **/
-public class Board  extends Observable{
+public class Board  extends JPanel{
 	private Piece[][] board;
 	private int rows = 10; // the row of the board
 	private int cols = 10;
@@ -94,8 +96,6 @@ public class Board  extends Observable{
 		board[8][8] =new Piece(Piece.Type.RightFace);
 		piecesBoard[2][2]=board[2][2] = new Piece(Piece.Type.LeftCreation);
 		piecesBoard[7][7]=board[7][7] = new Piece(Piece.Type.RightCreation);
-		setChanged();
-		notifyObservers();
 
 	}
 	/***
@@ -178,7 +178,6 @@ public class Board  extends Observable{
 				if(b1){	
 					//System.out.println("1111leftpiece: "+leftPiece.getName());
 					piecesBoard[xRow][xCol].addNeighbourPiece("left", leftPiece);
-
 				}	
 			} 
 			if(xCol<9){
@@ -189,7 +188,6 @@ public class Board  extends Observable{
 				if(b2){
 					//System.out.println("1111rightPiece: "+rightPiece.getName());
 					piecesBoard[xRow][xCol].addNeighbourPiece("right", rightPiece);
-
 				}
 			}
 			if(xRow<9){
@@ -199,7 +197,6 @@ public class Board  extends Observable{
 				if(b3){
 					//System.out.println("1111botPiece: "+botPiece.getName());
 					piecesBoard[xRow][xCol].addNeighbourPiece("bottom", botPiece);
-
 				}
 			}
 			if(xRow>0){
@@ -209,7 +206,6 @@ public class Board  extends Observable{
 				if(b4){
 					//System.out.println("1111topPiece: "+topPiece.getName());
 					piecesBoard[xRow][xCol].addNeighbourPiece("top", topPiece);
-
 				}
 			}
 		}
@@ -218,7 +214,7 @@ public class Board  extends Observable{
 			if(!piecesBoard[xRow][xCol].getNeighbourPiece().isEmpty()){
 			Piece tempPiece = 	piecesBoard[xRow][xCol];
 			System.out.println("There is a interaction happen!!");
-
+			repaint();
 			Thread.sleep(1000);
 			
 				Set<String> keys =tempPiece.getNeighbourPiece().keySet();
@@ -236,7 +232,6 @@ public class Board  extends Observable{
 						piecesBoard[xRow][xCol]=removeHelper(xRow, xCol);
 						piecesBoard[Nrow][Ncol].getNeighbourPiece().remove(actPiece.getName());
 						piecesBoard[xRow][xCol].getNeighbourPiece().remove(neighP.getName());
-
 						//System.out.println(piecesBoard[Nrow][Ncol].getName()+" ADN "+piecesBoard[xRow][xCol].getName()+" are dead");
 						break;
 					case 1:
@@ -249,14 +244,12 @@ public class Board  extends Observable{
 						piecesBoard[xRow][xCol].getNeighbourPiece().remove(neighP.getName());
 						ArrayList<Integer> rowCols1 = findPieceCoord(actPiece.getName());
 						piecesBoard[rowCols1.get(0)][rowCols1.get(1)].getNeighbourPiece().remove(actPiece.getName());
-
 						break;
 					case 2:
 						piecesBoard[xRow][xCol]=removeHelper(xRow, xCol);
 						//System.out.println("222222"+piecesBoard[xRow][xCol].getName()+" dead");
 						piecesBoard[Nrow][Ncol].getNeighbourPiece().remove(actPiece.getName());
 						piecesBoard[xRow][xCol].getNeighbourPiece().remove(neighP.getName());
-
 						break;
 					case 3:
 						String dir2=pushBackDir(key, true);
@@ -268,14 +261,12 @@ public class Board  extends Observable{
 						ArrayList<Integer> rowCols3 = findPieceCoord(actPiece.getName());
 						
 						piecesBoard[rowCols3.get(0)][rowCols3.get(1)].getNeighbourPiece().remove(neighP.getName());
-
 						break;
 					case 4:
 						piecesBoard[Nrow][Ncol]=removeHelper(Nrow, Ncol);
 						//System.out.println("4444444"+piecesBoard[Nrow][Ncol].getName()+" dead");
 						piecesBoard[Nrow][Ncol].getNeighbourPiece().remove(actPiece.getName());
 						piecesBoard[xRow][xCol].getNeighbourPiece().remove(neighP.getName());
-
 						
 						break;
 					default:
@@ -283,11 +274,8 @@ public class Board  extends Observable{
 					}
 					piecesBoard[Nrow][Ncol].getNeighbourPiece().remove(actPiece.getName());
 					piecesBoard[xRow][xCol].getNeighbourPiece().remove(neighP.getName());
-
-
 				}
 				piecesBoard[xRow][xCol].setNeighbourPiece(new HashMap<String,Piece>());
-
 				
 			}
 
@@ -296,14 +284,8 @@ public class Board  extends Observable{
 		if(keySize>0){
 			//if there is a interation, now change the pieceboard to the new board (after reation has done)
 			piecesBoard[xRow][xCol].setNeighbourPiece(new HashMap<String,Piece>());
-            setChanged();
-            notifyObservers();
-			setChanged();
-			notifyObservers();
 			return true;
 		}
-		setChanged();
-		notifyObservers();
 		return false;
 	}
 	/**
@@ -384,11 +366,8 @@ public class Board  extends Observable{
 		for(int row=0;row<10;row++){
 			for(int col=0;col<10;col++){
 				piecesBoard[row][col].fillPieceBoard();
-
 			}
 		}
-		setChanged();
-		notifyObservers();
 	}
 	/***
 	 * 
@@ -417,14 +396,10 @@ public class Board  extends Observable{
 		}
 		if (temp.getType() == Piece.Type.GreenPiece) {
 			actPiece=piecesBoard[2][2] = temp;
-
 		} else if (temp.getType() == Piece.Type.YellowPiece) {
 			actPiece=piecesBoard[7][7] = temp;
-
 		}
 		setHasCreate(true);
-		setChanged();
-		notifyObservers();
 		return true;
 	}
 	/**
@@ -443,13 +418,10 @@ public class Board  extends Observable{
 		//System.out.println("111111111");
 //		temp.printWeapon();
 		temp.rotate(degree);
-
 //		temp.printWeapon();
 		temp.setHasRotate(true);
 	    piecesBoard[pRow][pCol] = temp;
 	    actPiece = temp;
-		setChanged();
-		notifyObservers();
 		return true;
 	}
 	/**
@@ -467,14 +439,11 @@ public class Board  extends Observable{
 				if (pieceName == piecesBoard[row][col].getName()) {
 					rowCol.add(row);
 					rowCol.add(col);
-
 					break;
 				}
 			}
 		}
-
-		setChanged();
-		notifyObservers();
+	
 		return rowCol;
 	}
 	/**
@@ -509,8 +478,6 @@ public class Board  extends Observable{
 	}
 	public void setMoveQueue(Queue<Character>temp){
 		moveQue=temp;
-		setChanged();
-		notifyObservers();
 	}
 	public boolean checkNeighbourHelper(int row,int col,String dir){
 		char neigName='1';
@@ -556,8 +523,6 @@ public class Board  extends Observable{
 		default:
 			break;
 		}
-		setChanged();
-		notifyObservers();
 		
 		return hasNeighbour;
 	}
@@ -612,7 +577,6 @@ public class Board  extends Observable{
 				piecesBoard[pRow][pCol] = removeHelper(pRow, pCol); // REMOVE	
 				pRow = pRow - 1;
 				piecesBoard[pRow][pCol] = temp; // add
-
 			}
 		} else if (dir.equals("down")) {
 			if (!(moveHelper(pRow + 1, pCol))) {
@@ -622,7 +586,6 @@ public class Board  extends Observable{
 				piecesBoard[pRow][pCol] = removeHelper(pRow, pCol); // REMOVE	
 				pRow = pRow + 1;
 				piecesBoard[pRow][pCol] = temp; // add
-
 			}
 		} else if (dir.equals("left")) {
 			if (!(moveHelper(pRow, pCol - 1))) {
@@ -632,7 +595,6 @@ public class Board  extends Observable{
 				piecesBoard[pRow][pCol] = removeHelper(pRow, pCol); // REMOVE	
 				pCol = pCol - 1;
 				piecesBoard[pRow][pCol] = temp; // add
-
 			}
 		} else if (dir.equals("right")) {
 			if (!(moveHelper(pRow, pCol + 1))) {
@@ -641,22 +603,46 @@ public class Board  extends Observable{
 				piecesBoard[pRow][pCol] = removeHelper(pRow, pCol); // REMOVE	
 				pCol = pCol + 1;
 				piecesBoard[pRow][pCol] = temp; // add
-
 			}
 		}
 		if(!isPushed){
 			temp.setHasMove(true);
 		}
 		actPiece=temp;
-        setChanged();
-        notifyObservers();
 		return true;
 	}
-
+	@Override
+	public void paint(Graphics g){
+//		System.out.println("paint colorful board");
+		g.setColor(Color.PINK);
+		g.fillRect(0, 0, getWidth(), getHeight());
+		for(int row = 0; row<10;row++){
+			for(int col=0;col<10;col++){
+				board[row][col].drawPiece(g,col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE,row,col);
+			}
+		}
+		for(int row = 0; row<10;row++){
+			for(int col=0;col<10;col++){
+				piecesBoard[row][col].drawPiece(g,col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE,row,col);
+				if(piecesBoard[row][col].getType()==Type.GreenPiece||piecesBoard[row][col].getType()==Type.YellowPiece){
+				    piecePoint[row][col]=new Point(col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE);
+                }
+			}
+		}
+	}
+	protected void paintComponent(Graphics g){
+		super.paintComponent(g);
+	}
 	
 	
 	
-
+	@Override
+	public Dimension getPreferredSize(){
+		//width -> (5)*50
+		//height-> (10+10)*50
+		return new Dimension(10*(Piece.SIZE_PIECE),11*(Piece.SIZE_PIECE));
+	}
+	
 	//1-left win.  2- right win 0--non one win
 	public int doesWin() {
 		Piece leftBot= this.piecesBoard[2][1];

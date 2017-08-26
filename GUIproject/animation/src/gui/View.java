@@ -62,167 +62,182 @@ public class View extends JComponent {
     public RotationPanel getRotationPanel(){
         return rotationPanel;
     }
+	private DegPanLeView degPanLeView;
+	private LeftCreationView leftCreationView;
+	private RightCreationView rightCreationView;
+	private DegPanRiView degPanRiView;
+    public LeftCreationView getLeftCreationView(){return leftCreationView;}
+    public DegPanLeView getDegPanLeView(){return degPanLeView;}
+    private Animation animation;
+    public Animation getAnimation(){return animation;}
+    public DegPanRiView getDegPanRiView(){return degPanRiView;}
+    public RightCreationView getRightCreationView(){return  rightCreationView;}
 
 	public View() {
 
 
 
-		undoStack = new Stack<Board>();
-		isGreenTurn = true;
-		nameStack=new Stack<Character>();
-		degreeStack=new Stack<String>();
+			undoStack = new Stack<Board>();
+			isGreenTurn = true;
+			nameStack=new Stack<Character>();
+			degreeStack=new Stack<String>();
 
-        this.setFocusable(true);
+			this.setFocusable(true);
 
-		frame = new JFrame("Sword and Shield");
-        frame.setFocusable(true);
-        menuF =new Menu(this);
+			frame = new JFrame("Sword and Shield");
+			frame.setFocusable(true);
+			menuF =new Menu(this);
 
-		panelConLeft = new JPanel();
-		cardLayout1 = new CardLayout();
-		panelConLeft.setLayout(cardLayout1);
-        degreePanLeft = new DegreePanLeft();
+			panelConLeft = new JPanel();
+			cardLayout1 = new CardLayout();
+			panelConLeft.setLayout(cardLayout1);
+			degreePanLeft = new DegreePanLeft();
 
-        DegPanLeView degPanLeView= new DegPanLeView(degreePanLeft);
-
-
-
-        panelConRight=new JPanel();
-        cardLayout2=new CardLayout();
-		panelConRight.setLayout(cardLayout2);
-        degreePanRight=new DegreePanRight();
-
-        DegPanRiView degPanRiView =new DegPanRiView(degreePanRight);
+			 degPanLeView= new DegPanLeView(degreePanLeft);
 
 
 
-		board = new Board();
-		BoardView boardView =new BoardView(board);
+			panelConRight=new JPanel();
+			cardLayout2=new CardLayout();
+			panelConRight.setLayout(cardLayout2);
+			degreePanRight=new DegreePanRight();
 
-        panelConBoard=new JPanel();
-        cardLayout3=new CardLayout();
-        panelConBoard.setLayout(cardLayout3);
-        rotationPanel=new RotationPanel(board);//TODO
-
-        RotationPanView rotationPanView =new RotationPanView(rotationPanel);
-
-
-		greenPlayer = new Player(Piece.Type.GreenPiece);
-		yellowPlayer = new Player(Piece.Type.YellowPiece);
+			degPanRiView =new DegPanRiView(degreePanRight);
 
 
 
+			board = new Board();
+			BoardView boardView =new BoardView(board);
 
-		leftCreation = new LeftCreation(greenPlayer);
-        rightCreation = new RightCreation(yellowPlayer);
+			panelConBoard=new JPanel();
+			cardLayout3=new CardLayout();
+			panelConBoard.setLayout(cardLayout3);
+			rotationPanel=new RotationPanel(board);//TODO
 
-        LeftCreationView leftCreationView= new LeftCreationView(leftCreation);
-        RightCreationView rightCreationView =new RightCreationView(rightCreation);
-        leftCreationView.addMouseListener(new Controller(this));
-        rightCreationView.addMouseListener(new Controller(this));
+			RotationPanView rotationPanView =new RotationPanView(rotationPanel);
+
+
+			greenPlayer = new Player(Piece.Type.GreenPiece);
+			yellowPlayer = new Player(Piece.Type.YellowPiece);
 
 
 
 
-        panelConLeft.add(leftCreationView, "1");
-		panelConLeft.add(degPanLeView, "2");
-		cardLayout1.show(panelConLeft, "1");
+			leftCreation = new LeftCreation(greenPlayer);
+			rightCreation = new RightCreation(yellowPlayer);
 
-		panelConRight.add(rightCreationView,"3");
-		panelConRight.add(degPanRiView,"4");
-		cardLayout2.show(panelConRight,"3");
+			leftCreationView= new LeftCreationView(leftCreation);
 
 
-		panelConBoard.add(boardView,"5");
-		panelConBoard.add(rotationPanView,"6");
-		cardLayout3.show(panelConBoard,"5");
+			rightCreationView =new RightCreationView(rightCreation);
+			leftCreationView.addMouseListener(new Controller(this));
+			rightCreationView.addMouseListener(new Controller(this));
+
+		animation=new Animation(this);
+		leftCreationView =animation.getPane1();
+		degPanLeView=animation.getPane2();
+		rightCreationView =animation.getPane3();
+		degPanRiView = animation.getPane4();
+
+			panelConLeft.add(leftCreationView, "1");
+			panelConLeft.add(degPanLeView, "2");
+			cardLayout1.show(panelConLeft, "1");
+
+			panelConRight.add(rightCreationView,"3");
+			panelConRight.add(degPanRiView,"4");
+			cardLayout2.show(panelConRight,"3");
 
 
-//        frame.addKeyListener(new KeyController());
-        frame.addMouseListener(new Controller(this));
-		frame.addKeyListener(new Controller(this));
-        //board.addKeyListener(new Controller(this));
-
-        boardView.addKeyListener(new Controller(this));
-
-		boardView.addMouseListener(new Controller(this));
-		rotationPanView.addMouseListener(new Controller(this));
-		degPanRiView.addMouseListener(new Controller(this));
-		degPanLeView.addMouseListener(new Controller(this));
-		leftCreationView.addMouseListener(new Controller(this));
-		rightCreationView.addMouseListener(new Controller(this));
-        leftCreationView.setFocusable(true);
-        rightCreationView.setFocusable(true);
-
-		leftCemetery = new LeftCemetery(greenPlayer);
-
-		rightCemetery = new RightCemetery(yellowPlayer);
-		LeftCemView leftCemView =new LeftCemView(leftCemetery);
-		RightCemView rightCemView =new RightCemView(rightCemetery);
+			panelConBoard.add(boardView,"5");
+			panelConBoard.add(rotationPanView,"6");
+			cardLayout3.show(panelConBoard,"5");
 
 
-        menuBtn = new JButton("Menu");
-		menuBtn.setFocusable(false);
-		undo = new JButton("Undo");
-		undo.setFocusable(false);
-		pass = new JButton("Pass");
-		pass.setFocusable(false);
-		surrender = new JButton("Surrender");
-		surrender.setFocusable(false);
-		jtb = new JToolBar();
-		jtb.add(undo);
-		jtb.add(pass);
-		jtb.add(surrender);
-		jtb.add(menuBtn);
-		jtb.setFocusable(false);
+	//        frame.addKeyListener(new KeyController());
+			frame.addMouseListener(new Controller(this));
+			frame.addKeyListener(new Controller(this));
+			//board.addKeyListener(new Controller(this));
 
-		jtb.setPreferredSize(new Dimension(getWidth(),40));
-		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		frame.setLayout(new BorderLayout());
-		frame.add(jtb, BorderLayout.NORTH);
-        frame.add(panelConBoard);
-		addKeyListener(new Controller(this));
-//        addKeyListener(new KeyController());
-		frame.setVisible(false);
+			boardView.addKeyListener(new Controller(this));
+
+			boardView.addMouseListener(new Controller(this));
+			rotationPanView.addMouseListener(new Controller(this));
+			degPanRiView.addMouseListener(new Controller(this));
+			degPanLeView.addMouseListener(new Controller(this));
+			leftCreationView.addMouseListener(new Controller(this));
+			rightCreationView.addMouseListener(new Controller(this));
+			leftCreationView.setFocusable(true);
+			rightCreationView.setFocusable(true);
+
+			leftCemetery = new LeftCemetery(greenPlayer);
+
+			rightCemetery = new RightCemetery(yellowPlayer);
+			LeftCemView leftCemView =new LeftCemView(leftCemetery);
+			RightCemView rightCemView =new RightCemView(rightCemetery);
 
 
-		final JSplitPane hSplitRigt = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		final JSplitPane wholeBoard = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		final JSplitPane vSplitLeft = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		final JSplitPane vSplitRight = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		JLabel leJLabel = new JLabel("11");
-		JLabel rightLable = new JLabel("22");
-		// vSplitLeft.setTopComponent(leftCreation);
-		vSplitLeft.setTopComponent(panelConLeft);
-		// vSplitLeft.setBottomComponent(leftCemetery);
-		vSplitLeft.setBottomComponent(leJLabel);
-		vSplitLeft.setResizeWeight(0.6);
-		vSplitRight.setTopComponent(panelConRight);
-		// vSplitRight.setBottomComponent(rightCemetery);
-		vSplitRight.setBottomComponent(rightLable);
-		vSplitRight.setResizeWeight(0.4);
-		vSplitLeft.setContinuousLayout(true);
-		vSplitLeft.setOneTouchExpandable(true);
-		vSplitRight.setContinuousLayout(true);
-		vSplitRight.setOneTouchExpandable(true);
+			menuBtn = new JButton("Menu");
+			menuBtn.setFocusable(false);
+			undo = new JButton("Undo");
+			undo.setFocusable(false);
+			pass = new JButton("Pass");
+			pass.setFocusable(false);
+			surrender = new JButton("Surrender");
+			surrender.setFocusable(false);
+			jtb = new JToolBar();
+			jtb.add(undo);
+			jtb.add(pass);
+			jtb.add(surrender);
+			jtb.add(menuBtn);
+			jtb.setFocusable(false);
 
-		hSplitRigt.setLeftComponent(panelConBoard);
-		hSplitRigt.setRightComponent(vSplitRight);
-		hSplitRigt.setDividerLocation(1);
-		hSplitRigt.setContinuousLayout(true);
-		hSplitRigt.setOneTouchExpandable(true);
+			jtb.setPreferredSize(new Dimension(getWidth(),40));
+			frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+			frame.setLayout(new BorderLayout());
+			frame.add(jtb, BorderLayout.NORTH);
+			frame.add(panelConBoard);
+			addKeyListener(new Controller(this));
+	//        addKeyListener(new KeyController());
+			frame.setVisible(false);
 
-		wholeBoard.setLeftComponent(vSplitLeft);
-		wholeBoard.setRightComponent(hSplitRigt);
-		wholeBoard.setContinuousLayout(true);
-		wholeBoard.setOneTouchExpandable(true);
-		hSplitRigt.setDividerLocation(50);
-		wholeBoard.addKeyListener(new Controller(this));
-//        wholeBoard.addKeyListener(new KeyController());
-		frame.add(wholeBoard, BorderLayout.CENTER);
-		frame.pack();
 
-		buttonFuc();
+			final JSplitPane hSplitRigt = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+			final JSplitPane wholeBoard = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+			final JSplitPane vSplitLeft = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+			final JSplitPane vSplitRight = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+			JLabel leJLabel = new JLabel("11");
+			JLabel rightLable = new JLabel("22");
+			// vSplitLeft.setTopComponent(leftCreation);
+			vSplitLeft.setTopComponent(panelConLeft);
+			// vSplitLeft.setBottomComponent(leftCemetery);
+			vSplitLeft.setBottomComponent(leJLabel);
+			vSplitLeft.setResizeWeight(0.6);
+			vSplitRight.setTopComponent(panelConRight);
+			// vSplitRight.setBottomComponent(rightCemetery);
+			vSplitRight.setBottomComponent(rightLable);
+			vSplitRight.setResizeWeight(0.4);
+			vSplitLeft.setContinuousLayout(true);
+			vSplitLeft.setOneTouchExpandable(true);
+			vSplitRight.setContinuousLayout(true);
+			vSplitRight.setOneTouchExpandable(true);
+
+			hSplitRigt.setLeftComponent(panelConBoard);
+			hSplitRigt.setRightComponent(vSplitRight);
+			hSplitRigt.setDividerLocation(1);
+			hSplitRigt.setContinuousLayout(true);
+			hSplitRigt.setOneTouchExpandable(true);
+
+			wholeBoard.setLeftComponent(vSplitLeft);
+			wholeBoard.setRightComponent(hSplitRigt);
+			wholeBoard.setContinuousLayout(true);
+			wholeBoard.setOneTouchExpandable(true);
+			hSplitRigt.setDividerLocation(50);
+			wholeBoard.addKeyListener(new Controller(this));
+	//        wholeBoard.addKeyListener(new KeyController());
+			frame.add(wholeBoard, BorderLayout.CENTER);
+			frame.pack();
+
+			buttonFuc();
 
 	}
 

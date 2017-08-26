@@ -1,18 +1,18 @@
 package gui;
 
-import gameComponent.Menu;
-import gameComponent.Piece;
-import gameComponent.Player;
 import model.*;
+import model.Menu;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Stack;
 
-public class View extends JComponent {
+public class View extends JComponent implements Observer {
 
 	private JButton undo;
 	private JButton pass;
@@ -23,8 +23,6 @@ public class View extends JComponent {
 	private LeftCemetery leftCemetery;
 	private RightCemetery rightCemetery;
 	private Player greenPlayer, yellowPlayer;
-
-
 	private JToolBar jtb;
 	public static boolean isGreenTurn;
 	private boolean doesMove;
@@ -66,7 +64,6 @@ public class View extends JComponent {
 	public View() {
 
 
-
 		undoStack = new Stack<Board>();
 		isGreenTurn = true;
 		nameStack=new Stack<Character>();
@@ -83,28 +80,19 @@ public class View extends JComponent {
 		panelConLeft.setLayout(cardLayout1);
         degreePanLeft = new DegreePanLeft();
 
-        DegPanLeView degPanLeView= new DegPanLeView(degreePanLeft);
-
-
 
         panelConRight=new JPanel();
         cardLayout2=new CardLayout();
 		panelConRight.setLayout(cardLayout2);
         degreePanRight=new DegreePanRight();
 
-        DegPanRiView degPanRiView =new DegPanRiView(degreePanRight);
-
-
 
 		board = new Board();
-		BoardView boardView =new BoardView(board);
-
         panelConBoard=new JPanel();
         cardLayout3=new CardLayout();
         panelConBoard.setLayout(cardLayout3);
         rotationPanel=new RotationPanel(board);//TODO
 
-        RotationPanView rotationPanView =new RotationPanView(rotationPanel);
 
 
 		greenPlayer = new Player(Piece.Type.GreenPiece);
@@ -116,51 +104,41 @@ public class View extends JComponent {
 		leftCreation = new LeftCreation(greenPlayer);
         rightCreation = new RightCreation(yellowPlayer);
 
-        LeftCreationView leftCreationView= new LeftCreationView(leftCreation);
-        RightCreationView rightCreationView =new RightCreationView(rightCreation);
-        leftCreationView.addMouseListener(new Controller(this));
-        rightCreationView.addMouseListener(new Controller(this));
-
-
-
-
-        panelConLeft.add(leftCreationView, "1");
-		panelConLeft.add(degPanLeView, "2");
+        panelConLeft.add(leftCreation, "1");
+		panelConLeft.add(degreePanLeft, "2");
 		cardLayout1.show(panelConLeft, "1");
 
-		panelConRight.add(rightCreationView,"3");
-		panelConRight.add(degPanRiView,"4");
+		panelConRight.add(rightCreation,"3");
+		panelConRight.add(degreePanRight,"4");
 		cardLayout2.show(panelConRight,"3");
 
 
-		panelConBoard.add(boardView,"5");
-		panelConBoard.add(rotationPanView,"6");
+		panelConBoard.add(board,"5");
+		panelConBoard.add(rotationPanel,"6");
 		cardLayout3.show(panelConBoard,"5");
 
 
 //        frame.addKeyListener(new KeyController());
-        frame.addMouseListener(new Controller(this));
 		frame.addKeyListener(new Controller(this));
         //board.addKeyListener(new Controller(this));
 
-        boardView.addKeyListener(new Controller(this));
+        board.addKeyListener(new Controller(this));
 
-		boardView.addMouseListener(new Controller(this));
-		rotationPanView.addMouseListener(new Controller(this));
-		degPanRiView.addMouseListener(new Controller(this));
-		degPanLeView.addMouseListener(new Controller(this));
-		leftCreationView.addMouseListener(new Controller(this));
-		rightCreationView.addMouseListener(new Controller(this));
-        leftCreationView.setFocusable(true);
-        rightCreationView.setFocusable(true);
+		board.addMouseListener(new Controller(this));
+		rotationPanel.addMouseListener(new Controller(this));
+		degreePanRight.addMouseListener(new Controller(this));
+		degreePanLeft.addMouseListener(new Controller(this));
+		leftCreation.addMouseListener(new Controller(this));
+		rightCreation.addMouseListener(new Controller(this));
+        leftCreation.setFocusable(true);
+        rightCreation.setFocusable(true);
 
 		leftCemetery = new LeftCemetery(greenPlayer);
-
 		rightCemetery = new RightCemetery(yellowPlayer);
-		LeftCemView leftCemView =new LeftCemView(leftCemetery);
-		RightCemView rightCemView =new RightCemView(rightCemetery);
-
-
+//		startGame = new JButton("Begin new game");
+//		exitGame = new JButton("Quit");
+////		info = new JButton("Info");
+//		info.setFocusable(false);
         menuBtn = new JButton("Menu");
 		menuBtn.setFocusable(false);
 		undo = new JButton("Undo");
@@ -174,9 +152,9 @@ public class View extends JComponent {
 		jtb.add(pass);
 		jtb.add(surrender);
 		jtb.add(menuBtn);
+		jtb.setBackground(Color.PINK);
 		jtb.setFocusable(false);
-
-		jtb.setPreferredSize(new Dimension(getWidth(),40));
+		jtb.setLayout(new GridLayout(1,4));
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		frame.add(jtb, BorderLayout.NORTH);
@@ -233,7 +211,6 @@ public class View extends JComponent {
 
 			    frame.setVisible(false);
                 menuF.setVisible(true);
-
 			}
 		});
 
@@ -250,7 +227,7 @@ public class View extends JComponent {
 		pass.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 try {
-                    inputCommand("pass");
+                    excute("pass");
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -580,9 +557,9 @@ public class View extends JComponent {
 
 	public void inputCommand(String input) throws InterruptedException {
 
+		System.out.println("Enter a valid command:");
 
 		boolean isValid = isValidCommand(input);
-		System.out.println("input command :  "+input );
 		if (isValid) {
 			boolean doesExcute = excute(input);
 
@@ -613,7 +590,10 @@ public class View extends JComponent {
 
 	}
 
-
+	@Override
+	public void update(Observable o, Object arg) {
+		repaint();
+	}
 
 	public Dimension getPreferredSize() {
 		return new Dimension(600, 600);

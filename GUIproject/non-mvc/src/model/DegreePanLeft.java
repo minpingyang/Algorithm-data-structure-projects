@@ -1,17 +1,16 @@
 package model;
 
-import gameComponent.Piece;
-
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
-public class DegreePanLeft extends Observable {
+public class DegreePanLeft extends JPanel {
 	/**
 	 * 
 	 */
-
+	private int top = 10;
+	private int left = 12;
 	private static final long serialVersionUID = 1L;
 	private Piece selectPiece;
 	private List<Point> piecesPoint=new ArrayList<Point>();
@@ -19,9 +18,7 @@ public class DegreePanLeft extends Observable {
 	public List<Point> getPiecesPoint(){
 		return piecesPoint;
 	}
-	public Piece getSelectPiece(){
-		return selectPiece;
-	}
+
 	public void setSelectPiece(Piece temp){
 		List<Piece> late= new ArrayList<Piece>();
 	    selectPiece=temp;
@@ -41,8 +38,6 @@ public class DegreePanLeft extends Observable {
         diffDegreePiece.add(selectPiece2);
 		diffDegreePiece.add(selectPiece3);
 		diffDegreePiece.add(selectPiece4);
-		setChanged();
-		notifyObservers();
 
 	}
 	public List<Piece> getDiffDegreePiece(){
@@ -51,5 +46,32 @@ public class DegreePanLeft extends Observable {
 
 
 	
+	@Override
+	public void paint(Graphics g){
+		g.setColor(Color.PINK);
+		g.fillRect(0, 0, getWidth(), getHeight());
+		if(selectPiece!=null){
+			
+			int outline = 13;
 
+				for(int col=0;col<4;col++){
+					diffDegreePiece.get(col).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top,0,col);
+//                    System.out.println("draw name: "+diffDegreePiece.get(col).getName());
+//                    diffDegreePiece.get(col).printWeapon();
+					piecesPoint.add(new Point(left+col*(Piece.SIZE_PIECE+outline),top));
+				}
+		
+		}
+	
+	}
+	protected void paintComponent(Graphics g){
+		super.paintComponent(g);
+	}
+	
+	@Override
+	public Dimension getPreferredSize(){
+		//width -> (5)*50
+		//height-> (10+10)*50
+		return new Dimension(5*(Piece.SIZE_PIECE),11*(Piece.SIZE_PIECE));
+	}
 }
