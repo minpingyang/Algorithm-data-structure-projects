@@ -60,8 +60,6 @@ public class LeftCreation extends Observable implements ActionListener{
 
 			}
 		}
-		setChanged();
-		notifyObservers();
 
 	}
 	public float getAlpha(){return alpha;}

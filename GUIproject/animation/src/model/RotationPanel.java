@@ -30,8 +30,7 @@ public class RotationPanel extends Observable {
         this.piecesBoard=board.getPiecesBoard();
         this.backgroudBoard=board.getBoard();
         rotateTime=0;
-        setChanged();
-        notifyObservers();
+
 
     }
     public void setSelectPoint(){

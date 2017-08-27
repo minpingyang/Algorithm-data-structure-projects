@@ -115,8 +115,7 @@ public class Board  extends Observable{
 		piecesBoard[8][8]=board[8][8] =new Piece(Piece.Type.RightFace);
 		piecesBoard[2][2]=board[2][2] = new Piece(Piece.Type.LeftCreation);
 		piecesBoard[7][7]=board[7][7] = new Piece(Piece.Type.RightCreation);
-		setChanged();
-		notifyObservers();
+
 
 	}
 	/***
@@ -235,8 +234,7 @@ public class Board  extends Observable{
 			if(!piecesBoard[xRow][xCol].getNeighbourPiece().isEmpty()){
 				Piece tempPiece = 	piecesBoard[xRow][xCol];
 				//System.out.println("There is a interaction happen!!");
-				setChanged();
-				notifyObservers();
+
 				Thread.sleep(1000);
 
 				Set<String> keys =tempPiece.getNeighbourPiece().keySet();
@@ -265,6 +263,7 @@ public class Board  extends Observable{
 							//System.out.println("111111"+neighP.getName()+" was pushed "+dir1);
 							break;
 						case 2:
+							wentToCemetery(piecesBoard[xRow][xCol]);
 							piecesBoard[xRow][xCol]=removeHelper(xRow, xCol);
 							//System.out.println("222222"+piecesBoard[xRow][xCol].getName()+" dead");
 							break;
@@ -277,6 +276,7 @@ public class Board  extends Observable{
 							//System.out.println("3333333"+tempPiece.getName()+" was pushed "+dir2);
 							break;
 						case 4:
+							wentToCemetery(piecesBoard[Nrow][Ncol]);
 							piecesBoard[Nrow][Ncol]=removeHelper(Nrow, Ncol);
 							//System.out.println("4444444"+piecesBoard[Nrow][Ncol].getName()+" dead");
 							break;
@@ -469,8 +469,7 @@ public class Board  extends Observable{
 			}
 		}
 
-		setChanged();
-		notifyObservers();
+
 		return rowCol;
 	}
 	/**
@@ -506,8 +505,7 @@ public class Board  extends Observable{
 
 	public void setMoveQueue(Stack<Character>temp){
 		moveQue=temp;
-		setChanged();
-		notifyObservers();
+
 	}
 	public boolean checkNeighbourHelper(int row,int col,String dir){
 		char neigName='1';

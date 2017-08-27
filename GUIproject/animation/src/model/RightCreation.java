@@ -43,8 +43,7 @@ public class RightCreation extends Observable{
 
 			}
 		}
-		setChanged();
-		notifyObservers();
+
 	}
 
 
