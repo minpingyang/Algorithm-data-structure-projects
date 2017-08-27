@@ -19,6 +19,11 @@ public class Piece {
 	private boolean isHighLight = false;
 	private int rotatePSize = SIZE_PIECE+10;
 	private int rotateWeaponWidth=rotatePSize/8;
+	private int roTimes= 20;
+	public void decreaseRoTimes(){
+		roTimes--;
+	}
+	public int getRoTimes(){return roTimes;}
 	public void setIsHighLight(boolean b) {
 		isHighLight = b;
 	}
@@ -332,6 +337,7 @@ public class Piece {
 			}
 		}
 	}
+
 
 	public void drawWeapon(Graphics g, int x, int y) {
 		if (this.type == Type.GreenPiece) {

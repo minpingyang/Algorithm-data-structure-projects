@@ -45,7 +45,6 @@ public class RotationPanel extends Observable {
     public void rotatePiece(String degree,Piece selectPiece){
         if (degree.equals("2")) {
             rotateTime++;
-            System.out.println("rotate Time: "+rotateTime);
             selectPiece.setFourWeapon(selectPiece.getLeftWeapon(), selectPiece.getTopWeapon(), selectPiece.getRightWeapon(),selectPiece.getBottomWeapon());
         }
         setChanged();
