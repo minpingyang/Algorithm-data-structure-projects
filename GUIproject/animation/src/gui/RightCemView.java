@@ -27,17 +27,27 @@ public class RightCemView extends JComponent implements Observer {
        Graphics2D g = (Graphics2D)_g;
        g.setColor(Color.PINK);
        g.fillRect(0, 0, getWidth(), getHeight());
-       rightCemetery.setPieces(rightCemetery.getYellowPlayer().getPieces());
+
        int i=0;
        int outline = 10;
        for(int row = 0; row<6;row++){
            for(int col=0;col<4;col++){
-               rightCemetery.getPieces().get(i++).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top+row*(Piece.SIZE_PIECE+outline),row,col);
-               rightCemetery.getPiecesPoint().add(new Point(left+col*(Piece.SIZE_PIECE+outline),top+row*(Piece.SIZE_PIECE+outline)));
+//                System.out.println("leftCemetry size:  "+leftCemetery.getLeftDeadPiece().size());
+               if(i<rightCemetery.getRightDeadPieces().size()){
+
+                   rightCemetery.getRightDeadPieces().get(i++).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top+row*(Piece.SIZE_PIECE+outline),row,col);
+               }
+
            }
        }
-
    }
+    @Override
+    public Dimension getPreferredSize(){
+        //width -> (5)*50
+        //height-> (10+10)*50
+        return new Dimension(5*(Piece.SIZE_PIECE),11*(Piece.SIZE_PIECE));
+    }
+
 
     @Override
     public void update(Observable o, Object arg) {

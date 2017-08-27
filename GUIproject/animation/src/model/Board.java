@@ -18,6 +18,9 @@ import java.util.*;
  * 
  * **/
 public class Board  extends Observable{
+    private LeftCemetery leftCemetery;
+    private boolean isLeftTurn;
+    private RightCemetery rightCemetery;
 	private Piece[][] board;
 	private int rows = 10; // the row of the board
 	private int cols = 10;
@@ -64,6 +67,18 @@ public class Board  extends Observable{
 	    return piecesBoard;
     }
 
+    public boolean getIsleftTurn(){
+    	return isLeftTurn;
+	}
+
+	public void setIsLeftTurn(boolean turn){
+    	isLeftTurn =turn;
+		System.out.println("is left turn: "+isLeftTurn);
+		setChanged();
+		notifyObservers();
+	}
+
+
     public Piece[][] getBoard(){
         return board;
     }
@@ -73,7 +88,11 @@ public class Board  extends Observable{
 	 * arrange the board with initially correct Piece type.  For example, LefeFace, rightFace, grid, outBoard
 	 *
 	 * **/
-	public Board(){
+	public Board(View view){
+		isLeftTurn = View.isGreenTurn;
+		leftCemetery= view.getLeftCemetery();
+		rightCemetery=view.getRightCemetery();
+
 		moveQue=new Stack<Character>();
 		piecesBoard = new Piece[rows][cols];
 		board =new Piece[rows][cols];
@@ -231,6 +250,8 @@ public class Board  extends Observable{
 					int Ncol=neighCoord.get(1);
 					switch (act) {
 						case 0:
+						    wentToCemetery(piecesBoard[Nrow][Ncol]);
+						    wentToCemetery(piecesBoard[xRow][xCol]);
 							piecesBoard[Nrow][Ncol]=removeHelper(Nrow,Ncol);
 							piecesBoard[xRow][xCol]=removeHelper(xRow, xCol);
 							//System.out.println(piecesBoard[Nrow][Ncol].getName()+" ADN "+piecesBoard[xRow][xCol].getName()+" are dead");
@@ -278,6 +299,13 @@ public class Board  extends Observable{
 		notifyObservers();
 		return false;
 	}
+	public void wentToCemetery(Piece piece){
+        if(piece.getType()== Type.GreenPiece){
+            leftCemetery.addPieces(piece);
+        }else if(piece.getType()==Type.YellowPiece){
+        	rightCemetery.addPieces(piece);
+		}
+    }
 	/**
 	 * 
 	 * a remove helper method, which is used to check after a piece move to other position, what piece should be added again in
@@ -663,6 +691,8 @@ public class Board  extends Observable{
 		
 		return 0;
 	}
+
+
 
 }
 

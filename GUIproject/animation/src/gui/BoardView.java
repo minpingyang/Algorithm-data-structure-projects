@@ -39,6 +39,20 @@ public class BoardView extends JComponent implements Observer {
         }
 
 
+
+
+        String s=" ";
+        if(board.getIsleftTurn()){
+            g.setColor(Color.green);
+            s="Now It is Left player turn!";}
+        else{
+            g.setColor(Color.yellow);
+            s="Now It is Right player turn!";
+        }
+        Font font0 =new Font("arial",Font.BOLD,40);
+        g.setFont(font0);
+        g.drawString(s,Piece.SIZE_PIECE,11*Piece.SIZE_PIECE);
+
     }
     public Dimension getPreferredSize() {return new Dimension(10*(Piece.SIZE_PIECE),11*(Piece.SIZE_PIECE));}
     @Override
