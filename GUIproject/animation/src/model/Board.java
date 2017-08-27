@@ -4,6 +4,7 @@ package model;
 import gameComponent.Piece;
 import gameComponent.Piece.Type;
 import gui.View;
+import resources.SoundResource;
 
 import java.awt.*;
 import java.util.*;
@@ -300,6 +301,7 @@ public class Board  extends Observable{
 		return false;
 	}
 	public void wentToCemetery(Piece piece){
+		SoundResource.DISAPPEAR.sound.play();
         if(piece.getType()== Type.GreenPiece){
             leftCemetery.addPieces(piece);
         }else if(piece.getType()==Type.YellowPiece){
