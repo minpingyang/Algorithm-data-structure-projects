@@ -25,7 +25,7 @@ import java.util.List;
 public class Board extends Observable implements ActionListener {
     private LeftCemetery leftCemetery;
     private Piece reac1,reac2;
-    private Timer timer = new Timer(20, this);
+    private Timer timer = new Timer(10, this);
     private boolean isLeftTurn;
     private RightCemetery rightCemetery;
     private Piece[][] board;
@@ -108,7 +108,7 @@ public class Board extends Observable implements ActionListener {
         setChanged();
         notifyObservers();
     }
-
+    private View view;
 
     private List<ArrayList<Integer>> deadRowCol = new ArrayList<>();
 
@@ -128,7 +128,7 @@ public class Board extends Observable implements ActionListener {
         isLeftTurn = View.isGreenTurn;
         leftCemetery = view.getLeftCemetery();
         rightCemetery = view.getRightCemetery();
-
+        this.view =view;
         moveQue = new Stack<Character>();
         piecesBoard = new Piece[rows][cols];
         board = new Piece[rows][cols];
@@ -306,6 +306,7 @@ public class Board extends Observable implements ActionListener {
                             deadRowCol.add(firstList);
                             deadRowCol.add(secondList);
                             deadTimer = true;
+
                             timer.start();
 
 
@@ -751,11 +752,14 @@ public class Board extends Observable implements ActionListener {
                 }
                 piecesBoard[row][col].setMovingStep(70);
                 if (movingDir.equals("up")) {
+
                     piecePoint[row - 1][col] = piecePoint[row][col]; //add
                     piecePoint[row][col] = null; //remove
                     piecesBoard[row][col] = removeHelper(row, col); // REMOVE
+
                     piecesBoard[row - 1][col] = movingPiece; //add
                     piecesBoard[row - 1][col].setIsMoving(false);
+
                 } else if (movingDir.equals("down")) {
                     piecePoint[row + 1][col] = piecePoint[row][col]; //add
                     piecePoint[row][col] = null; //remove
@@ -777,7 +781,7 @@ public class Board extends Observable implements ActionListener {
                     piecesBoard[row][col - 1].setIsMoving(false);
                 }
 
-
+                view.checkWin();
                 moveTimer = false;
                 moveRowCol.clear();
                 movingDir = " ";

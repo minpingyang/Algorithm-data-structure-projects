@@ -637,6 +637,26 @@ public class View extends JComponent {
         return result;
     }
 
+    public void checkWin(){
+        int isGameStop = doesWin();
+        if (isGameStop != 0) {
+            String[] options = new String[]{"Back to menu"};
+            String message = " ";
+            if (isGameStop == 1) {
+                message = "Right Player WIN";
+            } else {
+                message = "Left Player WIN";
+            }
+            int response = JOptionPane.showOptionDialog(null, message, "Game Over",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+                    null, options, options[0]);
+            if (response == 0) {
+                frame.setVisible(false);
+                menuF.setVisible(true);
+            }
+
+        }
+    }
     /**
      * This method is used to print out the board
      **/
@@ -662,24 +682,7 @@ public class View extends JComponent {
 
                 System.out.println();
             }
-            int isGameStop = doesWin();
-            if (isGameStop != 0) {
-                String[] options = new String[]{"Back to menu"};
-                String message = " ";
-                if (isGameStop == 1) {
-                    message = "Right Player WIN";
-                } else {
-                    message = "Left Player WIN";
-                }
-                int response = JOptionPane.showOptionDialog(null, message, "Game Over",
-                        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-                        null, options, options[0]);
-                if (response == 0) {
-                    frame.setVisible(false);
-                    menuF.setVisible(true);
-                }
-
-            }
+             checkWin();
 
         } else if (!isValid) {
             System.out.println("illegal Command ");
