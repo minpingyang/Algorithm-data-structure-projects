@@ -5,10 +5,7 @@ import model.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.List;
 
 public class Controller implements MouseListener, KeyListener {
@@ -199,9 +196,7 @@ public class Controller implements MouseListener, KeyListener {
 
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
+
 
 
     public void clickHelper(Piece selectPiece, boolean isDegreePanel, boolean isLeft, boolean isBoard) {
@@ -385,10 +380,9 @@ public class Controller implements MouseListener, KeyListener {
             cardLayout2.show(panelConRight, "3");
         }
     }
-
     @Override
-    public void mousePressed(MouseEvent e) {
-//	    if(!canClick) return;
+    public void mouseClicked(MouseEvent e) {
+        if(e.getClickCount()!=1){return;}
         Point p = e.getPoint();
 
         if (p != null) {
@@ -433,6 +427,55 @@ public class Controller implements MouseListener, KeyListener {
 
             }
         }
+
+    }
+    @Override
+    public void mousePressed(MouseEvent e) {
+//	    if(!canClick) return;
+//        Point p = e.getPoint();
+//
+//        if (p != null) {
+//            if (e.getSource() instanceof LeftCreationView) {
+//                try {
+//
+//                    selectHelper(leftPoint, leftPieces, p, false, true);
+//                } catch (InterruptedException e1) {
+//                    e1.printStackTrace();
+//                }
+//            } else if (e.getSource() instanceof RightCreationView) {
+//                try {
+//                    selectHelper(rightPoint, rightPieces, p, false, false);
+//                } catch (InterruptedException e1) {
+//                    e1.printStackTrace();
+//                }
+//            } else if (e.getSource() instanceof DegPanLeView) {
+//                try {
+//                    selectHelper(degreeLeftPoint, degreeLeftPieces, p, true, true);
+//                } catch (InterruptedException e1) {
+//                    e1.printStackTrace();
+//                }
+//            } else if (e.getSource() instanceof DegPanRiView) {
+//                try {
+//                    selectHelper(degreeRightPoint, degreeRightPieces, p, true, false);
+//                } catch (InterruptedException e1) {
+//                    e1.printStackTrace();
+//                }
+//            } else if (e.getSource() instanceof BoardView) {
+//                if (!view.getDoesCliPieBoard()) {
+////                    System.out.println("click to chose");
+//                    selectHelper(boardPoint, p);
+//                } else {
+////                    System.out.println("click to move");
+//                    selectPieceOnBoard(boardPoint, p,false);//for move
+//
+//
+//                }
+//            }else if(e.getSource() instanceof RotationPanView){
+////                System.out.println("click rotation panel");
+//                selectPieceOnBoard(boardPoint, p,true);
+//
+//            }
+//        }
 
     }
 

@@ -25,7 +25,7 @@ import java.util.List;
 public class Board extends Observable implements ActionListener {
     private LeftCemetery leftCemetery;
     private Piece reac1,reac2;
-    private Timer timer = new Timer(10, this);
+    private Timer timer = new Timer(20, this);
     private boolean isLeftTurn;
     private RightCemetery rightCemetery;
     private Piece[][] board;
@@ -716,25 +716,25 @@ public class Board extends Observable implements ActionListener {
             boolean stop2 = false;
             switch (movingDir) {
                 case "up":
-                    piecePoint[row][col].translate(0, -1);
+                    piecePoint[row][col].translate(0, -14);
                     piecesBoard[row][col].setIsMoving(true);
                     piecesBoard[row][col].decreaseMovingStep();
                     stop2 = piecesBoard[row][col].getMovingStep() == 0;
                     break;
                 case "down":
-                    piecePoint[row][col].translate(0,1);
+                    piecePoint[row][col].translate(0,+14);
                     piecesBoard[row][col].setIsMoving(true);
                     piecesBoard[row][col].decreaseMovingStep();
                     stop2 = piecesBoard[row][col].getMovingStep() == 0;
                     break;
                 case "right":
-                    piecePoint[row][col].translate(1,0);
+                    piecePoint[row][col].translate(14,0);
                     piecesBoard[row][col].setIsMoving(true);
                     piecesBoard[row][col].decreaseMovingStep();
                     stop2 = piecesBoard[row][col].getMovingStep() == 0;
                     break;
                 case "left":
-                    piecePoint[row][col].translate(-1,0);
+                    piecePoint[row][col].translate(-14,0);
                     piecesBoard[row][col].setIsMoving(true);
                     piecesBoard[row][col].decreaseMovingStep();
                     stop2 = piecesBoard[row][col].getMovingStep() == 0;

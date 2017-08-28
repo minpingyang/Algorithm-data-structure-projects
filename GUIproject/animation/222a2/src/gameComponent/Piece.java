@@ -29,7 +29,7 @@ public class Piece {
 	}
 	private int movingStep = 70;
 	public void decreaseMovingStep(){
-		movingStep--;
+		movingStep-=14;
 	}
 	public int getMovingStep(){return movingStep;}
 	public void setMovingStep(int temp){movingStep=temp;}
