@@ -574,7 +574,7 @@ public class View extends JComponent {
                 boolean doesCreate = create(degree, pieceName);
                 doActionSuccess = doesCreate;
                 doesAct = doActionSuccess; //
-                if (doesCreate) { //only if create successfully
+                if (doesCreate&&board.findPieceOnBoard(pieceName)!=null) { //only if create successfully
                     board.findPieceOnBoard(pieceName).setIsHighLight(false);
                     undoStack.add(temp);
                     isRotate = false;

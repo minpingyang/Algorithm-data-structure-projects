@@ -24,6 +24,11 @@ import java.util.List;
  * **/
 public class Board extends Observable implements ActionListener {
     private LeftCemetery leftCemetery;
+    private int keySize = 0, xRow = 0, xCol = 0;
+    public int getXRow(){return xRow;}
+    public int getxCol(){return xCol;}
+    public int getKeySize(){return keySize;}
+    public void setKeySize(int temp){keySize=temp;}
     private Piece reac1,reac2;
     private Timer timer = new Timer(20, this);
     private boolean isLeftTurn;
@@ -39,10 +44,17 @@ public class Board extends Observable implements ActionListener {
     private Point[][] piecePoint = new Point[10][10];
     private int rowB, colB, moveDir;
     private boolean isRotationPanel = false;
-    private boolean deadTimer = false, moveTimer = false;
+    private boolean deadTimer = false, moveTimer = false,creationTimer=false;
     private Piece movingPiece;
     private String movingDir;
+    private Piece creationPiece;
+    private boolean doesClickBorder=false;
+    public void setDoesClickBorder(boolean temp){
+        doesClickBorder=temp;
+    }
+    public boolean getDoesClickBorder(){return doesClickBorder;}
 
+    private boolean isLeftPlayer;
     public boolean getIsRotationPanel() {
         return isRotationPanel;
     }
@@ -230,7 +242,7 @@ public class Board extends Observable implements ActionListener {
      * @return --boolean --> the boolean value indicates there is reaction happen in the current piece board
      **/
     public boolean checkReaction() throws InterruptedException {
-        int xRow = 0, xCol = 0, act = 5, keySize = 0;
+        int act = 5;
         ArrayList<Integer> selfCoord = new ArrayList<>();
         if (actPiece != null) {
             //System.out.println("name:"+actPiece.getName());
@@ -286,6 +298,7 @@ public class Board extends Observable implements ActionListener {
 
                 Set<String> keys = tempPiece.getNeighbourPiece().keySet();
                 keySize = keys.size();
+
                 for (String key : keys) {
                     //0->both dead     1->neighbour move back     2->self dead  3->self move back  4->neighbourd dead
                     Piece neighP = tempPiece.getNeighbourPiece().get(key);
@@ -296,18 +309,20 @@ public class Board extends Observable implements ActionListener {
                     switch (act) {
                         case 0:
 
-                            markReact(tempPiece.getName(),neighP.getName());
-                            ArrayList<Integer> firstList = new ArrayList<>();
-                            firstList.add(Nrow);
-                            firstList.add(Ncol);
-                            ArrayList<Integer> secondList = new ArrayList<>();
-                            secondList.add(xRow);
-                            secondList.add(xCol);
-                            deadRowCol.add(firstList);
-                            deadRowCol.add(secondList);
-                            deadTimer = true;
+//                            if(doesClickBorder){
+                                markReact(tempPiece.getName(),neighP.getName());
+                                ArrayList<Integer> firstList = new ArrayList<>();
+                                firstList.add(Nrow);
+                                firstList.add(Ncol);
+                                ArrayList<Integer> secondList = new ArrayList<>();
+                                secondList.add(xRow);
+                                secondList.add(xCol);
+                                deadRowCol.add(firstList);
+                                deadRowCol.add(secondList);
+                                deadTimer = true;
+                                timer.start();
+//                            }
 
-                            timer.start();
 
 
                             break;
@@ -493,17 +508,199 @@ public class Board extends Observable implements ActionListener {
         if (hasCreate || !isEmptyCreationArea()) {
             return false;
         }
+
         if (temp.getType() == Piece.Type.GreenPiece) {
-            actPiece = piecesBoard[2][2] = temp;
-
+            piecesBoard[0][0]=temp;
+            isLeftPlayer=true;
         } else if (temp.getType() == Piece.Type.YellowPiece) {
-            actPiece = piecesBoard[7][7] = temp;
-
+            piecesBoard[9][9]=temp;
+            isLeftPlayer =false;
         }
+        creationTimer=true;
+        creationPiece=temp;
+        timer.start();
+
+
+
+
         setHasCreate(true);
         setChanged();
         notifyObservers();
         return true;
+    }
+    public void addPieceToBoard(int row,int col,Piece temp){
+        piecesBoard[row][col]=temp;
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(creationTimer){
+            boolean stop3=false;
+
+
+            if(isLeftPlayer){
+                piecePoint[0][0].translate(14,14);
+                piecesBoard[0][0].setIsMoving(true);
+                piecesBoard[0][0].decreaseMovingStep();
+                stop3=piecesBoard[0][0].getMovingStep()==-70;
+            }else {
+                piecePoint[9][9].translate(-14,-14);
+                piecesBoard[9][9].setIsMoving(true);
+                piecesBoard[9][9].decreaseMovingStep();
+                stop3=piecesBoard[9][9].getMovingStep()==-70;
+            }
+
+
+            if(stop3){
+
+                if(isLeftPlayer){
+                    piecesBoard[0][0].setMovingStep(70);
+                    piecePoint[2][2] = piecePoint[0][0]; //add
+                    piecePoint[0][0] = null; //remove
+                    piecesBoard[0][0] = new Piece(Type.NonePiece);
+                    actPiece =  piecesBoard[2][2] = creationPiece; //add
+                    piecesBoard[2][2].setIsMoving(false);
+                }else{
+                    piecesBoard[9][9].setMovingStep(70);
+                    piecePoint[7][7] = piecePoint[9][9]; //add
+                    piecePoint[9][9] = null; //remove
+                    piecesBoard[9][9] = new Piece(Type.NonePiece);
+                    actPiece =  piecesBoard[7][7] = creationPiece; //add
+                    piecesBoard[7][7].setIsMoving(false);
+
+                }
+
+                try {
+                    checkReaction();
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+
+                creationPiece=null;
+                isLeftPlayer=false;
+                creationTimer=false;
+
+            }
+        }
+
+
+
+        if (deadTimer) {
+            ArrayList<Integer> first = deadRowCol.get(0);
+            ArrayList<Integer> second = new ArrayList<>();
+
+            piecesBoard[first.get(0)][first.get(1)].rotate("2");
+            piecesBoard[first.get(0)][first.get(1)].decreaseRoTimes();
+
+            boolean stop1 = piecesBoard[first.get(0)][first.get(1)].getRoTimes() == 0;
+
+            if (deadRowCol.size() > 1) {
+                second = deadRowCol.get(1);
+                piecesBoard[second.get(0)][second.get(1)].rotate("2");
+                piecesBoard[second.get(0)][second.get(1)].decreaseRoTimes();
+                stop1 = piecesBoard[first.get(0)][first.get(1)].getRoTimes() == 0 && piecesBoard[second.get(0)][second.get(1)].getRoTimes() == 0;
+            }
+
+            if (stop1) {
+                timer.stop();
+                reac1.setIsReact(false);
+                reac2.setIsReact(false);
+                wentToCemetery(piecesBoard[first.get(0)][first.get(1)]);
+                wentToCemeteryHelper(first.get(0), first.get(1));
+                if (deadRowCol.size() > 1) {
+                    wentToCemetery(piecesBoard[second.get(0)][second.get(1)]);
+                    wentToCemeteryHelper(second.get(0), second.get(1));
+                }
+
+                deadRowCol.clear();
+
+                deadTimer = false;
+
+            }
+        }
+        if (moveTimer) {
+            int row = moveRowCol.get(0);
+            int col = moveRowCol.get(1);
+
+            boolean stop2 = false;
+            switch (movingDir) {
+                case "up":
+                    piecePoint[row][col].translate(0, -14);
+                    piecesBoard[row][col].setIsMoving(true);
+                    piecesBoard[row][col].decreaseMovingStep();
+                    stop2 = piecesBoard[row][col].getMovingStep() == 0;
+                    break;
+                case "down":
+                    piecePoint[row][col].translate(0,+14);
+                    piecesBoard[row][col].setIsMoving(true);
+                    piecesBoard[row][col].decreaseMovingStep();
+                    stop2 = piecesBoard[row][col].getMovingStep() == 0;
+                    break;
+                case "right":
+                    piecePoint[row][col].translate(14,0);
+                    piecesBoard[row][col].setIsMoving(true);
+                    piecesBoard[row][col].decreaseMovingStep();
+                    stop2 = piecesBoard[row][col].getMovingStep() == 0;
+                    break;
+                case "left":
+                    piecePoint[row][col].translate(-14,0);
+                    piecesBoard[row][col].setIsMoving(true);
+                    piecesBoard[row][col].decreaseMovingStep();
+                    stop2 = piecesBoard[row][col].getMovingStep() == 0;
+                    break;
+
+            }
+
+
+            if (stop2) {
+
+                timer.stop();
+                if(reac1!=null&&reac2!=null){
+                    reac1.setIsReact(false);
+                    reac2.setIsReact(false);
+                }
+                piecesBoard[row][col].setMovingStep(70);
+                if (movingDir.equals("up")) {
+
+                    piecePoint[row - 1][col] = piecePoint[row][col]; //add
+                    piecePoint[row][col] = null; //remove
+                    piecesBoard[row][col] = removeHelper(row, col); // REMOVE
+
+                    piecesBoard[row - 1][col] = movingPiece; //add
+                    piecesBoard[row - 1][col].setIsMoving(false);
+
+                } else if (movingDir.equals("down")) {
+                    piecePoint[row + 1][col] = piecePoint[row][col]; //add
+                    piecePoint[row][col] = null; //remove
+                    piecesBoard[row][col] = removeHelper(row, col); // REMOVE
+                    piecesBoard[row + 1][col] = movingPiece; //add
+                    piecesBoard[row + 1][col].setIsMoving(false);
+                } else if (movingDir.equals("right")) {
+                    piecePoint[row][col + 1] = piecePoint[row][col]; //add
+                    piecePoint[row][col] = null; //remove
+                    piecesBoard[row][col] = removeHelper(row, col); // REMOVE
+                    piecesBoard[row][col + 1] = movingPiece; //add
+                    piecesBoard[row][col + 1].setIsMoving(false);
+
+                } else if (movingDir.equals("left")) {
+                    piecePoint[row][col - 1] = piecePoint[row][col]; //add
+                    piecePoint[row][col] = null; //remove
+                    piecesBoard[row][col] = removeHelper(row, col); // REMOVE
+                    piecesBoard[row][col - 1] = movingPiece; //add
+                    piecesBoard[row][col - 1].setIsMoving(false);
+                }
+
+                view.checkWin();
+                moveTimer = false;
+                moveRowCol.clear();
+                movingDir = " ";
+
+
+            }
+        }
+
+        setChanged();
+        notifyObservers();
+
     }
 
     /**
@@ -673,127 +870,7 @@ public class Board extends Observable implements ActionListener {
         return !(outborder || inForbiddenArea);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (deadTimer) {
-            ArrayList<Integer> first = deadRowCol.get(0);
-            ArrayList<Integer> second = new ArrayList<>();
 
-            piecesBoard[first.get(0)][first.get(1)].rotate("2");
-            piecesBoard[first.get(0)][first.get(1)].decreaseRoTimes();
-
-            boolean stop1 = piecesBoard[first.get(0)][first.get(1)].getRoTimes() == 0;
-
-            if (deadRowCol.size() > 1) {
-                second = deadRowCol.get(1);
-                piecesBoard[second.get(0)][second.get(1)].rotate("2");
-                piecesBoard[second.get(0)][second.get(1)].decreaseRoTimes();
-                stop1 = piecesBoard[first.get(0)][first.get(1)].getRoTimes() == 0 && piecesBoard[second.get(0)][second.get(1)].getRoTimes() == 0;
-            }
-
-            if (stop1) {
-                timer.stop();
-                reac1.setIsReact(false);
-                reac2.setIsReact(false);
-                wentToCemetery(piecesBoard[first.get(0)][first.get(1)]);
-                wentToCemeteryHelper(first.get(0), first.get(1));
-                if (deadRowCol.size() > 1) {
-                    wentToCemetery(piecesBoard[second.get(0)][second.get(1)]);
-                    wentToCemeteryHelper(second.get(0), second.get(1));
-                }
-
-                deadRowCol.clear();
-
-                deadTimer = false;
-
-            }
-        }
-        if (moveTimer) {
-            int row = moveRowCol.get(0);
-            int col = moveRowCol.get(1);
-            int x = piecePoint[row][col].x;
-            int y = piecePoint[row][col].y;
-            boolean stop2 = false;
-            switch (movingDir) {
-                case "up":
-                    piecePoint[row][col].translate(0, -14);
-                    piecesBoard[row][col].setIsMoving(true);
-                    piecesBoard[row][col].decreaseMovingStep();
-                    stop2 = piecesBoard[row][col].getMovingStep() == 0;
-                    break;
-                case "down":
-                    piecePoint[row][col].translate(0,+14);
-                    piecesBoard[row][col].setIsMoving(true);
-                    piecesBoard[row][col].decreaseMovingStep();
-                    stop2 = piecesBoard[row][col].getMovingStep() == 0;
-                    break;
-                case "right":
-                    piecePoint[row][col].translate(14,0);
-                    piecesBoard[row][col].setIsMoving(true);
-                    piecesBoard[row][col].decreaseMovingStep();
-                    stop2 = piecesBoard[row][col].getMovingStep() == 0;
-                    break;
-                case "left":
-                    piecePoint[row][col].translate(-14,0);
-                    piecesBoard[row][col].setIsMoving(true);
-                    piecesBoard[row][col].decreaseMovingStep();
-                    stop2 = piecesBoard[row][col].getMovingStep() == 0;
-                    break;
-
-            }
-
-
-            if (stop2) {
-
-                timer.stop();
-                if(reac1!=null&&reac2!=null){
-                    reac1.setIsReact(false);
-                    reac2.setIsReact(false);
-                }
-                piecesBoard[row][col].setMovingStep(70);
-                if (movingDir.equals("up")) {
-
-                    piecePoint[row - 1][col] = piecePoint[row][col]; //add
-                    piecePoint[row][col] = null; //remove
-                    piecesBoard[row][col] = removeHelper(row, col); // REMOVE
-
-                    piecesBoard[row - 1][col] = movingPiece; //add
-                    piecesBoard[row - 1][col].setIsMoving(false);
-
-                } else if (movingDir.equals("down")) {
-                    piecePoint[row + 1][col] = piecePoint[row][col]; //add
-                    piecePoint[row][col] = null; //remove
-                    piecesBoard[row][col] = removeHelper(row, col); // REMOVE
-                    piecesBoard[row + 1][col] = movingPiece; //add
-                    piecesBoard[row + 1][col].setIsMoving(false);
-                } else if (movingDir.equals("right")) {
-                    piecePoint[row][col + 1] = piecePoint[row][col]; //add
-                    piecePoint[row][col] = null; //remove
-                    piecesBoard[row][col] = removeHelper(row, col); // REMOVE
-                    piecesBoard[row][col + 1] = movingPiece; //add
-                    piecesBoard[row][col + 1].setIsMoving(false);
-
-                } else if (movingDir.equals("left")) {
-                    piecePoint[row][col - 1] = piecePoint[row][col]; //add
-                    piecePoint[row][col] = null; //remove
-                    piecesBoard[row][col] = removeHelper(row, col); // REMOVE
-                    piecesBoard[row][col - 1] = movingPiece; //add
-                    piecesBoard[row][col - 1].setIsMoving(false);
-                }
-
-                view.checkWin();
-                moveTimer = false;
-                moveRowCol.clear();
-                movingDir = " ";
-
-
-            }
-        }
-
-        setChanged();
-        notifyObservers();
-
-    }
     // return a boolean indicates if move the piece successfully
 
     /**

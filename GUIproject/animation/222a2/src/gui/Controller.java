@@ -254,11 +254,7 @@ public class Controller implements MouseListener, KeyListener {
 
     public void selectPieceOnBoard(Point[][] points, Point p,boolean isRotation) {
 
-//        if(board.getIsRotationPanel()){
-//            System.out.println("clickPx: "+p.getX()+"  clickPy: "+p.getY());
-//            System.out.println("selectPointX: "+rotationPanel.getSelectPoint().getX()+"  selectPointY: "+rotationPanel.getSelectPoint().getY());
-//
-//        }
+
         Piece selectPiece = board.getPieceBoard()[board.getRowB()][board.getColB()];
         if(board.getIsRotationPanel()&&isRotation&&!checkTwoPoint(p,rotationPanel.getSelectPoint())) {
             cardLayout3.show(panelConBoard, "5");
@@ -298,8 +294,6 @@ public class Controller implements MouseListener, KeyListener {
                 e1.printStackTrace();
             }
         }
-//        System.out.println("IS ROTATIONPANEL: "+board.getIsRotationPanel());
-//        System.out.println("!select has rotate "+!selectPiece.getHasRotate());
 
         if(dir==5&&!selectPiece.getHasRotate()&&!selectPiece.getHasMove()){
             selectRotationBoard(selectPiece, isRotation,p);
@@ -412,10 +406,15 @@ public class Controller implements MouseListener, KeyListener {
                     e1.printStackTrace();
                 }
             } else if (e.getSource() instanceof BoardView) {
+                if(view.getDoesCliPieBoard()&&board.getKeySize()!=0){
+                    selectPieceOnBoard(boardPoint, p,false);
+                }
+
                 if (!view.getDoesCliPieBoard()) {
 //                    System.out.println("click to chose");
                     selectHelper(boardPoint, p);
-                } else {
+                }
+                if(view.getDoesCliPieBoard()&&board.getKeySize()==0){
 //                    System.out.println("click to move");
                     selectPieceOnBoard(boardPoint, p,false);//for move
 
