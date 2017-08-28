@@ -24,6 +24,7 @@ import java.util.List;
  * **/
 public class Board extends Observable implements ActionListener {
     private LeftCemetery leftCemetery;
+    private Piece reac1,reac2;
     private Timer timer = new Timer(20, this);
     private boolean isLeftTurn;
     private RightCemetery rightCemetery;
@@ -209,6 +210,15 @@ public class Board extends Observable implements ActionListener {
         return act;
     }
 
+
+    public void markReact(char name1,char name2){
+         reac1=findPieceOnBoard(name1);
+        reac2= findPieceOnBoard(name2);
+        reac1.setIsReact(true);
+        reac2.setIsReact(true);
+
+    }
+
     /**
      * This method is ued to check if there is reaction in the current board
      * Basically, The method just check whether current piece with its four direction neighbouring pieces, either of them has a sword to point to actived pieces
@@ -272,7 +282,7 @@ public class Board extends Observable implements ActionListener {
                 Piece tempPiece = piecesBoard[xRow][xCol];
                 //System.out.println("There is a interaction happen!!");
 
-                Thread.sleep(1000);
+
 
                 Set<String> keys = tempPiece.getNeighbourPiece().keySet();
                 keySize = keys.size();
@@ -286,6 +296,7 @@ public class Board extends Observable implements ActionListener {
                     switch (act) {
                         case 0:
 
+                            markReact(tempPiece.getName(),neighP.getName());
                             ArrayList<Integer> firstList = new ArrayList<>();
                             firstList.add(Nrow);
                             firstList.add(Ncol);
@@ -300,7 +311,9 @@ public class Board extends Observable implements ActionListener {
 
                             break;
                         case 1:
+                            markReact(tempPiece.getName(),neighP.getName());
                             String dir1 = pushBackDir(key, false);
+
 
                             movePiece(neighP.getName(), dir1, true, false);
 
@@ -308,7 +321,7 @@ public class Board extends Observable implements ActionListener {
                             //System.out.println("111111"+neighP.getName()+" was pushed "+dir1);
                             break;
                         case 2:
-
+                            markReact(tempPiece.getName(),neighP.getName());
                             ArrayList<Integer> neiList = new ArrayList<>();
                             neiList.add(xRow);
                             neiList.add(xCol);
@@ -322,6 +335,7 @@ public class Board extends Observable implements ActionListener {
                             //System.out.println("222222"+piecesBoard[xRow][xCol].getName()+" dead");
                             break;
                         case 3:
+                            markReact(tempPiece.getName(),neighP.getName());
                             String dir2 = pushBackDir(key, true);
 
                             movePiece(tempPiece.getName(), dir2, true, false);
@@ -330,7 +344,7 @@ public class Board extends Observable implements ActionListener {
                             //System.out.println("3333333"+tempPiece.getName()+" was pushed "+dir2);
                             break;
                         case 4:
-
+                            markReact(tempPiece.getName(),neighP.getName());
                             ArrayList<Integer> seList = new ArrayList<>();
                             seList.add(Nrow);
                             seList.add(Ncol);
@@ -350,6 +364,8 @@ public class Board extends Observable implements ActionListener {
         }
 
         if (keySize > 0) {
+
+
             //if there is a interation, now change the pieceboard to the new board (after reation has done)
             piecesBoard[xRow][xCol].setNeighbourPiece(new HashMap<String, Piece>());
             setChanged();
@@ -676,7 +692,8 @@ public class Board extends Observable implements ActionListener {
 
             if (stop1) {
                 timer.stop();
-
+                reac1.setIsReact(false);
+                reac2.setIsReact(false);
                 wentToCemetery(piecesBoard[first.get(0)][first.get(1)]);
                 wentToCemeteryHelper(first.get(0), first.get(1));
                 if (deadRowCol.size() > 1) {
@@ -728,6 +745,10 @@ public class Board extends Observable implements ActionListener {
             if (stop2) {
 
                 timer.stop();
+                if(reac1!=null&&reac2!=null){
+                    reac1.setIsReact(false);
+                    reac2.setIsReact(false);
+                }
                 piecesBoard[row][col].setMovingStep(70);
                 if (movingDir.equals("up")) {
                     piecePoint[row - 1][col] = piecePoint[row][col]; //add

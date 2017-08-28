@@ -36,7 +36,9 @@ public class Piece {
 	public int getPanelX() {
 		return panelX;
 	}
-
+	private boolean isReact=false;
+	public void setIsReact(boolean b){ isReact=b;}
+	public boolean getIsReact(){return isReact;}
 	public int getPanelY() {
 		return panelY;
 	}
@@ -377,7 +379,11 @@ public class Piece {
 		drawRotateWeaponHelper(g, right, x, y, false, rotatePSize);
 
 	}
-
+	public void markReact(Graphics g){
+		g.setColor(new Color(10, 34, 211));
+		g.fillOval(panelX - selectWidth*2, panelY - selectWidth*2, SIZE_PIECE + selectWidth*4 ,
+				SIZE_PIECE + selectWidth * 4);
+	}
 	public void highLightSelect(Graphics g) {
 		g.setColor(new Color(0, 255, 239));
 		g.fillRect(panelX - selectWidth, panelY - selectWidth, SIZE_PIECE + selectWidth * 2,
@@ -390,6 +396,9 @@ public class Piece {
 			if (isHighLight) {
 				highLightSelect(g);
 			}
+			if(isReact){
+				markReact(g);
+			}
 			g.setColor(Color.BLACK);
 			g.fillRect(x, y, rotatePSize, rotatePSize);
 			g.setColor(Color.GREEN);
@@ -400,6 +409,9 @@ public class Piece {
 		} else if (this.type == Type.YellowPiece) {
 			if (isHighLight) {
 				highLightSelect(g);
+			}
+			if(isReact){
+				markReact(g);
 			}
 			g.setColor(Color.BLACK);
 			g.fillRect(x, y, rotatePSize, rotatePSize);
@@ -444,6 +456,9 @@ public class Piece {
 			if (isHighLight) {
 				highLightSelect(graphics2D);
 			}
+			if(isReact){
+				markReact(graphics2D);
+			}
 			graphics2D.setColor(Color.BLACK);
 			graphics2D.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
 			graphics2D.setColor(Color.GREEN);
@@ -454,6 +469,9 @@ public class Piece {
 		} else if (this.type == Type.YellowPiece) {
 			if (isHighLight) {
 				highLightSelect(graphics2D);
+			}
+			if(isReact){
+				markReact(graphics2D);
 			}
 			graphics2D.setColor(Color.BLACK);
 			graphics2D.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
