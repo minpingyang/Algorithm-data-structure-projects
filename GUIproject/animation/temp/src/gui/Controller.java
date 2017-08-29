@@ -5,10 +5,7 @@ import model.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.List;
 
 public class Controller implements MouseListener, KeyListener {
@@ -37,6 +34,7 @@ public class Controller implements MouseListener, KeyListener {
     private RightCreation rightCreation;
     private Board board;
     private AnimationController controller;
+
     public Controller(View view) {
 
         leftPoint = view.getLeftCreation().getPiecesPoint();
@@ -67,8 +65,8 @@ public class Controller implements MouseListener, KeyListener {
 
         panelConBoard = view.getPanelConBoard();
 
-        leftCreation=view.getLeftCreation();
-        rightCreation=view.getRightCreation();
+        leftCreation = view.getLeftCreation();
+        rightCreation = view.getRightCreation();
     }
 
 
@@ -112,17 +110,18 @@ public class Controller implements MouseListener, KeyListener {
         return 0;
 
     }
-    public void animateRight(){
+
+    public void animateRight() {
         try {
             if (controller != null) {
                 controller.stop();
             }
-            controller = new AnimationController(500);
+            controller = new AnimationController(600);
 
             boolean fadeIn = view.getRightCreationView().getAlpha() < view.getDegPanRiView().getAlpha();
 
-            controller.add(controller.new AlphaRange(view.getRightCreationView(),null, fadeIn));
-            controller.add(controller.new AlphaRange(null,view.getDegPanRiView(), !fadeIn));
+            controller.add(controller.new AlphaRange(view.getRightCreationView(), null, fadeIn));
+            controller.add(controller.new AlphaRange(null, view.getDegPanRiView(), !fadeIn));
 
             controller.start();
         } catch (Animation.InvalidStateException ex) {
@@ -130,18 +129,17 @@ public class Controller implements MouseListener, KeyListener {
         }
     }
 
-    public void animateLeft(){
+    public void animateLeft() {
 
         try {
             if (controller != null) {
                 controller.stop();
             }
-            controller = new AnimationController(500);
-
+            controller = new AnimationController(600);
             boolean fadeIn = view.getLeftCreationView().getAlpha() < view.getDegPanLeView().getAlpha();
 
-            controller.add(controller.new AlphaRange(view.getLeftCreationView(),null, fadeIn));
-            controller.add(controller.new AlphaRange(null,view.getDegPanLeView(), !fadeIn));
+            controller.add(controller.new AlphaRange(view.getLeftCreationView(), null, fadeIn));
+            controller.add(controller.new AlphaRange(null, view.getDegPanLeView(), !fadeIn));
 
             controller.start();
         } catch (Animation.InvalidStateException ex) {
@@ -200,10 +198,6 @@ public class Controller implements MouseListener, KeyListener {
 
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
-
 
     public void clickHelper(Piece selectPiece, boolean isDegreePanel, boolean isLeft, boolean isBoard) {
         // s->0->hig s->1->hig
@@ -241,7 +235,7 @@ public class Controller implements MouseListener, KeyListener {
             String degree = Integer.toString(selectIndex + 1);
             char name = selectPiece.getName();
             String command = "create " + name + " " + degree;
-            System.out.println("create command"+command);
+            System.out.println("create command" + command);
             try {
                 view.inputCommand(command);
             } catch (InterruptedException e) {
@@ -257,21 +251,16 @@ public class Controller implements MouseListener, KeyListener {
     //select for board Jpanel
 
 
+    public void selectPieceOnBoard(Point[][] points, Point p, boolean isRotation) {
 
-    public void selectPieceOnBoard(Point[][] points, Point p,boolean isRotation) {
 
-//        if(board.getIsRotationPanel()){
-//            System.out.println("clickPx: "+p.getX()+"  clickPy: "+p.getY());
-//            System.out.println("selectPointX: "+rotationPanel.getSelectPoint().getX()+"  selectPointY: "+rotationPanel.getSelectPoint().getY());
-//
-//        }
         Piece selectPiece = board.getPieceBoard()[board.getRowB()][board.getColB()];
-        if(board.getIsRotationPanel()&&isRotation&&!checkTwoPoint(p,rotationPanel.getSelectPoint())) {
+        if (board.getIsRotationPanel() && isRotation && !checkTwoPoint(p, rotationPanel.getSelectPoint())) {
             cardLayout3.show(panelConBoard, "5");
             //show rotation degree here
             board.setIsRotationPanel(false);
-            String command = "rotate "+selectPiece.getName()+" 1";
-            System.out.println("rotation command: "+command);
+            String command = "rotate " + selectPiece.getName() + " 1";
+            System.out.println("rotation command: " + command);
             try {
                 view.inputCommand(command);
             } catch (InterruptedException e) {
@@ -294,34 +283,26 @@ public class Controller implements MouseListener, KeyListener {
         if (dir == 4) direction = "left";
 
         selectPiece = board.getPieceBoard()[board.getRowB()][board.getColB()];
-        if (!direction.equals("1") && dir != 5&&!board.getIsRotationPanel()) {
+        if (!direction.equals("1") && dir != 5 && !board.getIsRotationPanel()) {
             char piecesName = board.getPiecesBoard()[board.getRowB()][board.getColB()].getName();
             String command = "move " + piecesName + " " + direction;
-            System.out.println("move command: "+command);
+            System.out.println("move command: " + command);
             try {
                 view.inputCommand(command);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
         }
-//        System.out.println("IS ROTATIONPANEL: "+board.getIsRotationPanel());
-//        System.out.println("!select has rotate "+!selectPiece.getHasRotate());
 
-        if(dir==5&&!selectPiece.getHasRotate()&&!selectPiece.getHasMove()){
-            selectRotationBoard(selectPiece, isRotation,p);
+        if (dir == 5 && !selectPiece.getHasRotate() && !selectPiece.getHasMove()) {
+            selectRotationBoard(selectPiece, isRotation, p);
         }
 
 
-
-        if(dir==5&&board.getIsRotationPanel()&&!selectPiece.getHasRotate()){
+        if (dir == 5 && board.getIsRotationPanel() && !selectPiece.getHasRotate()) {
             selectPiece.printWeapon();
-            rotationPanel.rotatePiece("2",selectPiece);
+            rotationPanel.rotatePiece("2", selectPiece);
         }
-
-
-
-
-
 
 
     }
@@ -349,24 +330,19 @@ public class Controller implements MouseListener, KeyListener {
             board.setIsRotationPanel(true);
 
 
-
         }
 
 
     }
 
-    public  void selectOrientation(Piece selectPiece, boolean isDegreePanel, boolean isLeft) throws InterruptedException {
+    public void selectOrientation(Piece selectPiece, boolean isDegreePanel, boolean isLeft) throws InterruptedException {
         if (!isDegreePanel && isLeft) {
             view.getDegreePanLeft().setSelectPiece(selectPiece);
 //            leftCreation.startTimer();
-            if(selectPiece.getType()== Piece.Type.GreenPiece){
+            if (selectPiece.getType() == Piece.Type.GreenPiece) {
                 animateLeft();
                 cardLayout1.show(view.getPanelConLeft(), "2");
             }
-
-
-
-
 
 
         } else if (isDegreePanel && isLeft) {
@@ -374,9 +350,9 @@ public class Controller implements MouseListener, KeyListener {
             cardLayout1.show(panelConLeft, "1");
         } else if (!isDegreePanel && !isLeft) {
             degreePanRight.setSelectPiece(selectPiece);
-            
-            if(selectPiece.getType()==Piece.Type.YellowPiece){
-               animateRight();
+
+            if (selectPiece.getType() == Piece.Type.YellowPiece) {
+                animateRight();
                 cardLayout2.show(panelConRight, "4");
             }
 
@@ -388,8 +364,10 @@ public class Controller implements MouseListener, KeyListener {
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-//	    if(!canClick) return;
+    public void mouseClicked(MouseEvent e) {
+        if (e.getClickCount() != 1) {
+            return;
+        }
         Point p = e.getPoint();
 
         if (p != null) {
@@ -418,23 +396,35 @@ public class Controller implements MouseListener, KeyListener {
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
-            } else if (e.getSource() instanceof BoardView) {
+            }
+        }
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        Point p = e.getPoint();
+
+        if (p != null) {
+            if (e.getSource() instanceof BoardView) {
+
+
                 if (!view.getDoesCliPieBoard()) {
 //                    System.out.println("click to chose");
                     selectHelper(boardPoint, p);
                 } else {
 //                    System.out.println("click to move");
-                    selectPieceOnBoard(boardPoint, p,false);//for move
+                    selectPieceOnBoard(boardPoint, p, false);//for move
 
 
                 }
-            }else if(e.getSource() instanceof RotationPanView){
+            } else if (e.getSource() instanceof RotationPanView) {
 //                System.out.println("click rotation panel");
-                selectPieceOnBoard(boardPoint, p,true);
+                selectPieceOnBoard(boardPoint, p, true);
 
             }
-        }
 
+        }
     }
 
     public void clickMove() {
@@ -488,6 +478,9 @@ public class Controller implements MouseListener, KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
     }
-    private static final class Lock { }
+
+    private static final class Lock {
+    }
+
     private final Object lock = new Lock();
 }

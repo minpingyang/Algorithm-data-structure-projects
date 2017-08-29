@@ -44,6 +44,11 @@ public class Piece {
 	}
 	public void setIsMoving(boolean b){isMoving=b;}
 	public boolean getIsMoving(){return isMoving;}
+
+	public boolean getIsHighLight() {
+		return isHighLight;
+	}
+
 	public enum Type {
 		GreenPiece, YellowPiece, GrayGrid, WhiteGrid, LeftFace, RightFace, OutBoard, LeftCreation, RightCreation, EmptyPiece, NonePiece
 
@@ -440,12 +445,11 @@ public class Piece {
 			graphics2D.setColor(Color.DARK_GRAY);
 			graphics2D.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
 		} else if (this.type == Type.LeftFace) {
-			graphics2D.drawImage(ImageResource.RIGHT.img,x,y,SIZE_PIECE,SIZE_PIECE,null);
+			graphics2D.drawImage(ImageResource.RIGHT.img, x, y, SIZE_PIECE, SIZE_PIECE, null);
 
 		} else if (this.type == Type.RightFace) {
 
-			graphics2D.drawImage(ImageResource.LEFT.img,x,y,SIZE_PIECE,SIZE_PIECE,null);
-
+			graphics2D.drawImage(ImageResource.LEFT.img, x, y, SIZE_PIECE, SIZE_PIECE, null);
 
 
 		} else if (this.type == Type.WhiteGrid) {
@@ -456,7 +460,7 @@ public class Piece {
 			if (isHighLight) {
 				highLightSelect(graphics2D);
 			}
-			if(isReact){
+			if (isReact) {
 				markReact(graphics2D);
 			}
 			graphics2D.setColor(Color.BLACK);
@@ -470,7 +474,7 @@ public class Piece {
 			if (isHighLight) {
 				highLightSelect(graphics2D);
 			}
-			if(isReact){
+			if (isReact) {
 				markReact(graphics2D);
 			}
 			graphics2D.setColor(Color.BLACK);

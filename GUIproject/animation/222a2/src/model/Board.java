@@ -24,9 +24,10 @@ import java.util.List;
  * **/
 public class Board extends Observable implements ActionListener {
     private LeftCemetery leftCemetery;
+    private boolean isPushMove;
     private int keySize = 0, xRow = 0, xCol = 0;
     public int getXRow(){return xRow;}
-    public int getxCol(){return xCol;}
+    public int getXCol(){return xCol;}
     public int getKeySize(){return keySize;}
     public void setKeySize(int temp){keySize=temp;}
     private Piece reac1,reac2;
@@ -308,9 +309,9 @@ public class Board extends Observable implements ActionListener {
                     int Ncol = neighCoord.get(1);
                     switch (act) {
                         case 0:
+                            markReact(tempPiece.getName(),neighP.getName());
+                            if(doesClickBorder){
 
-//                            if(doesClickBorder){
-                                markReact(tempPiece.getName(),neighP.getName());
                                 ArrayList<Integer> firstList = new ArrayList<>();
                                 firstList.add(Nrow);
                                 firstList.add(Ncol);
@@ -321,29 +322,36 @@ public class Board extends Observable implements ActionListener {
                                 deadRowCol.add(secondList);
                                 deadTimer = true;
                                 timer.start();
-//                            }
+                            }
 
 
 
                             break;
                         case 1:
                             markReact(tempPiece.getName(),neighP.getName());
-                            String dir1 = pushBackDir(key, false);
+                            if(doesClickBorder){
+
+                                String dir1 = pushBackDir(key, false);
 
 
-                            movePiece(neighP.getName(), dir1, true, false);
+                                movePiece(neighP.getName(), dir1, true, false);
+                            }
+
 
 
                             //System.out.println("111111"+neighP.getName()+" was pushed "+dir1);
                             break;
                         case 2:
                             markReact(tempPiece.getName(),neighP.getName());
-                            ArrayList<Integer> neiList = new ArrayList<>();
-                            neiList.add(xRow);
-                            neiList.add(xCol);
-                            deadRowCol.add(neiList);
-                            deadTimer = true;
-                            timer.start();
+                            if(doesClickBorder){
+                                ArrayList<Integer> neiList = new ArrayList<>();
+                                neiList.add(xRow);
+                                neiList.add(xCol);
+                                deadRowCol.add(neiList);
+                                deadTimer = true;
+                                timer.start();
+                            }
+
 
 
 //                            wentToCemetery(piecesBoard[xRow][xCol]);
@@ -352,21 +360,27 @@ public class Board extends Observable implements ActionListener {
                             break;
                         case 3:
                             markReact(tempPiece.getName(),neighP.getName());
-                            String dir2 = pushBackDir(key, true);
+                            if(doesClickBorder){
+                                String dir2 = pushBackDir(key, true);
 
-                            movePiece(tempPiece.getName(), dir2, true, false);
+                                movePiece(tempPiece.getName(), dir2, true, false);
+                            }
+
 
 
                             //System.out.println("3333333"+tempPiece.getName()+" was pushed "+dir2);
                             break;
                         case 4:
                             markReact(tempPiece.getName(),neighP.getName());
-                            ArrayList<Integer> seList = new ArrayList<>();
-                            seList.add(Nrow);
-                            seList.add(Ncol);
-                            deadRowCol.add(seList);
-                            deadTimer = true;
-                            timer.start();
+                            if(doesClickBorder){
+                                ArrayList<Integer> seList = new ArrayList<>();
+                                seList.add(Nrow);
+                                seList.add(Ncol);
+                                deadRowCol.add(seList);
+                                deadTimer = true;
+                                timer.start();
+                            }
+
 //                            wentToCemetery(piecesBoard[Nrow][Ncol]);
 //                            piecesBoard[Nrow][Ncol] = removeHelper(Nrow, Ncol);
 //                            //System.out.println("4444444"+piecesBoard[Nrow][Ncol].getName()+" dead");
@@ -381,9 +395,9 @@ public class Board extends Observable implements ActionListener {
 
         if (keySize > 0) {
 
-
+            setDoesClickBorder(false);
             //if there is a interation, now change the pieceboard to the new board (after reation has done)
-            piecesBoard[xRow][xCol].setNeighbourPiece(new HashMap<String, Piece>());
+//            piecesBoard[xRow][xCol].setNeighbourPiece(new HashMap<String, Piece>());
             setChanged();
             notifyObservers();
             return true;
@@ -574,7 +588,9 @@ public class Board extends Observable implements ActionListener {
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
-
+                if(getDoesClickBorder()){
+                    setDoesClickBorder(false);
+                }
                 creationPiece=null;
                 isLeftPlayer=false;
                 creationTimer=false;
@@ -610,9 +626,11 @@ public class Board extends Observable implements ActionListener {
                     wentToCemetery(piecesBoard[second.get(0)][second.get(1)]);
                     wentToCemeteryHelper(second.get(0), second.get(1));
                 }
-
+                if(getDoesClickBorder()){
+                    setDoesClickBorder(false);
+                }
                 deadRowCol.clear();
-
+                setKeySize(0);
                 deadTimer = false;
 
             }
@@ -689,6 +707,9 @@ public class Board extends Observable implements ActionListener {
                     piecesBoard[row][col - 1].setIsMoving(false);
                 }
 
+                if(isPushMove){
+                    setKeySize(0);
+                }
                 view.checkWin();
                 moveTimer = false;
                 moveRowCol.clear();
@@ -899,6 +920,7 @@ public class Board extends Observable implements ActionListener {
      **/
 
     public boolean movePiece(char pieceName, String dir, boolean isPushed, boolean mulitpleMove) {
+        isPushMove=isPushed;
         Piece temp = findPieceOnBoard(pieceName);
         if (temp == null) {
             return false;

@@ -441,7 +441,7 @@ public class View extends JComponent {
 
 
                     if (!greenPlayer.getHasCreate()) {
-                        gPieces.set(index, new Piece(Piece.Type.EmptyPiece));
+
                         greenPlayer.setPieces(gPieces);
                         piece.rotate(degree);
                         doesCreate = board.createPiece(piece);// create the piece in the board instance
@@ -449,6 +449,7 @@ public class View extends JComponent {
 
 
                     if (doesCreate) {
+                        gPieces.set(index, new Piece(Piece.Type.EmptyPiece));
                         piece.setIsHighLight(false);
                         greenPlayer.setHasCreate(true);
                     }
@@ -460,15 +461,17 @@ public class View extends JComponent {
             for (Piece piece : pieces) {
 
                 if (piece.getName() == pieceName) {
+                    int index = pieces.indexOf(piece);
                     if (!yellowPlayer.getHasCreate()) {
-                        int index = pieces.indexOf(piece);
-                        pieces.set(index, new Piece(Piece.Type.EmptyPiece));
+
+
                         yellowPlayer.setPieces(pieces);
                         piece.rotate(degree);
                         doesCreate = board.createPiece(piece);
                     }
 
                     if (doesCreate) {
+                        pieces.set(index, new Piece(Piece.Type.EmptyPiece));
                         piece.setIsHighLight(false);
                         yellowPlayer.setHasCreate(true);
                     }
@@ -574,7 +577,7 @@ public class View extends JComponent {
                 boolean doesCreate = create(degree, pieceName);
                 doActionSuccess = doesCreate;
                 doesAct = doActionSuccess; //
-                if (doesCreate) { //only if create successfully
+                if (doesCreate&&board.findPieceOnBoard(pieceName)!=null) { //only if create successfully
                     board.findPieceOnBoard(pieceName).setIsHighLight(false);
                     undoStack.add(temp);
                     isRotate = false;
@@ -637,6 +640,26 @@ public class View extends JComponent {
         return result;
     }
 
+    public void checkWin(){
+        int isGameStop = doesWin();
+        if (isGameStop != 0) {
+            String[] options = new String[]{"Back to menu"};
+            String message = " ";
+            if (isGameStop == 1) {
+                message = "Right Player WIN";
+            } else {
+                message = "Left Player WIN";
+            }
+            int response = JOptionPane.showOptionDialog(null, message, "Game Over",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+                    null, options, options[0]);
+            if (response == 0) {
+                frame.setVisible(false);
+                menuF.setVisible(true);
+            }
+
+        }
+    }
     /**
      * This method is used to print out the board
      **/
@@ -662,24 +685,7 @@ public class View extends JComponent {
 
                 System.out.println();
             }
-            int isGameStop = doesWin();
-            if (isGameStop != 0) {
-                String[] options = new String[]{"Back to menu"};
-                String message = " ";
-                if (isGameStop == 1) {
-                    message = "Right Player WIN";
-                } else {
-                    message = "Left Player WIN";
-                }
-                int response = JOptionPane.showOptionDialog(null, message, "Game Over",
-                        JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-                        null, options, options[0]);
-                if (response == 0) {
-                    frame.setVisible(false);
-                    menuF.setVisible(true);
-                }
-
-            }
+             checkWin();
 
         } else if (!isValid) {
             System.out.println("illegal Command ");

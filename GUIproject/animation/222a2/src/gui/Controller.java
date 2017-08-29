@@ -5,8 +5,13 @@ import model.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class Controller implements MouseListener, KeyListener {
     //    public static boolean canClick= true;
@@ -202,6 +207,7 @@ public class Controller implements MouseListener, KeyListener {
     public void clickHelper(Piece selectPiece, boolean isDegreePanel, boolean isLeft, boolean isBoard) {
         // s->0->hig s->1->hig
         selectPiece.setIsHighLight(true);
+
         leftCreation.startTimer();
 
         hasClicked++;// has->1 ->2->1
@@ -252,10 +258,13 @@ public class Controller implements MouseListener, KeyListener {
 
 
 
-    public void selectPieceOnBoard(Point[][] points, Point p,boolean isRotation) {
+    public void selectPieceOnBoard(Point[][] points, Point p,boolean isRotation,boolean isReaction) {
 
 
         Piece selectPiece = board.getPieceBoard()[board.getRowB()][board.getColB()];
+
+
+
         if(board.getIsRotationPanel()&&isRotation&&!checkTwoPoint(p,rotationPanel.getSelectPoint())) {
             cardLayout3.show(panelConBoard, "5");
             //show rotation degree here
@@ -283,28 +292,65 @@ public class Controller implements MouseListener, KeyListener {
         if (dir == 3) direction = "down";
         if (dir == 4) direction = "left";
 
-        selectPiece = board.getPieceBoard()[board.getRowB()][board.getColB()];
-        if (!direction.equals("1") && dir != 5&&!board.getIsRotationPanel()) {
-            char piecesName = board.getPiecesBoard()[board.getRowB()][board.getColB()].getName();
-            String command = "move " + piecesName + " " + direction;
-            System.out.println("move command: "+command);
-            try {
-                view.inputCommand(command);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
+        if(isReaction){
+            System.out.println("is reaction block!!!");
+
+            Piece tempPiece =board.getPieceBoard()[board.getXRow()][board.getXCol()];
+
+            System.out.println("temp piece name: "+tempPiece.getName());
+            Set<String> keys = tempPiece.getNeighbourPiece().keySet();
+            if(keys.isEmpty()){
+                System.out.println("key is empty");
+                    keys = board.getPieceBoard()[board.getXRow()][board.getXCol()].getNeighbourPiece().keySet();
+
+            }else{
+                for(String key:keys){
+                    System.out.println("neighbour: "+key);
+                    System.out.println("direction: "+direction);
+                    boolean b1 = key.equals("top")&&direction.equals("up");
+                    boolean b2 = key.equals("bottom")&&direction.equals("down");
+                    boolean b3 = key.equals(direction);
+                    tempPiece.setIsHighLight(false);
+                    if(b1||b2||b3){
+                        board.setDoesClickBorder(true);
+                        try {
+                            board.checkReaction();
+
+                            board.getPieceBoard()[board.getXRow()][board.getXCol()].setNeighbourPiece(new HashMap<String, Piece>());
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    }
+                }
+            }
+
+        }
+        if(!isReaction){
+            selectPiece = board.getPieceBoard()[board.getRowB()][board.getColB()];
+            if (!direction.equals("1") && dir != 5&&!board.getIsRotationPanel()) {
+                char piecesName = board.getPiecesBoard()[board.getRowB()][board.getColB()].getName();
+                String command = "move " + piecesName + " " + direction;
+                System.out.println("move command: "+command);
+                try {
+                    view.inputCommand(command);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+            if(dir==5&&!selectPiece.getHasRotate()&&!selectPiece.getHasMove()){
+                selectRotationBoard(selectPiece, isRotation,p);
+            }
+
+
+
+            if(dir==5&&board.getIsRotationPanel()&&!selectPiece.getHasRotate()){
+                selectPiece.printWeapon();
+                rotationPanel.rotatePiece("2",selectPiece);
             }
         }
 
-        if(dir==5&&!selectPiece.getHasRotate()&&!selectPiece.getHasMove()){
-            selectRotationBoard(selectPiece, isRotation,p);
-        }
-
-
-
-        if(dir==5&&board.getIsRotationPanel()&&!selectPiece.getHasRotate()){
-            selectPiece.printWeapon();
-            rotationPanel.rotatePiece("2",selectPiece);
-        }
 
 
 
@@ -405,77 +451,36 @@ public class Controller implements MouseListener, KeyListener {
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
-            } else if (e.getSource() instanceof BoardView) {
-                if(view.getDoesCliPieBoard()&&board.getKeySize()!=0){
-                    selectPieceOnBoard(boardPoint, p,false);
-                }
-
-                if (!view.getDoesCliPieBoard()) {
-//                    System.out.println("click to chose");
-                    selectHelper(boardPoint, p);
-                }
-                if(view.getDoesCliPieBoard()&&board.getKeySize()==0){
-//                    System.out.println("click to move");
-                    selectPieceOnBoard(boardPoint, p,false);//for move
-
-
-                }
-            }else if(e.getSource() instanceof RotationPanView){
-//                System.out.println("click rotation panel");
-                selectPieceOnBoard(boardPoint, p,true);
-
             }
         }
 
     }
     @Override
     public void mousePressed(MouseEvent e) {
-//	    if(!canClick) return;
-//        Point p = e.getPoint();
-//
-//        if (p != null) {
-//            if (e.getSource() instanceof LeftCreationView) {
-//                try {
-//
-//                    selectHelper(leftPoint, leftPieces, p, false, true);
-//                } catch (InterruptedException e1) {
-//                    e1.printStackTrace();
-//                }
-//            } else if (e.getSource() instanceof RightCreationView) {
-//                try {
-//                    selectHelper(rightPoint, rightPieces, p, false, false);
-//                } catch (InterruptedException e1) {
-//                    e1.printStackTrace();
-//                }
-//            } else if (e.getSource() instanceof DegPanLeView) {
-//                try {
-//                    selectHelper(degreeLeftPoint, degreeLeftPieces, p, true, true);
-//                } catch (InterruptedException e1) {
-//                    e1.printStackTrace();
-//                }
-//            } else if (e.getSource() instanceof DegPanRiView) {
-//                try {
-//                    selectHelper(degreeRightPoint, degreeRightPieces, p, true, false);
-//                } catch (InterruptedException e1) {
-//                    e1.printStackTrace();
-//                }
-//            } else if (e.getSource() instanceof BoardView) {
-//                if (!view.getDoesCliPieBoard()) {
-////                    System.out.println("click to chose");
-//                    selectHelper(boardPoint, p);
-//                } else {
-////                    System.out.println("click to move");
-//                    selectPieceOnBoard(boardPoint, p,false);//for move
-//
-//
-//                }
-//            }else if(e.getSource() instanceof RotationPanView){
-////                System.out.println("click rotation panel");
-//                selectPieceOnBoard(boardPoint, p,true);
-//
-//            }
-//        }
+        Point p = e.getPoint();
 
+        if (p != null) {
+            if (e.getSource() instanceof BoardView) {
+
+
+
+                if (!view.getDoesCliPieBoard()) {
+                        System.out.println("111111111click to chose");
+                    selectHelper(boardPoint, p);
+                }else if(view.getDoesCliPieBoard()&&board.getKeySize()!=0){
+                    System.out.println("key size: "+board.getKeySize() );
+                    selectPieceOnBoard(boardPoint, p,false,true);
+                }else if(view.getDoesCliPieBoard()){
+    //                    System.out.println("click to move");
+                    selectPieceOnBoard(boardPoint, p,false,false);//for move
+
+                }
+            }else if(e.getSource() instanceof RotationPanView){
+    //                System.out.println("click rotation panel");
+                selectPieceOnBoard(boardPoint, p,true,false);
+
+            }
+        }
     }
 
     public void clickMove() {

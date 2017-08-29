@@ -296,8 +296,6 @@ public class View extends JComponent {
         pass.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 try {
-
-
                     inputCommand("pass");
 
                 } catch (InterruptedException e) {
@@ -350,6 +348,7 @@ public class View extends JComponent {
      * set "hasRotate" to false -> allow the player to rotate anypice once in a new turn
      **/
     public void switchTurn() {
+        setDoesClPieBoard(false);
         isGreenTurn = !isGreenTurn;
         board.setIsLeftTurn(isGreenTurn);
         yellowPlayer.setHasCreate(false);
@@ -441,7 +440,7 @@ public class View extends JComponent {
 
 
                     if (!greenPlayer.getHasCreate()) {
-                        gPieces.set(index, new Piece(Piece.Type.EmptyPiece));
+
                         greenPlayer.setPieces(gPieces);
                         piece.rotate(degree);
                         doesCreate = board.createPiece(piece);// create the piece in the board instance
@@ -449,6 +448,7 @@ public class View extends JComponent {
 
 
                     if (doesCreate) {
+                        gPieces.set(index, new Piece(Piece.Type.EmptyPiece));
                         piece.setIsHighLight(false);
                         greenPlayer.setHasCreate(true);
                     }
@@ -460,15 +460,17 @@ public class View extends JComponent {
             for (Piece piece : pieces) {
 
                 if (piece.getName() == pieceName) {
+                    int index = pieces.indexOf(piece);
                     if (!yellowPlayer.getHasCreate()) {
-                        int index = pieces.indexOf(piece);
-                        pieces.set(index, new Piece(Piece.Type.EmptyPiece));
+
+
                         yellowPlayer.setPieces(pieces);
                         piece.rotate(degree);
                         doesCreate = board.createPiece(piece);
                     }
 
                     if (doesCreate) {
+                        pieces.set(index, new Piece(Piece.Type.EmptyPiece));
                         piece.setIsHighLight(false);
                         yellowPlayer.setHasCreate(true);
                     }

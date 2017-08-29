@@ -26,17 +26,30 @@ public class BoardView extends JComponent implements Observer {
         g.fillRect(0, 0, getWidth(), getHeight());
         for(int row = 0; row<10;row++){
             for(int col=0;col<10;col++){
-                board.getBoard()[row][col].drawPiece(g,col* Piece.SIZE_PIECE,row*Piece.SIZE_PIECE,row,col);
+                board.getBoard()[row][col].drawPiece(g,col* Piece.SIZE_PIECE,row*Piece.SIZE_PIECE);
             }
         }
         for(int row = 0; row<10;row++){
             for(int col=0;col<10;col++){
-                board.getPieceBoard()[row][col].drawPiece(g,col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE,row,col);
+
+                //board.getPieceBoard()[row][col].drawPiece(g,col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE,row,col);
+
                 if(board.getPieceBoard()[row][col].getType()== Piece.Type.GreenPiece||board.getPieceBoard()[row][col].getType()== Piece.Type.YellowPiece){
-                    board.getPiecePoint()[row][col]=new Point(col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE);
+                    if(!board.getPieceBoard()[row][col].getIsMoving()){
+                        board.getPiecePoint()[row][col]=new Point(col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE);
+//                        System.out.println("Now UP  piece is : "+board.getPieceBoard()[row-1][col].getName());
+//                        System.out.println("Now CREATION piece is : "+board.getPieceBoard()[row][col].getName());
+                    }
+
+                    board.getPieceBoard()[row][col].drawPiece(g,board.getPiecePoint()[row][col].x,board.getPiecePoint()[row][col].y);
+
                 }
             }
         }
+        if(board.getPiecePoint()[2][2]!=null){
+//            System.out.println("changing y: "+board.getPiecePoint()[2][2].y);
+        }
+
 
 
 

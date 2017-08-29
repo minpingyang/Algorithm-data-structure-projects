@@ -35,7 +35,7 @@ public class RightCemView extends JComponent implements Observer {
 //                System.out.println("leftCemetry size:  "+leftCemetery.getLeftDeadPiece().size());
                if(i<rightCemetery.getRightDeadPieces().size()){
 
-                   rightCemetery.getRightDeadPieces().get(i++).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top+row*(Piece.SIZE_PIECE+outline),row,col);
+                   rightCemetery.getRightDeadPieces().get(i++).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top+row*(Piece.SIZE_PIECE+outline));
                }
 
            }

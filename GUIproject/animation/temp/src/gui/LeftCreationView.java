@@ -43,7 +43,7 @@ public class LeftCreationView extends JComponent implements Observer{
             for(int col=0;col<4;col++){
                 //System.out.printf("\n left: %c ,",temp.get(i).getName());
 
-                leftCreation.getPieces().get(i++).drawPiece(g2d,left+col*(Piece.SIZE_PIECE+outline),top+ row*(Piece.SIZE_PIECE+outline),row,col);
+                leftCreation.getPieces().get(i++).drawPiece(g2d,left+col*(Piece.SIZE_PIECE+outline),top+ row*(Piece.SIZE_PIECE+outline));
 
                 leftCreation.getPiecesPoint().add(new Point(left+col*(Piece.SIZE_PIECE+outline), top+ row*(Piece.SIZE_PIECE+outline)));
             }

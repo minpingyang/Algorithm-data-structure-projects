@@ -9,11 +9,20 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 /**
+ * This class is used to represent the menu of the game, by using a new JFrame
+ *
+ *
  * Created by minpingyang on 24/08/17.
  */
 public class Menu extends JFrame implements MouseListener{
-    private MenuCanvas canvas;
+    private MenuCanvas canvas;   // the canvas of the menu
     private View view;
+    /**
+     * constructor
+     * @param view  the main class
+     * set up the menu windows.
+     * add mouseListener to click option
+     * */
     public Menu(View view){
         super("Menu");
 //        JPanel panel= new JPanel();
@@ -30,7 +39,10 @@ public class Menu extends JFrame implements MouseListener{
 
     }
 
-
+    /**
+     *mouse press action to implement the function of each button of the menu
+     *
+     * **/
     @Override
     public void mousePressed(MouseEvent e) {
 
@@ -55,24 +67,6 @@ public class Menu extends JFrame implements MouseListener{
                 System.exit(0);
             }
         }
-
-    }
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
 
     }
 
@@ -121,6 +115,24 @@ public class Menu extends JFrame implements MouseListener{
         public Dimension getPreferredSize(){
             return new Dimension(600, 600);
         }
+
+    }
+    @Override
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
 
     }
 

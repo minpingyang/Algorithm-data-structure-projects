@@ -31,12 +31,12 @@ public class RotationPanView extends JComponent implements Observer{
         g2d.fillRect(0, 0, getWidth(), getHeight());
         for(int row = 0; row<10;row++){
             for(int col=0;col<10;col++){
-                rotationPanel.getBackgroudBoard()[row][col].drawPiece(g2d,col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE,row,col);
+                rotationPanel.getBackgroudBoard()[row][col].drawPiece(g2d,col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE);
             }
         }
         for(int row = 0; row<10;row++){
             for(int col=0;col<10;col++){
-                rotationPanel.getPiecesBoard()[row][col].drawPiece(g2d,col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE,row,col);
+                rotationPanel.getPiecesBoard()[row][col].drawPiece(g2d,col*Piece.SIZE_PIECE,row*Piece.SIZE_PIECE);
 
             }
         }

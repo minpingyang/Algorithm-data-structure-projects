@@ -34,7 +34,7 @@ public class RightCreationView extends JComponent implements Observer{
         int outline = 10;
         for(int row = 0; row<6;row++){
             for(int col=0;col<4;col++){
-                rightCreation.getPieces().get(i++).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top+row*(Piece.SIZE_PIECE+outline),row,col);
+                rightCreation.getPieces().get(i++).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top+row*(Piece.SIZE_PIECE+outline));
                 rightCreation.getPiecesPoint().add(new Point(left+col*(Piece.SIZE_PIECE+outline), top+ row*(Piece.SIZE_PIECE+outline)));
             }
         }

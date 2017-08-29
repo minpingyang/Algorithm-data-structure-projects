@@ -36,7 +36,7 @@ public class DegPanLeView extends JComponent implements Observer {
             int outline = 13;
 
             for(int col=0;col<4;col++){
-                degreePanLeft.getDiffDegreePiece().get(col).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top,0,col);
+                degreePanLeft.getDiffDegreePiece().get(col).drawPiece(g,left+col*(Piece.SIZE_PIECE+outline),top);
 //                    System.out.println("draw name: "+diffDegreePiece.get(col).getName());
 //                    diffDegreePiece.get(col).printWeapon();
                 degreePanLeft.getPiecesPoint().add(new Point(left+col*(Piece.SIZE_PIECE+outline),top));

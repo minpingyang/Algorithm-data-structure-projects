@@ -13,7 +13,7 @@ public class Piece {
 	private char topWeapon, rightWeapon, botWeapon, leftWeapon;
 	private boolean hasRotate, hasMove;
 	private int weaponWidth = SIZE_PIECE / 8;
-
+	private boolean isMoving=false;
 	private int selectWidth = weaponWidth / 2;
 	private int panelX, panelY;
 	private boolean isHighLight = false;
@@ -27,15 +27,23 @@ public class Piece {
 	public void setIsHighLight(boolean b) {
 		isHighLight = b;
 	}
-
+	private int movingStep = 70;
+	public void decreaseMovingStep(){
+		movingStep-=14;
+	}
+	public int getMovingStep(){return movingStep;}
+	public void setMovingStep(int temp){movingStep=temp;}
 	public int getPanelX() {
 		return panelX;
 	}
-
+	private boolean isReact=false;
+	public void setIsReact(boolean b){ isReact=b;}
+	public boolean getIsReact(){return isReact;}
 	public int getPanelY() {
 		return panelY;
 	}
-
+	public void setIsMoving(boolean b){isMoving=b;}
+	public boolean getIsMoving(){return isMoving;}
 	public enum Type {
 		GreenPiece, YellowPiece, GrayGrid, WhiteGrid, LeftFace, RightFace, OutBoard, LeftCreation, RightCreation, EmptyPiece, NonePiece
 
@@ -371,7 +379,11 @@ public class Piece {
 		drawRotateWeaponHelper(g, right, x, y, false, rotatePSize);
 
 	}
-
+	public void markReact(Graphics g){
+		g.setColor(new Color(10, 34, 211));
+		g.fillOval(panelX - selectWidth*2, panelY - selectWidth*2, SIZE_PIECE + selectWidth*4 ,
+				SIZE_PIECE + selectWidth * 4);
+	}
 	public void highLightSelect(Graphics g) {
 		g.setColor(new Color(0, 255, 239));
 		g.fillRect(panelX - selectWidth, panelY - selectWidth, SIZE_PIECE + selectWidth * 2,
@@ -384,6 +396,9 @@ public class Piece {
 			if (isHighLight) {
 				highLightSelect(g);
 			}
+			if(isReact){
+				markReact(g);
+			}
 			g.setColor(Color.BLACK);
 			g.fillRect(x, y, rotatePSize, rotatePSize);
 			g.setColor(Color.GREEN);
@@ -394,6 +409,9 @@ public class Piece {
 		} else if (this.type == Type.YellowPiece) {
 			if (isHighLight) {
 				highLightSelect(g);
+			}
+			if(isReact){
+				markReact(g);
 			}
 			g.setColor(Color.BLACK);
 			g.fillRect(x, y, rotatePSize, rotatePSize);
@@ -406,7 +424,7 @@ public class Piece {
 
 	}
 
-	public void drawPiece(Graphics2D graphics2D, int x, int y, int row, int col) {
+	public void drawPiece(Graphics2D graphics2D, int x, int y) {
 
 		if (this.type == Type.RightCreation) {
 			graphics2D.setColor(Color.ORANGE);
@@ -438,6 +456,9 @@ public class Piece {
 			if (isHighLight) {
 				highLightSelect(graphics2D);
 			}
+			if(isReact){
+				markReact(graphics2D);
+			}
 			graphics2D.setColor(Color.BLACK);
 			graphics2D.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
 			graphics2D.setColor(Color.GREEN);
@@ -448,6 +469,9 @@ public class Piece {
 		} else if (this.type == Type.YellowPiece) {
 			if (isHighLight) {
 				highLightSelect(graphics2D);
+			}
+			if(isReact){
+				markReact(graphics2D);
 			}
 			graphics2D.setColor(Color.BLACK);
 			graphics2D.fillRect(x, y, SIZE_PIECE, SIZE_PIECE);
