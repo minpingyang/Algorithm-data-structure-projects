@@ -56,13 +56,13 @@ public class Node {
         pathCost.put(this,0);
         for (Node n : nodes) {
             if (this.name.equals(n.name)) {
-                n.parentDistance.put(null, 0);
+                parentDistance.put(null, 0);
                 previouseCost = 0;
                 previouseParent = null;
             } else {
                 n.parentDistance.put(null, max);
-                previouseCost = max;
-                previouseParent = null;
+                n.previouseCost = max;
+                n.previouseParent = null;
             }
             others.add(n);
         }
@@ -75,7 +75,6 @@ public class Node {
         Node temp = minNode;
         while (temp != this) {
             recordPath.add(temp);
-//            System.out.println("record get: "+recordPath.get(i++).name);
             temp = temp.previouseParent;
         }
 
@@ -93,12 +92,6 @@ public class Node {
                 Collections.reverse(recordPath);
 
                 path.put(minNode.name, recordPath);
-                System.out.print("recode path for "+minNode.name+":");
-                System.out.println("path size "+path.get(minNode.name).size());
-                for(Node node:recordPath){
-                    System.out.print(" "+node.name);
-                }
-                System.out.println();
                 pathCost.put(minNode, minNode.previouseCost);
 
             }
@@ -107,6 +100,21 @@ public class Node {
         }
 
 
+    }
+    public Node findMinCost() {
+        int min = max;
+        Node minNode = null;
+        for (Node node : others) {
+            System.out.println("this node: "+this.name+"  node: "+node.name+" node.previousCost"+node.previouseCost);
+            if (node.previouseCost!=max&&min > node.previouseCost) {
+
+                min = node.previouseCost;
+//                System.out.println("current Node"+this.name+ "min: "+min);
+                minNode = node;
+            }
+        }
+
+        return minNode;
     }
 
     //update others
@@ -154,18 +162,7 @@ public class Node {
     }
 
 
-    public Node findMinCost() {
-        int min = max;
-        Node minNode = null;
-        for (Node node : others) {
-            if (min > node.previouseCost) {
-                min = node.previouseCost;
-                minNode = node;
-            }
-        }
 
-        return minNode;
-    }
 
     public void printShortestPath() {
         UI.println("Table for "+this.name);
@@ -178,25 +175,14 @@ public class Node {
                 UI.print("->"+n.name);
             }
 
+
+            UI.println("    total Cost: "+pathCost.get(node));
             UI.println();
-            UI.println("total Cost: "+pathCost.get(node));
         }
         UI.println();
-
+        UI.println("------------------------------------------------");
     }
 
-    /**
-     * Updates the routing table
-     */
-    public void updateRoutingTable(String fromNode, String nodeData, int newCost) {
-
-
-    }
-
-
-    public void simulateNewLink(String fromNode, String nodeData, int newCost) {
-
-    }
 
     /**
      * @param nodeName:the neighbour node name
