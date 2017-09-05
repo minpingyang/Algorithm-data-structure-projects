@@ -11,18 +11,23 @@ package lab4;
 
 import ecs100.UI;
 
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 
 public class Node {
     private String name; // the node name
     private int xPos, yPos; // the positions to draw the node
     private HashMap<String, Integer> neighbours; // the list of neighbours
     private boolean hasVisit;
-    private HashMap<String, Integer> parentDistance = new HashMap<>();
+    private HashMap<Node, Integer> parentDistance = new HashMap<>();
     private int max = Integer.MAX_VALUE;
-    private Vector<Node> others=new Vector<>();
+    private Vector<Node> others = new Vector<>();
+    private Vector<Node> allNodes= new Vector<>();
+    private HashMap<String, List<Node>> path = new HashMap<>(); // key represents the toNode, path from this to ToNode
+    private HashMap<Node, Integer> pathCost = new HashMap<>(); // key represents the toNode, value refers to the cost
+    private int previouseCost = max;
+    private Node previouseParent = null;
+    private List<Node> recordPath = new ArrayList<>();
+
     // Think of what data structure to use to store the routing table
     // 2D array, vector, priorityQueue, etc.
 
@@ -35,7 +40,7 @@ public class Node {
         this.name = n;
         this.xPos = xp;
         this.yPos = yp;
-        this.neighbours = new HashMap<String, Integer>();
+        this.neighbours = new HashMap<>();
         hasVisit = false;
     }
 
@@ -44,63 +49,140 @@ public class Node {
      * Initialises the routing table
      */
     public void initialise(Vector<Node> nodes) {
-        hasVisit=true;
+        allNodes=nodes;
+        List<Node> temp = new ArrayList<>();
+        temp.add(this);
+        path.put(this.name, temp);
+        pathCost.put(this,0);
         for (Node n : nodes) {
-            if (this.getName().equals(n.getName())) continue;
-            n.parentDistance.put(this.getName(), max);
+            if (this.name.equals(n.name)) {
+                n.parentDistance.put(null, 0);
+                previouseCost = 0;
+                previouseParent = null;
+            } else {
+                n.parentDistance.put(null, max);
+                previouseCost = max;
+                previouseParent = null;
+            }
             others.add(n);
         }
-        checkNeighbour();
+        startIter();
+
     }
 
-    public void checkNeighbour() {
-        Set<String> neighbourNames = neighbours.keySet();
-        for (Node n : others) {
-            for (String neighNa : neighbourNames) {
-                if(n.getName().equals(neighNa)){
-                    n.parentDistance.put(this.getName(),this.neighbours.get(neighNa));
+    public void addToPath(Node minNode) {
+        recordPath=new ArrayList<>();
+        Node temp = minNode;
+        while (temp != this) {
+            recordPath.add(temp);
+//            System.out.println("record get: "+recordPath.get(i++).name);
+            temp = temp.previouseParent;
+        }
+
+
+    }
+
+    public void startIter() {
+
+        Node minNode = null;
+        if (!others.isEmpty()) {minNode = findMinCost();}
+        if (minNode != null) {
+            minNode.hasVisit = true;
+            if (minNode != this) {
+                addToPath(minNode);
+                Collections.reverse(recordPath);
+
+                path.put(minNode.name, recordPath);
+                System.out.print("recode path for "+minNode.name+":");
+                System.out.println("path size "+path.get(minNode.name).size());
+                for(Node node:recordPath){
+                    System.out.print(" "+node.name);
                 }
-            }
-        }
-        String minName= findMinCost(others);
-        if(minName!=" "){
-            Node node= findNodeByName(minName,others);
-           if(node!=null) {
-               node.hasVisit=true;
-               printTable(node);
-           }
+                System.out.println();
+                pathCost.put(minNode, minNode.previouseCost);
 
+            }
+
+            iteration(minNode);
         }
+
+
+    }
+
+    //update others
+    public void iteration(Node currentNode) {
+        others.remove(currentNode);
+        if(!others.isEmpty()){
+            for (Node node : others) {
+                compareCost(currentNode, node);
+            }
+
+            startIter();
+        }else{
+            printShortestPath();
+        }
+
+    }
+
+    public void compareCost(Node currentNode, Node toNode) {
+
+        int cost2 = max;
+        int newCost = isNeighbour(currentNode, toNode) ? currentNode.neighbours.get(toNode.name) + currentNode.previouseCost : cost2;
+        //infinity
+        if (newCost < toNode.previouseCost) {
+            toNode.previouseParent = currentNode;
+            toNode.previouseCost = newCost;
+
+        } else if (toNode.previouseCost == max) {
+            toNode.previouseParent = currentNode;
+        }
+
+        toNode.parentDistance.put(toNode.previouseParent, toNode.previouseCost);//A preivouse one
     }
 
 
-    public Node findNodeByName(String name,Vector<Node> nodes){
-        for(Node node:nodes){
-            if(node.getName().equals(name)){
-                return node;
+    //check if the unsure node is one of the neighbour of current node
+    public boolean isNeighbour(Node currentNode, Node unsureNode) {
+        Set<String> neighbourNames = currentNode.neighbours.keySet();
+        for (String neighNa : neighbourNames) {
+            if (unsureNode.getName().equals(neighNa)) {
+                return true;
             }
         }
-        return null;
+
+        return false;
     }
 
-    public String findMinCost(Vector<Node> nodes){
+
+    public Node findMinCost() {
         int min = max;
-        String minName = " ";
-        for(Node node:nodes){
-
-            int cost =node.parentDistance.get(this.getName()) ;
-            if(cost!=max&&min>cost){
-                min=cost;
-                minName=node.getName();
+        Node minNode = null;
+        for (Node node : others) {
+            if (min > node.previouseCost) {
+                min = node.previouseCost;
+                minNode = node;
             }
         }
-       return minName;
+
+        return minNode;
     }
 
-    public void printTable(Node n){
-        UI.println("From: "+this.name+" To: "+n.getName());
-        UI.println("Path: "+this.name+"-"+n.getName());
-        UI.println("Cost: "+n.parentDistance.get(this.getName()));
+    public void printShortestPath() {
+        UI.println("Table for "+this.name);
+        UI.println("From: "+this.name);
+        for(Node node:allNodes){
+            UI.println("To: "+node.name);
+            UI.print("path: "+this.name);
+            List<Node> tempList = path.get(node.name);
+            for(Node n:tempList){
+                UI.print("->"+n.name);
+            }
+
+            UI.println();
+            UI.println("total Cost: "+pathCost.get(node));
+        }
+        UI.println();
+
     }
 
     /**

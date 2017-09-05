@@ -34,6 +34,7 @@ public class Lab4 {
     public void start() {
 
         for (Node n : this.nodes) {
+
            n.initialise(nodes);
             //1. initialise
             //2. update neighbours
