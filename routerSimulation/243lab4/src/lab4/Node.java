@@ -90,7 +90,6 @@ public class Node {
             if (minNode != this) {
                 addToPath(minNode);
                 Collections.reverse(recordPath);
-
                 path.put(minNode.name, recordPath);
                 pathCost.put(minNode, minNode.previouseCost);
 
@@ -105,11 +104,9 @@ public class Node {
         int min = max;
         Node minNode = null;
         for (Node node : others) {
-            System.out.println("this node: "+this.name+"  node: "+node.name+" node.previousCost"+node.previouseCost);
             if (node.previouseCost!=max&&min > node.previouseCost) {
 
                 min = node.previouseCost;
-//                System.out.println("current Node"+this.name+ "min: "+min);
                 minNode = node;
             }
         }
@@ -199,12 +196,7 @@ public class Node {
         return name;
     }
 
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+
 
     /**
      * @return the xPos
@@ -213,12 +205,6 @@ public class Node {
         return xPos;
     }
 
-    /**
-     * @param xPos the xPos to set
-     */
-    public void setxPos(int xPos) {
-        this.xPos = xPos;
-    }
 
     /**
      * @return the yPos

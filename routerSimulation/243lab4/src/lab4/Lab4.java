@@ -23,28 +23,72 @@ public class Lab4 {
     public Lab4() {
         UI.addButton("load map", this::load);
         UI.addButton("Draw Nodes", this::draw);
-
         UI.addButton("Start", this::start);
+        UI.addButton("Change a cost",this::changeCost);
+    }
+    public Node findNode(String name){
+        for(Node node:nodes){
+            if(node.getName().equals(name)){
+                return node;
+            }
+        }
+        return null;
+    }
+
+    public boolean isNeighbour(Node node1,Node node2){
+        Set<String> keys = node1.getNeighbours().keySet();
+        for(String key:keys){
+            if(key.equals(node2.getName())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void changeCost(){
+
+        String startNode_Name =UI.askString("Start node of the line: (eg, A, B, ..)");
+        String toNode_Name = UI.askString("End node of the line: (eg, C, D, ..)");
+
+        Node startNode = findNode(startNode_Name);
+        Node toNode = findNode(toNode_Name);
+        boolean isValid=startNode!=null&&toNode!=null;
+        if(!isValid){
+            UI.println("Error: Please input valid node!");
+            return;}
+        if(!isNeighbour(startNode,toNode)){
+            UI.println("Error: There is not a line between these two nodes!");
+            return;
+        }
+        int newCost= UI.askInt("input the new cost between the two nodes: ");
+        if(newCost<=0){
+            UI.println("Error: Please input a valid cost");
+            return;
+        }
+        for(Node node:nodes){
+            if(node.getName().equals(startNode_Name)){
+                node.addNeighbour(toNode_Name,newCost);
+            }else if(node.getName().equals(toNode_Name)){
+                node.addNeighbour(startNode_Name,newCost);
+            }
+        }
+        UI.clearText();
+        UI.clearGraphics();
+        UI.println("----------------repaint right panel ---------");
+        UI.println("----------------reprint the table-------------");
+        UI.println();
+        draw();
+        start();
 
     }
-    public void setNodes(){
-
-    }
-
     public void start() {
+        long start =System.currentTimeMillis();
 
         for (Node n : this.nodes) {
-
            n.initialise(nodes);
-            //1. initialise
-            //2. update neighbours
         }
-
-
-
-    }
-    public void printTable(){
-
+        long end = System.currentTimeMillis();
+        UI.println("Time Cost: "+(end-start)/1000.0+" s");
     }
 
     public void load() {
