@@ -44,14 +44,24 @@ public class Lab4 {
             UI.println("Error: Please input valid node!");
             return;
         }
+        startNode.initialise(nodes);
+        UI.clearText();
         HashMap<String,List<Node>> pathMap =routePath.get(startNode);
         List<Node> toPath = pathMap.get(toNode_Name);
-        UI.println("To: "+toNode.getName());
-        UI.print("shortest path: "+startNode.getName());
-        for(Node n:toPath){
-            UI.print("->"+n.getName());
-        }
+        UI.println("From: "+startNode_Name+"   To: "+toNode.getName());
+        UI.print("how data routed: \n"+startNode.getName()+"(parentNode, cost)");
 
+        for(Node n:toPath){
+           if(n.getPreviouseParent()==null){
+               UI.print("->"+n.getName()+"(null,"+n.getPreviouseCost()+")");
+           }else{
+               UI.print("->"+n.getName()+"("+n.getPreviouseParent().getName()+","+n.getPreviouseCost()+")");
+           }
+
+        }
+        UI.println();
+        HashMap<Node,Integer> costMap= routeCost.get(startNode);
+        UI.println("total cost: "+costMap.get(toNode));
 
 
 

@@ -28,7 +28,8 @@ public class Node {
     private Node previouseParent = null;
     private List<Node> recordPath = new ArrayList<>();
     private int []costArray;
-
+    public int getPreviouseCost(){return previouseCost;}
+    public Node getPreviouseParent(){return  previouseParent;}
     public HashMap<String,List<Node>> getPath(){
         return path;
     }
