@@ -9,23 +9,84 @@ package lab4;
  * @author aliahmed
  */
 
-import ecs100.*;
+import ecs100.UI;
+import ecs100.UIFileChooser;
 
-import java.awt.Color;
-import java.util.Scanner;
-import java.io.*;
-import java.util.Vector;
-import java.util.Set;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.List;
 
 public class Lab4 {
     Vector<Node> nodes = new Vector<Node>();
-
+    HashMap<Node,HashMap<String,List<Node>>> routePath=new HashMap<>();
+    HashMap<Node,HashMap<Node,Integer>> routeCost= new HashMap<>();
     public Lab4() {
         UI.addButton("load map", this::load);
         UI.addButton("Draw Nodes", this::draw);
         UI.addButton("Start", this::start);
         UI.addButton("Change a cost",this::changeCost);
+        UI.addButton("Choose node to show how data is routed",this::showRoutate);
     }
+    public void showRoutate(){
+        start();
+        draw();
+        UI.clearText();
+        UI.println("Notice: please input uppercase character.");
+        String startNode_Name =UI.askString("Type in [Start node] of the line: (eg, A, B, ..)");
+        String toNode_Name = UI.askString("Type in [End node] of the line: (eg, C, D, ..)");
+
+        Node startNode = findNode(startNode_Name);
+        Node toNode = findNode(toNode_Name);
+        boolean isValid=startNode!=null&&toNode!=null;
+        if(!isValid){
+            UI.println("Error: Please input valid node!");
+            return;
+        }
+        HashMap<String,List<Node>> pathMap =routePath.get(startNode);
+        List<Node> toPath = pathMap.get(toNode_Name);
+        UI.println("To: "+toNode.getName());
+        UI.print("shortest path: "+startNode.getName());
+        for(Node n:toPath){
+            UI.print("->"+n.getName());
+        }
+
+
+
+
+    }
+    /**
+     * This method is used to print the router table and find shortest path
+     * */
+    public void start() {
+        long start =System.currentTimeMillis();
+        int [][]costTable =new int[nodes.size()][nodes.size()];
+
+        int i=0;
+
+        for (Node n : this.nodes) {
+            n.initialise(nodes);
+
+            HashMap<String,List<Node>> tempPath= n.getPath();
+            HashMap<Node,Integer> tempCost = n.getPathCost();
+            routePath.put(n,tempPath);
+            routeCost.put(n,tempCost);
+            costTable[i++]=n.getCostArray();
+        }
+
+
+
+        printTable(costTable);
+        long end = System.currentTimeMillis();
+
+
+        UI.println("Time Cost: "+(end-start)/1000.0+" s");
+    }
+    /**
+     * This method is used to return the node by passing the node name
+     * @param name
+     * */
     public Node findNode(String name){
         for(Node node:nodes){
             if(node.getName().equals(name)){
@@ -34,7 +95,11 @@ public class Lab4 {
         }
         return null;
     }
-
+    /***
+     *This method is used to check if node1 and node2 are neighbour with each other
+     * @param node1
+     * @param node2
+     * */
     public boolean isNeighbour(Node node1,Node node2){
         Set<String> keys = node1.getNeighbours().keySet();
         for(String key:keys){
@@ -45,10 +110,15 @@ public class Lab4 {
         return false;
     }
 
-    public void changeCost(){
 
-        String startNode_Name =UI.askString("Start node of the line: (eg, A, B, ..)");
-        String toNode_Name = UI.askString("End node of the line: (eg, C, D, ..)");
+    /**
+     * This method is used for user to input a new cost in one of line of the diagram in order to change the cost of the line
+     * */
+    public void changeCost(){
+        UI.clearText();
+        UI.println("Notice: please input uppercase character.");
+        String startNode_Name =UI.askString("Type in [Start node] of the line: (eg, A, B, ..)");
+        String toNode_Name = UI.askString("Type in [End node] of the line: (eg, C, D, ..)");
 
         Node startNode = findNode(startNode_Name);
         Node toNode = findNode(toNode_Name);
@@ -60,6 +130,7 @@ public class Lab4 {
             UI.println("Error: There is not a line between these two nodes!");
             return;
         }
+
         int newCost= UI.askInt("input the new cost between the two nodes: ");
         if(newCost<=0){
             UI.println("Error: Please input a valid cost");
@@ -81,16 +152,36 @@ public class Lab4 {
         start();
 
     }
-    public void start() {
-        long start =System.currentTimeMillis();
 
-        for (Node n : this.nodes) {
-           n.initialise(nodes);
+
+    public void printTable(int[][] costTable){
+        UI.println("Routing table for all nodes");
+        UI.print("  |");
+        for(Node node:nodes){
+            UI.print( node.getName()+"  ");
         }
-        long end = System.currentTimeMillis();
-        UI.println("Time Cost: "+(end-start)/1000.0+" s");
-    }
+        UI.println();
+        for(int i=0;i<nodes.size()+16;i++){
+            UI.print("-");
+        }
+        UI.println();
+        for(int i=0;i<nodes.size();i++){
+            UI.print(" "+nodes.get(i).getName()+"|");
+            for(int col=0;col<nodes.size();col++){
+                UI.print(costTable[i][col]+"  ");
+            }
+            UI.println();
 
+        }
+        for(int i=0;i<nodes.size()+16;i++){
+            UI.print("-");
+        }
+        UI.println();
+
+    }
+    /**
+     * This method is used to load map file into nodes
+     * */
     public void load() {
         try {
             Scanner scan = new Scanner(new File(UIFileChooser.open("Select Map File")));
@@ -111,7 +202,9 @@ public class Lab4 {
             UI.println("File Failure: " + e);
         }
     }
-
+    /**
+     * According to the map files, draw the diagram.
+     * */
     public void draw() {
         for (Node n : this.nodes) {
             UI.setColor(Color.green);
@@ -135,13 +228,12 @@ public class Lab4 {
                 if (neighbour != null) // there is a neighbour
                 {
                     UI.drawLine(n.getxPos() + 20, n.getyPos() + 20, neighbour.getxPos() + 20, neighbour.getyPos() + 20);
-                    //UI.drawString(n.getNeighbours().get(s), !, !);
                     int offX= neighbour.getxPos()-n.getxPos();
                     int offY = neighbour.getyPos()-n.getyPos();
                     int midX = offX>0?n.getxPos()+offX/2:neighbour.getxPos()-offX/2;
                     int midY= offY>0?n.getyPos()+offY/2:neighbour.getyPos()-offY/2;
                     UI.drawString(" "+n.getNeighbours().get(neighbour.getName()),20+midX,20+midY);
-
+                    //this part is used to show the cost of every line.
                 }
 
 
